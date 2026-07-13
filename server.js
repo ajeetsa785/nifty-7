@@ -157,7 +157,7 @@ app.post('/api/request-otp', async (req, res) => {
             [phone, otp]
         );
         
-        const FAST2SMS_API_KEY = "lNFrWOqxImkwQohcLj0Ev4MCSTXdDR38tVH9ua6ysUzBGiJeKY3MqdPItfSQa0yJVZo7NWFBOxCARm8D";
+        const FAST2SMS_API_KEY = process.env.FAST2SMS_KEY || "lNFrWOqxImkwQohcLj0Ev4MCSTXdDR38tVH9ua6ysUzBGiJeKY3MqdPItfSQa0yJVZo7NWFBOxCARm8D";
         const SEND_REAL_SMS = true; 
 
         if (SEND_REAL_SMS && FAST2SMS_API_KEY !== "YOUR_FAST2SMS_API_KEY_HERE") {
@@ -329,7 +329,7 @@ app.post('/api/contests/:id/payout', async (req, res) => {
 // ============================================================================
 // 6. ADMIN COMMAND CENTER APIS (SECURED)
 // ============================================================================
-const ADMIN_SECRET_KEY = "ajeet_admin_secret_99"; 
+const ADMIN_SECRET_KEY = process.env.ADMIN_SECRET_KEY || "ajeet_admin_secret_99"; 
 
 const requireAdmin = (req, res, next) => {
     const adminHeader = req.headers['x-admin-secret'];
