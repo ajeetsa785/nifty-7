@@ -3,174 +3,291 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nifty-7 Command Center</title>
+    <title>Nifty-7 Admin Command Center</title>
     <style>
-        body { font-family: Arial, sans-serif; background: #0f172a; color: #f8fafc; margin: 0; padding: 20px; }
-        .container { max-width: 1000px; margin: 0 auto; }
-        h1, h2 { color: #38bdf8; border-bottom: 2px solid #334155; padding-bottom: 10px; }
-        .card { background: #1e293b; padding: 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #334155; }
-        th { background: #0f172a; color: #38bdf8; }
-        input, select, button { padding: 10px; margin: 5px 0; border-radius: 5px; border: 1px solid #475569; background: #0f172a; color: #fff; }
-        button { background: #0284c7; cursor: pointer; font-weight: bold; border: none; }
-        button:hover { background: #0369a1; }
-        .btn-danger { background: #e11d48; }
-        .btn-danger:hover { background: #be123c; }
-        .btn-success { background: #16a34a; }
-        .flex-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #0f172a;
+            color: #f8fafc;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+            color: #38bdf8;
+            border-bottom: 2px solid #1e293b;
+            padding-bottom: 10px;
+        }
+        .card {
+            background-color: #1e293b;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+        h2 {
+            margin-top: 0;
+            color: #38bdf8;
+            font-size: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .form-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        input, button {
+            padding: 10px 14px;
+            border-radius: 6px;
+            border: 1px solid #334155;
+            font-size: 0.95rem;
+        }
+        input {
+            background-color: #0f172a;
+            color: #fff;
+            flex: 1;
+            min-width: 150px;
+        }
+        button {
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        .btn-primary { background-color: #0284c7; color: white; border: none; }
+        .btn-primary:hover { background-color: #0369a1; }
+        .btn-danger { background-color: #dc2626; color: white; border: none; }
+        .btn-danger:hover { background-color: #b91c1c; }
+        .btn-success { background-color: #16a34a; color: white; border: none; }
+        .btn-success:hover { background-color: #15803d; }
+        .btn-warning { background-color: #ea580c; color: white; border: none; }
+        .btn-warning:hover { background-color: #c2410c; }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            font-size: 0.95rem;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #334155;
+        }
+        th { background-color: #0f172a; color: #94a3b8; }
+        tr:hover { background-color: #273549; }
+        .badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            background-color: #16a34a;
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>🛠️ Nifty-7 Admin Command Center</h1>
 
-        <!-- Contest Governance -->
-        <div class="card">
-            <h2>🏆 Contest Management</h2>
-            <div class="flex-row">
-                <input type="text" id="newContestName" placeholder="Contest Name (e.g. IPL Special)">
-                <input type="number" id="newContestFee" placeholder="Entry Fee (₹)" style="width: 120px;">
-                <button onclick="createContest()">➕ Create Contest</button>
-            </div>
-            <br>
-            <div class="flex-row">
-                <button id="lockBtn" onclick="toggleLock()" class="btn-danger">🔒 Toggle Market Lock</button>
-                <button onclick="resetContest()" class="btn-danger">⚠️ Reset All Contests & Squads</button>
-            </div>
+<div class="container">
+    <h1>🛠️ Nifty-7 Admin Command Center</h1>
+
+    <!-- Contest Management Actions -->
+    <div class="card">
+        <h2>🏆 Contest Management</h2>
+        <div class="form-group">
+            <input type="text" id="contestName" placeholder="Contest Name (e.g. Mega League)">
+            <input type="number" id="entryFee" placeholder="Entry Fee (₹)" value="100">
+            <button class="btn-primary" onclick="createContest()">➕ Create Contest</button>
         </div>
-
-        <!-- User Wallet Management -->
-        <div class="card">
-            <h2>👥 Registered Users & Wallets</h2>
-            <button onclick="loadUsers()">🔄 Refresh User List</button>
-            <table>
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Phone Number</th>
-                        <th>Referral Code</th>
-                        <th>Wallet Balance (₹)</th>
-                        <th>Adjust Balance</th>
-                    </tr>
-                </thead>
-                <tbody id="userTableBody">
-                    <tr><td colspan="5">Loading users...</td></tr>
-                </tbody>
-            </table>
+        <div style="display: flex; gap: 10px;">
+            <button class="btn-warning" onclick="toggleMarketLock()">🔒 Toggle Market Lock</button>
+            <button class="btn-danger" onclick="resetAllContests()">⚠️ Reset All Contests & Squads</button>
         </div>
     </div>
 
-    <script>
-        const ADMIN_SECRET = "ajeet_admin_secret_99";
-        const HEADERS = {
-            "Content-Type": "application/json",
-            "x-admin-secret": ADMIN_SECRET
-        };
+    <!-- Live Active Contests Table -->
+    <div class="card">
+        <h2>📊 Active Contests Lobby & Payouts</h2>
+        <table id="contestsTable">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Contest Name</th>
+                    <th>Entry Fee</th>
+                    <th>Prize Pool</th>
+                    <th>Entries</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Contests load here dynamically -->
+            </tbody>
+        </table>
+    </div>
 
-        async function loadUsers() {
-            try {
-                const res = await fetch('/api/admin/users', { headers: HEADERS });
-                const data = await res.json();
-                const tbody = document.getElementById('userTableBody');
-                tbody.innerHTML = '';
+    <!-- User Management Table -->
+    <div class="card">
+        <h2>👥 Registered Users & Wallets</h2>
+        <button class="btn-primary" onclick="loadUsers()" style="margin-bottom: 15px;">🔄 Refresh User List</button>
+        <table id="usersTable">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Phone Number</th>
+                    <th>Referral Code</th>
+                    <th>Wallet Balance (₹)</th>
+                    <th>Adjust Balance</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Users load here dynamically -->
+            </tbody>
+        </table>
+    </div>
+</div>
 
-                if (data.success && data.users.length > 0) {
-                    data.users.forEach(u => {
-                        tbody.innerHTML += `
-                            <tr>
-                                <td>#${u.id}</td>
-                                <td><strong>${u.phone_number}</strong></td>
-                                <td>${u.referral_code}</td>
-                                <td>₹${parseFloat(u.balance).toFixed(2)}</td>
-                                <td class="flex-row">
-                                    <input type="number" id="amt_${u.id}" placeholder="Amount" style="width: 80px;">
-                                    <button class="btn-success" onclick="adjustWallet(${u.id}, 'credit')">+ Add</button>
-                                    <button class="btn-danger" onclick="adjustWallet(${u.id}, 'debit')">- Deduct</button>
-                                </td>
-                            </tr>
-                        `;
-                    });
-                } else {
-                    tbody.innerHTML = '<tr><td colspan="5">No users found.</td></tr>';
-                }
-            } catch (err) {
-                alert("Error loading users. Check if server is running.");
-            }
-        }
+<script>
+    const API_URL = window.location.origin;
+    const ADMIN_SECRET = "ajeet_admin_secret_99";
 
-        async function adjustWallet(userId, type) {
-            const amountInput = document.getElementById(`amt_${userId}`);
-            const amount = parseFloat(amountInput.value);
-            if (!amount || amount <= 0) return alert("Please enter a valid amount.");
+    const adminHeaders = {
+        'Content-Type': 'application/json',
+        'x-admin-secret': ADMIN_SECRET
+    };
 
-            try {
-                const res = await fetch('/api/admin/wallet/adjust', {
-                    method: 'POST',
-                    headers: HEADERS,
-                    body: JSON.stringify({ userId, amount, type })
-                });
-                const data = await res.json();
-                if (data.success) {
-                    alert(data.message);
-                    loadUsers();
-                } else {
-                    alert("Error: " + data.message);
-                }
-            } catch (err) {
-                alert("Wallet adjustment failed.");
-            }
-        }
-
-        async function createContest() {
-            const name = document.getElementById('newContestName').value;
-            const entryFee = document.getElementById('newContestFee').value;
-            if (!name) return alert("Please enter a contest name.");
-
-            try {
-                const res = await fetch('/api/admin/contests/create', {
-                    method: 'POST',
-                    headers: HEADERS,
-                    body: JSON.stringify({ name, entryFee })
-                });
-                const data = await res.json();
-                if (data.success) {
-                    alert(data.message);
-                    document.getElementById('newContestName').value = '';
-                    document.getElementById('newContestFee').value = '';
-                } else {
-                    alert("Error: " + data.message);
-                }
-            } catch (err) {
-                alert("Failed to create contest.");
-            }
-        }
-
-        async function toggleLock() {
-            try {
-                const res = await fetch('/api/admin/contests/toggle-lock', { method: 'POST', headers: HEADERS });
-                const data = await res.json();
-                if (data.success) {
-                    alert("Contest lock status changed to: " + (data.isLocked ? "LOCKED" : "UNLOCKED"));
-                }
-            } catch (err) {
-                alert("Failed to toggle lock.");
-            }
-        }
-
-        async function resetContest() {
-            if (!confirm("Are you sure you want to clear all squads and reset prize pools?")) return;
-            try {
-                const res = await fetch('/api/admin/contests/reset', { method: 'POST', headers: HEADERS });
-                const data = await res.json();
-                if (data.success) alert(data.message);
-            } catch (err) {
-                alert("Failed to reset contests.");
-            }
-        }
-
-        // Auto-load users on page start
+    // Load everything when page opens
+    window.onload = function() {
+        loadContests();
         loadUsers();
-    </script>
+    };
+
+    async function loadContests() {
+        try {
+            const res = await fetch(`${API_URL}/api/contests`);
+            const data = await res.json();
+            const tbody = document.querySelector('#contestsTable tbody');
+            tbody.innerHTML = '';
+
+            if(data.success) {
+                data.contests.forEach(c => {
+                    tbody.innerHTML += `
+                        <tr>
+                            <td>#${c.id}</td>
+                            <td><strong>${c.name}</strong></td>
+                            <td>₹${c.entry_fee}</td>
+                            <td>₹${c.prize_pool || '0.00'}</td>
+                            <td>${c.total_entries || 0} teams</td>
+                            <td><span class="badge">${c.status}</span></td>
+                            <td>
+                                <button class="btn-success" onclick="distributePrizes(${c.id})">🏆 Payout Winner</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            }
+        } catch(err) { console.error("Error loading contests:", err); }
+    }
+
+    async function distributePrizes(id) {
+        if(!confirm(`Are you sure you want to declare the winner and distribute payouts for Contest #${id}?`)) return;
+        try {
+            const res = await fetch(`${API_URL}/api/contests/${id}/payout`, { method: 'POST' });
+            const data = await res.json();
+            alert(data.message || "Payout processed!");
+            loadContests();
+            loadUsers();
+        } catch(err) { alert("Payout failed."); }
+    }
+
+    async function createContest() {
+        const name = document.getElementById('contestName').value;
+        const entryFee = document.getElementById('entryFee').value;
+        if(!name) return alert("Please enter a contest name.");
+
+        try {
+            const res = await fetch(`${API_URL}/api/admin/contests/create`, {
+                method: 'POST',
+                headers: adminHeaders,
+                body: JSON.stringify({ name, entryFee })
+            });
+            const data = await res.json();
+            alert(data.message);
+            loadContests();
+        } catch(err) { alert("Failed to create contest."); }
+    }
+
+    async function toggleMarketLock() {
+        try {
+            const res = await fetch(`${API_URL}/api/admin/contests/toggle-lock`, {
+                method: 'POST',
+                headers: adminHeaders
+            });
+            const data = await res.json();
+            alert(`Market lock flipped! Current Lock State: ${data.isLocked}`);
+        } catch(err) { alert("Failed to toggle lock."); }
+    }
+
+    async function resetAllContests() {
+        if(!confirm("Danger: This will delete all user squads and clear prize pools! Continue?")) return;
+        try {
+            const res = await fetch(`${API_URL}/api/admin/contests/reset`, {
+                method: 'POST',
+                headers: adminHeaders
+            });
+            const data = await res.json();
+            alert(data.message);
+            loadContests();
+        } catch(err) { alert("Reset failed."); }
+    }
+
+    async function loadUsers() {
+        try {
+            const res = await fetch(`${API_URL}/api/admin/users`, { headers: adminHeaders });
+            const data = await res.json();
+            const tbody = document.querySelector('#usersTable tbody');
+            tbody.innerHTML = '';
+
+            if(data.success) {
+                data.users.forEach(u => {
+                    tbody.innerHTML += `
+                        <tr>
+                            <td>#${u.id}</td>
+                            <td>${u.phone_number}</td>
+                            <td>${u.referral_code}</td>
+                            <td><strong>₹${u.balance}</strong></td>
+                            <td>
+                                <input type="number" id="amt-${u.id}" placeholder="Amount" style="width:70px; padding:5px;">
+                                <button class="btn-success" style="padding:5px 10px;" onclick="adjustWallet(${u.id}, 'credit')">+ Add</button>
+                                <button class="btn-danger" style="padding:5px 10px;" onclick="adjustWallet(${u.id}, 'debit')">- Deduct</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            }
+        } catch(err) { console.error("Error loading users:", err); }
+    }
+
+    async function adjustWallet(userId, type) {
+        const amount = document.getElementById(`amt-${userId}`).value;
+        if(!amount || amount <= 0) return alert("Enter a valid amount.");
+
+        try {
+            const res = await fetch(`${API_URL}/api/admin/wallet/adjust`, {
+                method: 'POST',
+                headers: adminHeaders,
+                body: JSON.stringify({ userId, amount, type })
+            });
+            const data = await res.json();
+            alert(data.message);
+            loadUsers();
+        } catch(err) { alert("Adjustment failed."); }
+    }
+</script>
 </body>
 </html>
