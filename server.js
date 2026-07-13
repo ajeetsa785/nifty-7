@@ -401,12 +401,12 @@ app.post('/api/admin/contests/reset', requireAdmin, async (req, res) => {
     try {
         if (contestId) {
             await pool.query(`DELETE FROM entries WHERE contest_id = $1;`, [contestId]);
-            await pool.query(`UPDATE contests SET prize_pool = 0.00 WHERE id = $1;`, [contestId]);
+            await pool.query(`UPDATE contests SET prize_pool = 0.00, status = 'active' WHERE id = $1;`, [contestId]);
         } else {
             await pool.query(`DELETE FROM entries;`);
-            await pool.query(`UPDATE contests SET prize_pool = 0.00;`);
+            await pool.query(`UPDATE contests SET prize_pool = 0.00, status = 'active';`);
         }
-        res.json({ success: true, message: 'Contest squads cleared and prize pool reset for new match!' });
+        res.json({ success: true, message: 'Contest squads cleared, prize pool reset, and status set to ACTIVE!' });
     } catch (err) {
         res.status(500).json({ success: false, message: 'Failed to reset contest.' });
     }
