@@ -778,42 +778,42 @@
     syncContestLobby();
     updateDashboard();
     checkSession();
-    setInterval(() => { syncContestLobby(); updateDashboard(); }, 4000);
-</script>
+    
+    // Core Application Loop: Polls Server for Leaderboard, Lobby, and Wallet Balance Every 4 Seconds
     setInterval(async () => {
-        const user = JSON.parse(localStorage.getItem('user') || '{}');
-        if (!user || !user.id) return; 
+        syncContestLobby();
+        updateDashboard();
+        
+        const user = JSON.parse(localStorage.getItem('nifty7_user') || '{}');
+        if (!user || !user.id) return;
         
         try {
-            // 1. Silently sync latest wallet payouts from the backend database
             const res = await fetch(`/api/user/${user.id}/balance`);
             const data = await res.json();
             
-            if (data.success) {
-                user.balance = data.balance;
-                localStorage.setItem('user', JSON.stringify(user));
+            if (data.success && data.balance !== undefined) {
+                user.balance = parseFloat(data.balance).toFixed(2);
+                localStorage.setItem('nifty7_user', JSON.stringify(user));
                 
-                // Update your specific top-right auth button immediately
-                const authButton = document.getElementById('authBtn');
-                if (authButton && user.phone_number) {
-                    authButton.innerText = `${user.phone_number} | ₹${parseFloat(data.balance).toFixed(2)}`;
+                const authBtn = document.getElementById('authBtn');
+                if (authBtn) {
+                    authBtn.innerHTML = `📱 ${user.phone} | <span class="wallet-amount">₹${user.balance}</span>`;
                 }
                 
-                // Update any generic balance displays if they exist on the screen
-                const balanceElements = document.querySelectorAll('#walletBalance, #userBalance, .balance-display');
-                balanceElements.forEach(el => {
-                    el.innerText = `₹${parseFloat(data.balance).toFixed(2)}`;
-                });
-            }
-            
-            // 2. Silently update leaderboard metrics if active on view screen
-            if (window.currentActiveContestId && document.getElementById('leaderboardSection')?.style.display !== 'none') {
-                if (typeof loadLeaderboard === 'function') loadLeaderboard();
+                const profileBalance = document.getElementById('profileUserBalance');
+                if (profileBalance && document.getElementById('profileModal').style.display !== 'none') {
+                    profileBalance.innerText = `₹${user.balance}`;
+                }
+                
+                const depositBalance = document.getElementById('depositModalBalance');
+                if (depositBalance && document.getElementById('depositModal').style.display !== 'none') {
+                    depositBalance.innerText = `₹${user.balance}`;
+                }
             }
         } catch (err) {
-            console.log('Background server polling active...');
+            console.log("Background balance sync waiting for connection...");
         }
-    }, 10000); // Polls every 10 seconds
+    }, 4000);
 </script>
 </body>
 </html>
