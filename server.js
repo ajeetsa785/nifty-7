@@ -512,6 +512,18 @@ cron.schedule('30 15 * * 1-5', async () => {
     console.log("🔓 [CRON ENGINE] Contest windows reset and unlocked for next match session.");
 }, { scheduled: true, timezone: "Asia/Kolkata" });
 
+// ============================================================================
+// 9. LIVE USER BALANCE SYNC API
+// ============================================================================
+app.get('/api/user/:id/balance', async (req, res) => {
+    try {
+        const result = await pool.query(`SELECT balance FROM wallets WHERE user_id = $1;`, [req.params.id]);
+        if (result.rows.length === 0) return res.status(404).json({ success: false, message: 'Wallet not found' });
+        res.json({ success: true, balance: result.rows[0].balance });
+    } catch (err) {
+        res.status(500).json({ success: false, message: 'Error fetching balance' });
+    }
+});
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
