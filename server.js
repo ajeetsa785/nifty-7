@@ -157,8 +157,8 @@ app.post('/api/request-otp', async (req, res) => {
             [phone, otp]
         );
         
-        const FAST2SMS_API_KEY = "YOUR_FAST2SMS_API_KEY_HERE";
-        const SEND_REAL_SMS = false; 
+        const FAST2SMS_API_KEY = "lNFrWOqxImkwQohcLj0Ev4MCSTXdDR38tVH9ua6ysUzBGiJeKY3MqdPItfSQa0yJVZo7NWFBOxCARm8D";
+        const SEND_REAL_SMS = true; 
 
         if (SEND_REAL_SMS && FAST2SMS_API_KEY !== "YOUR_FAST2SMS_API_KEY_HERE") {
             try {
