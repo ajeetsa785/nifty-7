@@ -90,6 +90,28 @@ async function initDatabase() {
                 total_points INT DEFAULT 0,
                 created_at TIMESTAMP DEFAULT NOW()
             );
+
+            DROP FUNCTION IF EXISTS distribute_prizes(INT);
+
+            CREATE OR REPLACE FUNCTION distribute_prizes(p_contest_id INT)
+            RETURNS VOID AS $$
+            DECLARE
+                total_pool DECIMAL(10,2);
+                winner_id INT;
+            BEGIN
+                SELECT prize_pool INTO total_pool FROM contests WHERE id = p_contest_id AND status = 'active';
+                
+                IF total_pool > 0 THEN
+                    SELECT user_id INTO winner_id FROM entries WHERE contest_id = p_contest_id ORDER BY total_points DESC LIMIT 1;
+                    
+                    IF winner_id IS NOT NULL THEN
+                        UPDATE wallets SET balance = balance + total_pool WHERE user_id = winner_id;
+                    END IF;
+                END IF;
+
+                UPDATE contests SET status = 'completed', prize_pool = 0.00 WHERE id = p_contest_id;
+            END;
+            $$ LANGUAGE plpgsql;
         `);
 
         const contestCheck = await pool.query(`SELECT COUNT(*) FROM contests;`);
@@ -103,7 +125,7 @@ async function initDatabase() {
             console.log("🏆 [DATABASE] Seeded 3 default active contests into lobby.");
         }
 
-        console.log("✅ [DATABASE] All tables (auth_otps, users, wallets, contests, entries) are verified and ready!");
+        console.log("✅ [DATABASE] All tables and payout functions are verified and ready!");
 
         await pool.query(`
             UPDATE entries 
@@ -346,16 +368,28 @@ app.post('/api/admin/wallet/adjust', requireAdmin, async (req, res) => {
 });
 
 app.post('/api/admin/contests/create', requireAdmin, async (req, res) => {
-    const { name, entryFee } = req.body;
-    if (!name) return res.status(400).json({ success: false, message: 'Contest name is required.' });
     try {
+        const name = req.body.name || req.body.contestName || req.body.contest_name;
+        const entry_fee = req.body.entryFee || req.body.entry_fee || req.body.fee || 100;
+
+        if (!name) {
+            return res.status(400).json({ success: false, message: 'Contest name is required.' });
+        }
+
+        try {
+            await pool.query("SELECT setval(pg_get_serial_sequence('contests', 'id'), COALESCE(MAX(id), 1)) FROM contests;");
+        } catch (seqError) {
+            console.log("Sequence sync check bypassed:", seqError.message);
+        }
+
         const newContest = await pool.query(
             `INSERT INTO contests (name, entry_fee, prize_pool, status) VALUES ($1, $2, 0.00, 'active') RETURNING *;`,
-            [name, parseFloat(entryFee || 100)]
+            [name, parseFloat(entry_fee)]
         );
-        res.json({ success: true, contest: newContest.rows[0], message: `Successfully created league: ${name}!` });
+        return res.json({ success: true, contest: newContest.rows[0], message: `Successfully created league: ${name}!` });
     } catch (err) {
-        res.status(500).json({ success: false, message: 'Failed to create contest.' });
+        console.error("Contest creation failed:", err);
+        return res.status(500).json({ success: false, message: 'Failed to create contest.' });
     }
 });
 
