@@ -780,5 +780,35 @@
     checkSession();
     setInterval(() => { syncContestLobby(); updateDashboard(); }, 4000);
 </script>
+<!-- 🔄 LIVE AUTO-REFRESH ENGINE (Silent Background Sync Loop) -->
+<script>
+    setInterval(async () => {
+        const user = JSON.parse(localStorage.getItem('user') || '{}');
+        if (!user || !user.id) return; 
+        
+        try {
+            // 1. Silently sync latest wallet payouts from the backend database
+            const res = await fetch(`/api/user/${user.id}/balance`);
+            const data = await res.json();
+            
+            if (data.success) {
+                user.balance = data.balance;
+                localStorage.setItem('user', JSON.stringify(user));
+                
+                const balanceElements = document.querySelectorAll('#walletBalance, #userBalance, .balance-display');
+                balanceElements.forEach(el => {
+                    el.innerText = `₹${parseFloat(data.balance).toFixed(2)}`;
+                });
+            }
+            
+            // 2. Silently update leaderboard metrics if active on view screen
+            if (window.currentActiveContestId && document.getElementById('leaderboardSection')?.style.display !== 'none') {
+                loadLeaderboard();
+            }
+        } catch (err) {
+            console.log('Background server polling active...');
+        }
+    }, 10000); // Polls every 10 seconds
+</script>
 </body>
 </html>
