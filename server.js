@@ -140,7 +140,7 @@ async function initDatabase() {
 initDatabase();
 
 // ============================================================================
-// 1. AUTHENTICATION & REAL SMS GATEWAY DISPATCH
+// 1. AUTHENTICATION & REAL SMS GATEWAY DISPATCH (NO-DLT QUICK ROUTE)
 // ============================================================================
 app.post('/api/request-otp', async (req, res) => {
     const { phone } = req.body;
@@ -163,9 +163,10 @@ app.post('/api/request-otp', async (req, res) => {
         if (SEND_REAL_SMS && FAST2SMS_API_KEY !== "YOUR_FAST2SMS_API_KEY_HERE") {
             try {
                 await axios.post("https://www.fast2sms.com/dev/bulkV2", {
-                    route: "otp",
-                    variables_values: otp,
-                    numbers: phone
+                    route: "q",
+                    message: `Your Nifty-7 verification code is: ${otp}`,
+                    numbers: phone,
+                    flash: "0"
                 }, {
                     headers: {
                         "authorization": FAST2SMS_API_KEY,
@@ -174,7 +175,9 @@ app.post('/api/request-otp', async (req, res) => {
                 });
                 console.log(`📱 [LIVE SMS GATEWAY] Real text SMS dispatched to mobile: ${phone}`);
             } catch (smsErr) {
-                console.error(`⚠️ [SMS DISPATCH FAILED]: Check API Key or balance. Fallback OTP for ${phone}: >>> ${otp} <<<`);
+                const errorDetails = smsErr.response ? JSON.stringify(smsErr.response.data) : smsErr.message;
+                console.error(`⚠️ [SMS DISPATCH FAILED]: ${errorDetails}`);
+                console.error(`Fallback OTP for ${phone}: >>> ${otp} <<<`);
             }
         } else {
             console.log(`🔑 [SIMULATED SMS GATEWAY] SEND_REAL_SMS is false. Generated random OTP for ${phone}: >>> ${otp} <<<`);
