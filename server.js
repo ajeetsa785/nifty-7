@@ -302,9 +302,19 @@ app.post('/api/contests/:id/payout', async (req, res) => {
 });
 
 // ============================================================================
-// 6. ADMIN COMMAND CENTER APIS
+// 6. ADMIN COMMAND CENTER APIS (SECURED)
 // ============================================================================
-app.get('/api/admin/users', async (req, res) => {
+const ADMIN_SECRET_KEY = "ajeet_admin_secret_99"; 
+
+const requireAdmin = (req, res, next) => {
+    const adminHeader = req.headers['x-admin-secret'];
+    if (!adminHeader || adminHeader !== ADMIN_SECRET_KEY) {
+        return res.status(403).json({ success: false, message: 'Unauthorized access denied.' });
+    }
+    next();
+};
+
+app.get('/api/admin/users', requireAdmin, async (req, res) => {
     try {
         const result = await pool.query(`
             SELECT u.id, u.phone_number, u.referral_code, u.created_at, COALESCE(w.balance, 0.00) as balance
@@ -318,7 +328,7 @@ app.get('/api/admin/users', async (req, res) => {
     }
 });
 
-app.post('/api/admin/wallet/adjust', async (req, res) => {
+app.post('/api/admin/wallet/adjust', requireAdmin, async (req, res) => {
     const { userId, amount, type } = req.body;
     try {
         const operator = type === 'debit' ? '-' : '+';
@@ -335,7 +345,7 @@ app.post('/api/admin/wallet/adjust', async (req, res) => {
     }
 });
 
-app.post('/api/admin/contests/create', async (req, res) => {
+app.post('/api/admin/contests/create', requireAdmin, async (req, res) => {
     const { name, entryFee } = req.body;
     if (!name) return res.status(400).json({ success: false, message: 'Contest name is required.' });
     try {
@@ -349,7 +359,7 @@ app.post('/api/admin/contests/create', async (req, res) => {
     }
 });
 
-app.post('/api/admin/contests/reset', async (req, res) => {
+app.post('/api/admin/contests/reset', requireAdmin, async (req, res) => {
     const { contestId } = req.body;
     try {
         if (contestId) {
@@ -365,7 +375,7 @@ app.post('/api/admin/contests/reset', async (req, res) => {
     }
 });
 
-app.post('/api/admin/contests/toggle-lock', (req, res) => {
+app.post('/api/admin/contests/toggle-lock', requireAdmin, (req, res) => {
     isContestLocked = !isContestLocked;
     console.log(`🔒 [ADMIN ACTION] Contest execution lock status manually flipped to: ${isContestLocked}`);
     res.json({ success: true, isLocked: isContestLocked });
