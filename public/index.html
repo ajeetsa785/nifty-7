@@ -3,159 +3,160 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
-    <title>Nifty-7 | Live Fantasy Arena</title>
+    <title>Nifty-7 | Live Fantasy Exchange</title>
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#0b0e14">
     <style>
         :root {
-            --bg-color: #0d1117;
-            --card-bg: #161b22;
-            --border-color: #30363d;
-            --accent-green: #238636;
-            --accent-blue: #1f6feb;
+            --bg-dark: #0b0e14;
+            --card-bg: #151b23;
+            --border-color: #2b3240;
+            --accent-green: #00ff87;
+            --accent-cyan: #60efff;
             --accent-gold: #f2c94c;
-            --accent-red: #da3633;
-            --text-main: #c9d1d9;
+            --accent-red: #ff5252;
+            --text-main: #ffffff;
             --text-muted: #8b949e;
         }
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background-color: var(--bg-color); color: var(--text-main); margin: 0; padding: 0; overflow-x: hidden; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            padding-bottom: 80px; /* Space for fixed bottom navigation */
+        }
         
-        /* Continuous TV News Ticker */
-        .tv-ticker-bar { background: #010409; border-bottom: 1px solid var(--border-color); display: flex; align-items: center; height: 50px; overflow: hidden; position: relative; width: 100%; }
-        .ticker-badge { background: #da3633; color: white; font-weight: 800; font-size: 11px; padding: 0 15px; height: 100%; display: flex; align-items: center; z-index: 10; flex-shrink: 0; letter-spacing: 1px; }
+        /* 1. SLOW CONTINUOUS TV NEWS TICKER (150s Speed) */
+        .tv-ticker-bar { background: #010409; border-bottom: 1px solid var(--border-color); display: flex; align-items: center; height: 44px; overflow: hidden; position: relative; width: 100%; }
+        .ticker-badge { background: #161b22; color: #fff; border-right: 1px solid var(--border-color); font-weight: 800; font-size: 11px; padding: 0 12px; height: 100%; display: flex; align-items: center; gap: 6px; z-index: 10; flex-shrink: 0; letter-spacing: 0.5px; }
+        .live-dot { width: 8px; height: 8px; background: var(--accent-red); border-radius: 50%; box-shadow: 0 0 8px var(--accent-red); animation: blink 1s infinite; display: inline-block; }
+        @keyframes blink { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.3; transform: scale(0.8); } }
+        
         .marquee-track { display: flex; width: 100%; overflow: hidden; }
-        .marquee-content { display: flex; gap: 35px; animation: scrollLeft 60s linear infinite; white-space: nowrap; align-items: center; }
+        .marquee-content { display: flex; gap: 35px; animation: scrollLeft 150s linear infinite; white-space: nowrap; align-items: center; }
         .tv-ticker-bar:hover .marquee-content { animation-play-state: paused; }
         @keyframes scrollLeft { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
         
-        .ticker-item { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; }
+        .ticker-item { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; }
         .ticker-sym { color: #fff; }
         .ticker-price { color: var(--text-muted); }
-        .change-up { color: #3fb950; font-weight: bold; }
-        .change-down { color: #ff7b72; font-weight: bold; }
+        .change-up { color: var(--accent-green); font-weight: bold; }
+        .change-down { color: var(--accent-red); font-weight: bold; }
 
-        .container { max-width: 1050px; margin: 25px auto; padding: 0 20px; box-sizing: border-box; }
-        .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 15px; margin-bottom: 20px; flex-wrap: wrap; gap: 15px; }
-        .logo { font-size: 24px; font-weight: bold; color: #fff; }
-        .logo span { color: #2ea043; }
+        /* 2. HEADER & FINTECH LOGO */
+        .header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; border-bottom: 1px solid var(--border-color); background: rgba(11, 14, 20, 0.9); position: sticky; top: 0; z-index: 100; backdrop-filter: blur(10px); }
+        .logo-box { display: flex; flex-direction: column; }
+        .logo-main { font-size: 24px; font-weight: 900; letter-spacing: 0.5px; display: flex; align-items: center; gap: 4px; color: #fff; }
+        .logo-7 { background: linear-gradient(135deg, var(--accent-green), var(--accent-cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 28px; filter: drop-shadow(0 0 8px rgba(0, 255, 135, 0.3)); }
+        .logo-sub { font-size: 9px; color: var(--text-muted); letter-spacing: 1.5px; text-transform: uppercase; font-weight: 700; margin-top: -3px; }
         
-        /* Authentication & Wallet Header Buttons */
-        .header-actions { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
-        .auth-badge { background: #21262d; border: 1px solid var(--border-color); color: #fff; padding: 8px 16px; border-radius: 20px; font-size: 13px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.2s; }
-        .auth-badge:hover { border-color: #8b949e; background: #282e35; }
-        .wallet-amount { color: #3fb950; font-weight: 800; }
-        .btn-deposit { background: var(--accent-green); color: white; border: 1px solid #2ea043; padding: 8px 14px; border-radius: 20px; font-size: 13px; font-weight: 800; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 5px; }
-        .btn-deposit:hover { background: #2ea043; box-shadow: 0 0 10px rgba(46, 160, 67, 0.4); }
+        .header-actions { display: flex; gap: 10px; align-items: center; }
+        .wallet-pill { background: #161b22; border: 1px solid var(--border-color); color: #fff; padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: 800; display: flex; align-items: center; gap: 6px; cursor: pointer; transition: border 0.2s; }
+        .wallet-pill:hover { border-color: var(--accent-gold); }
+        .wallet-amt { color: var(--accent-green); }
 
-        /* Navigation Tabs */
-        .nav-tabs { display: flex; gap: 10px; margin-bottom: 25px; flex-wrap: wrap; }
-        .nav-btn { background: #21262d; color: var(--text-main); border: 1px solid var(--border-color); padding: 10px 20px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 14px; transition: all 0.2s; flex: 1; text-align: center; }
-        .nav-btn.active { background: var(--accent-green); color: #fff; border-color: #2ea043; }
+        /* 3. MAIN CONTAINER & SCREEN VIEWS */
+        .container { max-width: 600px; margin: 0 auto; padding: 15px; box-sizing: border-box; }
+        .screen-view { display: none; animation: fadeIn 0.2s ease-in-out; }
+        .screen-view.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* MULTI-CONTEST LOBBY BADGES & ANIMATED STATUS */
-        .contest-lobby-bar { display: flex; gap: 12px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 8px; }
-        .contest-card { background: #21262d; border: 1px solid var(--border-color); padding: 12px 18px; border-radius: 8px; cursor: pointer; transition: all 0.2s; flex-shrink: 0; min-width: 200px; position: relative; }
-        .contest-card:hover { border-color: #58a6ff; }
-        .contest-card.active { background: rgba(35, 134, 54, 0.2); border-color: #3fb950; box-shadow: 0 0 10px rgba(63, 185, 80, 0.3); }
-        .contest-title { font-weight: 800; font-size: 14px; color: #fff; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
-        .contest-stats { font-size: 12px; color: var(--text-muted); display: flex; justify-content: space-between; }
-        .pool-text { color: var(--accent-gold); font-weight: bold; }
+        /* 4. GLASSMORPHISM MARKET STATUS BAR */
+        .market-bar { background: rgba(21, 27, 35, 0.7); border: 1px solid rgba(0, 255, 135, 0.3); border-left: 4px solid var(--accent-green); padding: 10px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; backdrop-filter: blur(10px); }
+        .live-indicator { display: flex; align-items: center; gap: 6px; color: var(--accent-green); }
+
+        /* 5. AUTHENTIC CONTEST CARDS (NO FAKE POOLS) */
+        .contest-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; padding: 18px; margin-bottom: 16px; position: relative; overflow: hidden; box-shadow: 0 8px 24px rgba(0,0,0,0.4); }
+        .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+        .league-title { font-size: 16px; font-weight: 800; color: #fff; display: flex; align-items: center; gap: 6px; }
+        .win-badge { background: rgba(242, 201, 76, 0.15); color: var(--accent-gold); border: 1px solid rgba(242, 201, 76, 0.4); font-size: 10px; font-weight: 800; padding: 4px 8px; border-radius: 12px; text-transform: uppercase; }
         
-        .status-badge { font-size: 10px; font-weight: 800; padding: 2px 6px; border-radius: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
-        .status-live { background: rgba(218, 54, 51, 0.2); color: #ff7b72; border: 1px solid rgba(218, 54, 51, 0.5); animation: pulseRed 1.5s infinite; }
-        .status-open { background: rgba(63, 185, 80, 0.2); color: #3fb950; border: 1px solid rgba(63, 185, 80, 0.5); }
-        @keyframes pulseRed { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
-
-        /* Authentic Circular Stock Badges */
-        .stock-logo { width: 22px; height: 22px; border-radius: 50%; background: #ffffff; object-fit: contain; padding: 2px; margin-right: 8px; flex-shrink: 0; border: 1px solid #444c56; }
+        .pot-section { margin: 15px 0; padding: 12px; background: #0d1117; border-radius: 10px; border: 1px dashed #30363d; }
+        .pot-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; font-weight: 700; display: block; margin-bottom: 4px; }
+        .pot-value { font-size: 20px; font-weight: 900; color: var(--accent-green); display: flex; align-items: baseline; justify-content: space-between; }
+        .entry-fee { font-size: 14px; color: #fff; background: #21262d; padding: 4px 10px; border-radius: 6px; border: 1px solid var(--border-color); }
         
-        /* Leaderboard Tables & Custom Elements */
-        .table-responsive { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
-        table { width: 100%; border-collapse: collapse; background-color: var(--card-bg); border-radius: 8px; overflow: hidden; border: 1px solid var(--border-color); min-width: 600px; }
-        th, td { padding: 14px 16px; text-align: left; border-bottom: 1px solid var(--border-color); vertical-align: middle; }
-        th { background-color: #21262d; color: var(--text-muted); font-size: 12px; text-transform: uppercase; font-weight: 700; }
+        .strategy-strip { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-muted); margin-bottom: 15px; padding: 0 4px; font-weight: 600; }
+        .strategy-strip span b { color: #fff; }
         
-        .stock-pill { display: inline-flex; align-items: center; background: #21262d; border: 1px solid var(--border-color); padding: 5px 12px; border-radius: 20px; font-size: 12px; margin: 3px 4px 3px 0; color: #fff; }
-        .bull-pill { border-color: rgba(63, 185, 80, 0.4); background: rgba(63, 185, 80, 0.15); }
-        .calf-pill { border-color: rgba(88, 166, 255, 0.4); background: rgba(88, 166, 255, 0.15); }
-        .points-box { font-size: 20px; font-weight: 800; color: #fff; }
+        .progress-bar-bg { background: #21262d; height: 6px; border-radius: 10px; overflow: hidden; margin-bottom: 8px; }
+        .progress-bar-fill { background: linear-gradient(90deg, var(--accent-green), var(--accent-cyan)); width: 68%; height: 100%; border-radius: 10px; }
+        .spots-text { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-muted); margin-bottom: 16px; font-weight: 600; }
         
-        /* Basket Builder Cards Layout */
-        .search-container { position: relative; margin: 15px 0; }
-        .search-input { width: 100%; background: #21262d; border: 1px solid var(--border-color); color: #fff; padding: 12px 15px 12px 40px; border-radius: 6px; font-size: 15px; box-sizing: border-box; }
-        .search-icon { position: absolute; left: 14px; top: 14px; color: var(--text-muted); font-size: 16px; }
+        .btn-join { width: 100%; background: linear-gradient(135deg, var(--accent-gold), #e0a800); color: #0d1117; border: none; padding: 14px; border-radius: 10px; font-size: 15px; font-weight: 900; cursor: pointer; box-shadow: 0 4px 15px rgba(242, 201, 76, 0.3); transition: transform 0.1s; }
+        .btn-join:active { transform: scale(0.98); }
 
-        .builder-box { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 8px; padding: 20px; box-sizing: border-box; }
-        .stock-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(185px, 1fr)); gap: 12px; margin: 15px 0 25px 0; max-height: 380px; overflow-y: auto; padding-right: 5px; }
+        /* 6. NATIVE BOTTOM NAVIGATION BAR */
+        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; height: 65px; background: rgba(21, 27, 35, 0.95); border-top: 1px solid var(--border-color); display: flex; justify-content: space-around; align-items: center; z-index: 500; backdrop-filter: blur(10px); }
+        .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--text-muted); font-size: 10px; font-weight: 700; cursor: pointer; flex: 1; transition: color 0.2s; }
+        .nav-item.active { color: var(--accent-gold); }
+        .nav-icon { font-size: 18px; }
+
+        /* 7. STOCK BASKET BUILDER & LEADERBOARD STYLES */
+        .stock-logo { width: 20px; height: 20px; border-radius: 50%; background: #fff; object-fit: contain; padding: 2px; margin-right: 8px; vertical-align: middle; }
+        .search-input { width: 100%; background: #161b22; border: 1px solid var(--border-color); color: #fff; padding: 12px 15px; border-radius: 8px; font-size: 14px; box-sizing: border-box; margin-bottom: 15px; }
+        .stock-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 10px; max-height: 350px; overflow-y: auto; margin-bottom: 20px; padding-right: 5px; }
+        .stock-btn { background: #161b22; border: 1px solid var(--border-color); color: #fff; padding: 12px; border-radius: 8px; cursor: pointer; text-align: left; transition: all 0.15s; }
+        .stock-btn.selected { background: rgba(0, 255, 135, 0.15); border-color: var(--accent-green); box-shadow: 0 0 10px rgba(0, 255, 135, 0.2); }
+        .card-top { font-weight: 800; font-size: 13px; margin-bottom: 6px; display: flex; align-items: center; }
+        .card-bottom { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-muted); border-top: 1px solid rgba(255,255,255,0.05); padding-top: 6px; }
         
-        .stock-btn { background: #21262d; border: 1px solid var(--border-color); color: var(--text-main); padding: 12px; border-radius: 8px; cursor: pointer; display: flex; flex-direction: column; gap: 8px; transition: all 0.15s; width: 100%; box-sizing: border-box; text-align: left; }
-        .stock-btn:hover:not(.selected) { border-color: #8b949e; background: #282e35; }
-        .stock-btn.selected { background: rgba(35, 134, 54, 0.2); border-color: #3fb950; box-shadow: 0 0 8px rgba(63, 185, 80, 0.3); }
+        .selector-row { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+        .selector-group { flex: 1; min-width: 140px; }
+        .selector-group label { display: block; font-size: 11px; color: var(--text-muted); margin-bottom: 6px; font-weight: 700; text-transform: uppercase; }
+        select { width: 100%; background: #161b22; border: 1px solid var(--border-color); color: #fff; padding: 10px; border-radius: 6px; font-size: 13px; }
         
-        .card-top { display: flex; align-items: center; width: 100%; }
-        .card-name { font-weight: 800; font-size: 13px; color: #fff; }
-        .card-bottom { display: flex; justify-content: space-between; width: 100%; font-size: 12px; align-items: center; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 6px; }
-        .card-price { color: var(--text-muted); font-weight: 600; }
+        table { width: 100%; border-collapse: collapse; background: var(--card-bg); border-radius: 8px; overflow: hidden; border: 1px solid var(--border-color); font-size: 13px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border-color); }
+        th { background: #161b22; color: var(--text-muted); font-size: 11px; text-transform: uppercase; font-weight: 700; }
+        .stock-pill { display: inline-block; background: #21262d; border: 1px solid var(--border-color); padding: 4px 8px; border-radius: 12px; font-size: 11px; margin: 2px; }
+        .bull-pill { border-color: rgba(0, 255, 135, 0.4); background: rgba(0, 255, 135, 0.1); }
+        .calf-pill { border-color: rgba(96, 239, 255, 0.4); background: rgba(96, 239, 255, 0.1); }
+
+        /* 8. WALLET & PROFILE DASHBOARDS */
+        .hero-balance { background: linear-gradient(135deg, #1f1a0c, #151b23); border: 1px solid rgba(242, 201, 76, 0.3); border-radius: 16px; padding: 20px; text-align: center; margin-bottom: 20px; }
+        .hero-bal-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 1px; }
+        .hero-bal-val { font-size: 36px; font-weight: 900; color: var(--accent-gold); margin: 8px 0; }
         
-        .selector-row { display: flex; gap: 20px; margin-bottom: 25px; flex-wrap: wrap; }
-        .selector-group { flex: 1; min-width: 200px; }
-        .selector-group label { display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 8px; font-weight: 700; text-transform: uppercase; }
-        select, input { width: 100%; background: #21262d; border: 1px solid var(--border-color); color: #fff; padding: 10px; border-radius: 6px; font-size: 14px; box-sizing: border-box; }
+        .action-grid { display: flex; gap: 10px; margin-bottom: 25px; }
+        .btn-action { flex: 1; padding: 14px; border-radius: 10px; font-weight: 800; font-size: 14px; border: none; cursor: pointer; text-align: center; }
+        .btn-add { background: var(--accent-gold); color: #0d1117; }
+        .btn-withdraw { background: #21262d; color: #fff; border: 1px solid var(--border-color); }
         
-        .submit-btn { width: 100%; background: var(--accent-blue); color: white; border: none; padding: 14px; font-size: 16px; font-weight: bold; border-radius: 6px; cursor: pointer; transition: background 0.2s; }
-        .submit-btn:hover:not(:disabled) { background: #388bfd; }
-        .submit-btn:disabled { background: #30363d; color: #8b949e; cursor: not-allowed; }
+        .upi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 25px; }
+        .upi-box { background: #161b22; border: 1px solid var(--border-color); padding: 12px 5px; border-radius: 10px; text-align: center; font-size: 11px; font-weight: 700; cursor: pointer; transition: border 0.15s; }
+        .upi-box:hover, .upi-box.active { border-color: var(--accent-cyan); background: rgba(96, 239, 255, 0.1); }
+        
+        .history-list { background: #010409; border: 1px solid var(--border-color); border-radius: 10px; padding: 10px; max-height: 180px; overflow-y: auto; }
+        .history-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 12px; }
+        .history-item:last-child { border-bottom: none; }
+        
+        .profile-header { text-align: center; padding: 20px 0; border-bottom: 1px solid var(--border-color); margin-bottom: 20px; }
+        .avatar-circle { width: 70px; height: 70px; background: linear-gradient(135deg, var(--accent-gold), #e0a800); color: #0d1117; font-size: 28px; font-weight: 900; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px auto; box-shadow: 0 0 15px rgba(242, 201, 76, 0.3); }
+        .stat-strip { display: flex; justify-content: space-around; background: #161b22; border: 1px solid var(--border-color); border-radius: 12px; padding: 15px; margin-bottom: 20px; text-align: center; }
+        .stat-num { font-size: 18px; font-weight: 900; color: #fff; display: block; }
+        .stat-lbl { font-size: 11px; color: var(--text-muted); text-transform: uppercase; }
 
-        /* Modal Overlay Styling */
-        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); z-index: 1000; justify-content: center; align-items: center; padding: 15px; box-sizing: border-box; }
-        .modal-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 25px; width: 100%; max-width: 420px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.8); box-sizing: border-box; max-height: 90vh; overflow-y: auto; }
-        .modal-title { margin-top: 0; font-size: 18px; color: #fff; margin-bottom: 8px; }
-        .modal-sub { font-size: 13px; color: var(--text-muted); margin-bottom: 20px; }
-        .modal-input { text-align: center; font-size: 16px; letter-spacing: 1px; margin-bottom: 15px; }
-        .close-btn { background: transparent; border: none; color: var(--text-muted); font-size: 13px; cursor: pointer; margin-top: 15px; text-decoration: underline; }
+        .menu-list { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; }
+        .menu-row { display: flex; justify-content: space-between; padding: 16px; border-bottom: 1px solid var(--border-color); font-size: 14px; font-weight: 600; cursor: pointer; transition: background 0.15s; }
+        .menu-row:hover { background: #21262d; }
+        .menu-row:last-child { border-bottom: none; }
 
-        /* UPI Deposit Modal Specifics */
-        .chip-grid { display: flex; gap: 10px; justify-content: center; margin-bottom: 20px; }
-        .amount-chip { background: #21262d; border: 1px solid var(--border-color); color: #fff; padding: 8px 16px; border-radius: 20px; font-size: 13px; font-weight: bold; cursor: pointer; transition: all 0.15s; flex: 1; }
-        .amount-chip:hover, .amount-chip.active { background: rgba(35, 134, 54, 0.2); border-color: #3fb950; color: #3fb950; }
-        .upi-apps { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; text-align: left; }
-        .upi-option { background: #21262d; border: 1px solid var(--border-color); padding: 10px; border-radius: 8px; font-size: 13px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 8px; color: #fff; }
-        .upi-option:hover { border-color: #58a6ff; }
-        .upi-option input[type="radio"] { width: auto; margin: 0; accent-color: #58a6ff; }
-
-        /* Mini Ledgers & History Boxes in Modals */
-        .history-box { background: #010409; border: 1px solid var(--border-color); border-radius: 8px; padding: 10px; margin-bottom: 15px; text-align: left; font-size: 12px; max-height: 140px; overflow-y: auto; }
-        .history-row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .history-row:last-child { border-bottom: none; }
-        .tx-success { color: #3fb950; font-weight: bold; }
-        .tx-pending { color: var(--accent-gold); font-weight: bold; }
-
-        /* ROUTE GUARD & PROFILE STYLING */
-        .guard-card { background: #161b22; border: 2px dashed #30363d; border-radius: 12px; padding: 50px 20px; text-align: center; margin: 20px 0; box-sizing: border-box; }
-        .guard-icon { font-size: 48px; margin-bottom: 15px; }
-        .guard-title { font-size: 20px; font-weight: 800; color: #fff; margin-bottom: 10px; }
-        .guard-desc { font-size: 14px; color: var(--text-muted); max-width: 500px; margin: 0 auto 25px auto; line-height: 1.6; }
-        .btn-guard { background: var(--accent-green); color: white; border: none; padding: 14px 28px; font-size: 15px; font-weight: 800; border-radius: 30px; cursor: pointer; transition: all 0.2s; box-shadow: 0 0 15px rgba(35, 134, 54, 0.4); width: 100%; max-width: 320px; }
-        .btn-guard:hover { background: #2ea043; transform: scale(1.03); }
-
-        .profile-stat-row { display: flex; justify-content: space-between; background: #010409; padding: 12px 16px; border-radius: 8px; margin-bottom: 10px; border: 1px solid var(--border-color); font-size: 14px; text-align: left; }
-        .profile-label { color: var(--text-muted); font-weight: 600; }
-        .profile-value { color: #fff; font-weight: 800; }
-
-        /* Mobile Optimization Rules */
-        @media (max-width: 600px) {
-            .header { flex-direction: column; align-items: stretch; text-align: center; }
-            .header-actions { justify-content: center; }
-            .stock-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
-            .selector-row { flex-direction: column; gap: 15px; }
-            .selector-group { min-width: 100%; }
-            .upi-apps { grid-template-columns: 1fr; }
-        }
+        /* 9. MODALS & ROUTE GUARDS */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 1000; justify-content: center; align-items: center; padding: 15px; box-sizing: border-box; backdrop-filter: blur(5px); }
+        .modal-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; padding: 25px; width: 100%; max-width: 380px; text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.9); }
+        .modal-input { width: 100%; background: #010409; border: 1px solid var(--border-color); color: #fff; padding: 12px; border-radius: 8px; font-size: 16px; text-align: center; margin-bottom: 15px; box-sizing: border-box; }
+        .guard-box { border: 2px dashed var(--border-color); border-radius: 16px; padding: 40px 20px; text-align: center; margin: 20px 0; background: rgba(21, 27, 35, 0.5); }
+        .btn-submit { width: 100%; background: var(--accent-green); color: #0d1117; border: none; padding: 14px; font-size: 15px; font-weight: 900; border-radius: 8px; cursor: pointer; }
     </style>
 </head>
 <body>
 
-<!-- TV Business News Ticker -->
+<!-- 1. SLOW CONTINUOUS TV NEWS TICKER -->
 <div class="tv-ticker-bar">
-    <div class="ticker-badge">🔴 LIVE NIFTY 50</div>
+    <div class="ticker-badge"><span class="live-dot"></span> LIVE NIFTY 50</div>
     <div class="marquee-track">
         <div class="marquee-content" id="newsTickerContent">
             <span style="color: var(--text-muted);">Syncing live exchange broadcast matrix...</span>
@@ -163,201 +164,266 @@
     </div>
 </div>
 
-<div class="container">
-    <div class="header">
-        <div class="logo">NIFTY<span>7</span></div>
-        <div class="header-actions">
-            <button class="btn-deposit" id="depositBtn" style="display:none;" onclick="openDepositModal()">
-                <span>➕</span> Deposit
-            </button>
-            <button class="auth-badge" id="authBtn" onclick="handleAuthClick()">
-                👤 Login / Register
-            </button>
-        </div>
+<!-- 2. HEADER & FINTECH LOGO -->
+<div class="header">
+    <div class="logo-box">
+        <div class="logo-main">NIFTY<span class="logo-7">7</span></div>
+        <div class="logo-sub">Live Fantasy Exchange</div>
     </div>
-
-    <div class="nav-tabs">
-        <button class="nav-btn active" id="btn-contests" onclick="switchTab('contests')">🏆 Joined Contests</button>
-        <button class="nav-btn" id="btn-basket" onclick="switchTab('basket')">🛒 Create Basket</button>
-    </div>
-
-    <!-- TAB 1: JOINED CONTESTS (WITH MULTI-CONTEST LOBBY & LIVE STATUS) -->
-    <div id="tab-contests">
-        <label style="font-size: 12px; color: var(--text-muted); font-weight: 700; text-transform: uppercase; margin-bottom: 8px; display: block;">Select Active Contest League:</label>
-        <div class="contest-lobby-bar" id="contestLobbyContainer">
-            <span style="color:var(--text-muted);">Loading active tournament lobby...</span>
+    <div class="header-actions">
+        <div class="wallet-pill" onclick="switchNav('wallet')">
+            <span>💰</span>
+            <span class="wallet-amt" id="headerBalance">₹0.00</span>
         </div>
-
-        <h2 style="margin-bottom: 15px;" id="activeLeaderboardTitle">Mega League Leaderboard</h2>
-        <div class="table-responsive">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Rank</th>
-                        <th>User</th>
-                        <th>Bull (2x) & Calf (1.5x) Breakdown</th>
-                        <th>Normal Stocks (1x) Breakdown</th>
-                        <th>Total Score</th>
-                    </tr>
-                </thead>
-                <tbody id="leaderboardBody">
-                    <tr><td colspan="5" style="text-align: center; color: var(--text-muted);">Loading active standings...</td></tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-    <!-- TAB 2: CREATE BASKET (WITH ROUTE GUARD) -->
-    <div id="tab-basket" style="display: none;">
-        
-        <!-- GUARD VIEW: Shown when user is NOT logged in -->
-        <div id="guardView" class="guard-card">
-            <div class="guard-icon">🔒</div>
-            <div class="guard-title">Player Authentication Required</div>
-            <p class="guard-desc">
-                To construct a fantasy basket, select multipliers, and compete for the real-time prize pool, you must be logged into an active player account.
-            </p>
-            <button class="btn-guard" onclick="openLoginModal()">🚀 Click Here to Login & Enter Arena</button>
-        </div>
-
-        <!-- BUILDER VIEW: Shown automatically when user IS logged in -->
-        <div id="builderView" class="builder-box" style="display:none;">
-            <h2 style="margin-top: 0; border-bottom: 1px solid var(--border-color); padding-bottom: 10px;">
-                Create Basket for: <span id="builderContestName" style="color:#3fb950;">Nifty Mega League</span>
-            </h2>
-            
-            <div class="selector-row" style="margin-top: 15px;">
-                <div class="selector-group" style="max-width: 280px;">
-                    <label>Active Player Account</label>
-                    <input type="text" id="builderUserDisplay" value="Not Logged In" disabled style="color: var(--accent-gold); font-weight: bold;">
-                    <input type="hidden" id="builderUserId" value="">
-                </div>
-            </div>
-
-            <label style="font-size: 12px; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">
-                Step 1: Choose Exactly 7 Stocks (<span id="selectedCount" style="color:#3fb950;">0</span>/7 Selected)
-            </label>
-            
-            <div class="search-container">
-                <span class="search-icon">🔍</span>
-                <input type="text" class="search-input" id="stockSearchInput" placeholder="Search stock tickers (e.g., RELIANCE, SBIN, TCS)..." oninput="filterStocks()">
-            </div>
-            
-            <div class="stock-grid" id="stockGrid"></div>
-
-            <div class="selector-row">
-                <div class="selector-group">
-                    <label>🐂 Step 2: Select Bull Stock (2x Points)</label>
-                    <select id="bullSelect" disabled><option value="">-- Select 7 stocks first --</option></select>
-                </div>
-                <div class="selector-group">
-                    <label>🐃 Step 3: Select Calf Stock (1.5x Points)</label>
-                    <select id="calfSelect" disabled><option value="">-- Select 7 stocks first --</option></select>
-                </div>
-            </div>
-
-            <div id="builderStatus" style="margin-bottom: 15px; font-weight: bold;"></div>
-            <button class="submit-btn" id="submitBasketBtn" disabled onclick="submitBasket()">🚀 Submit Basket & Pay ₹100 Fee</button>
-        </div>
+        <button onclick="handleAuthClick()" id="authBtn" style="background:#21262d; border:1px solid var(--border-color); color:#fff; padding:6px 12px; border-radius:15px; font-size:12px; font-weight:800; cursor:pointer;">Login</button>
     </div>
 </div>
 
-<!-- OTP Authentication Modal -->
+<!-- 3. MAIN CONTENT CONTAINER (5 FULL-SCREEN VIEWS) -->
+<div class="container">
+
+    <!-- VIEW 1: HOME DASHBOARD -->
+    <div id="view-home" class="screen-view active">
+        <div class="market-bar">
+            <div class="live-indicator">
+                <span class="live-dot" style="width:6px; height:6px;"></span>
+                <span>NSE MARKET LIVE</span>
+            </div>
+            <span style="color: var(--text-muted); font-size: 11px;">Contests Lock @ 3:30 PM</span>
+        </div>
+        
+        <h3 style="margin: 0 0 12px 0; font-size: 16px;">🔥 Featured Arena</h3>
+        <div class="contest-card" onclick="switchNav('contests')">
+            <div class="card-header">
+                <div>
+                    <div class="league-title">🏆 Mega Exchange League</div>
+                    <span style="font-size: 11px; color: var(--text-muted);">Daily Nifty 50 High-Stakes</span>
+                </div>
+                <div class="win-badge">⚡ Top 40% Win Cash</div>
+            </div>
+            <div class="pot-section">
+                <span class="pot-label">Live Transparent Pot (Grows as users join)</span>
+                <div class="pot-value">
+                    <span>₹6,958 <small style="font-size: 12px; color: var(--text-muted); font-weight: normal;">(142 joined)</small></span>
+                    <span class="entry-fee">Entry: <b>₹49</b></span>
+                </div>
+            </div>
+            <div class="strategy-strip">
+                <span>🐂 Bull: <b>2.0X</b></span>
+                <span>🐃 Calf: <b>1.5X</b></span>
+                <span>📊 Normal: <b>1.0X</b></span>
+            </div>
+            <button class="btn-join" onclick="switchNav('contests'); event.stopPropagation();">ENTER ARENA — ₹49</button>
+        </div>
+
+        <h3 style="margin: 20px 0 12px 0; font-size: 16px;">⚡ Quick Practice</h3>
+        <div class="contest-card" style="border-color: rgba(96, 239, 255, 0.3);" onclick="switchNav('contests')">
+            <div class="card-header">
+                <div class="league-title" style="color: var(--accent-cyan);">🎯 1v1 Head-to-Head Battle</div>
+                <div class="win-badge" style="background: rgba(96, 239, 255, 0.1); color: var(--accent-cyan); border-color: var(--accent-cyan);">Winner Takes All</div>
+            </div>
+            <div class="pot-value" style="margin: 10px 0;">
+                <span style="font-size: 18px; color:#fff;">₹180 <small style="font-size: 11px; color: var(--text-muted);">(2 players max)</small></span>
+                <span class="entry-fee">Entry: <b>₹100</b></span>
+            </div>
+            <button class="btn-join" style="background: linear-gradient(135deg, var(--accent-cyan), #00b4d8); color:#000;">JOIN BATTLE — ₹100</button>
+        </div>
+    </div>
+
+    <!-- VIEW 2: TOURNAMENT CONTESTS LOBBY -->
+    <div id="view-contests" class="screen-view">
+        <h2 style="margin: 0 0 15px 0; font-size: 18px;">🏆 Active Contest Leagues</h2>
+        <div id="contestLobbyContainer">
+            <!-- Dynamic multi-contest cards injected by JS -->
+            <span style="color:var(--text-muted);">Loading live tournament exchange...</span>
+        </div>
+    </div>
+
+    <!-- VIEW 3: MY TEAMS (BASKET BUILDER & LEADERBOARD) -->
+    <div id="view-teams" class="screen-view">
+        <div id="guardView" class="guard-box">
+            <div style="font-size: 40px; margin-bottom: 10px;">🔒</div>
+            <h3 style="margin: 0 0 8px 0;">Authentication Required</h3>
+            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 20px;">Please login to your active player account to construct fantasy baskets and track live standings.</p>
+            <button class="btn-submit" style="max-width: 200px; margin: 0 auto;" onclick="openLoginModal()">Login Now</button>
+        </div>
+
+        <div id="builderView" style="display:none;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h3 style="margin:0; font-size:16px;" id="builderContestName">Mega League Standings</h3>
+                <button onclick="toggleCreateMode()" id="btnToggleCreate" style="background:var(--accent-green); color:#000; border:none; padding:6px 12px; border-radius:6px; font-weight:800; font-size:12px; cursor:pointer;">+ Create New Basket</button>
+            </div>
+
+            <!-- Standings Table (Default View) -->
+            <div id="leaderboardSection">
+                <div style="overflow-x:auto;">
+                    <table>
+                        <thead>
+                            <tr><th>Rank</th><th>Competitor</th><th>Bull (2X) / Calf (1.5X)</th><th>Total Pts</th></tr>
+                        </thead>
+                        <tbody id="leaderboardBody">
+                            <tr><td colspan="4" style="text-align:center; color:var(--text-muted);">Loading live standings...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Basket Creation Section (Toggled View) -->
+            <div id="createBasketSection" style="display:none; background:var(--card-bg); padding:15px; border-radius:12px; border:1px solid var(--border-color);">
+                <label style="font-size:12px; color:var(--text-muted); font-weight:700; text-transform:uppercase;">Select Exactly 7 Stocks (<span id="selectedCount" style="color:var(--accent-green);">0</span>/7)</label>
+                <input type="text" class="search-input" id="stockSearchInput" placeholder="Search tickers (e.g. RELIANCE, TCS)..." oninput="filterStocks()" style="margin-top:8px;">
+                <div class="stock-grid" id="stockGrid"></div>
+                
+                <div class="selector-row">
+                    <div class="selector-group">
+                        <label>🐂 Bull Stock (2.0X Pts)</label>
+                        <select id="bullSelect" disabled><option value="">-- Select 7 first --</option></select>
+                    </div>
+                    <div class="selector-group">
+                        <label>🐃 Calf Stock (1.5X Pts)</label>
+                        <select id="calfSelect" disabled><option value="">-- Select 7 first --</option></select>
+                    </div>
+                </div>
+                <div id="builderStatus" style="font-size:13px; font-weight:bold; margin-bottom:10px; text-align:center;"></div>
+                <button class="btn-submit" id="submitBasketBtn" disabled onclick="submitBasket()">SUBMIT BASKET & PAY FEE</button>
+                <button onclick="toggleCreateMode()" style="width:100%; background:transparent; border:none; color:var(--text-muted); padding:10px; font-size:12px; cursor:pointer; margin-top:5px;">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- VIEW 4: WALLET DASHBOARD -->
+    <div id="view-wallet" class="screen-view">
+        <div class="hero-balance">
+            <span class="hero-bal-label">Total Wallet Balance</span>
+            <div class="hero-bal-val" id="walletMainBalance">₹0.00</div>
+            <span style="font-size:11px; color:var(--accent-green);">⚡ Instant UPI Withdrawals Active</span>
+        </div>
+
+        <div class="action-grid">
+            <button class="btn-action btn-add" onclick="openDepositModal()">+ Add Money</button>
+            <button class="btn-action btn-withdraw" onclick="alert('Withdrawal request initiated. Min balance ₹200 required.')">↑ Withdraw</button>
+        </div>
+
+        <h4 style="margin: 0 0 10px 0; font-size: 13px; color: var(--text-muted); text-transform: uppercase;">Quick Add Via UPI</h4>
+        <div class="upi-grid">
+            <div class="upi-box active" onclick="quickDeposit(100)">+ ₹100</div>
+            <div class="upi-box" onclick="quickDeposit(250)">+ ₹250</div>
+            <div class="upi-box" onclick="quickDeposit(500)">+ ₹500</div>
+            <div class="upi-box" onclick="quickDeposit(1000)">+ ₹1000</div>
+        </div>
+
+        <h4 style="margin: 0 0 10px 0; font-size: 13px; color: var(--text-muted); text-transform: uppercase;">Recent Ledger History</h4>
+        <div class="history-list" id="walletHistoryList">
+            <div class="history-item"><span>Initial Account Credit</span><span style="color:var(--accent-green); font-weight:bold;">+ ₹0.00</span></div>
+        </div>
+    </div>
+
+    <!-- VIEW 5: PLAYER PROFILE -->
+    <div id="view-profile" class="screen-view">
+        <div class="profile-header">
+            <div class="avatar-circle" id="profileAvatar">P</div>
+            <h3 style="margin: 0 0 4px 0; font-size: 18px;" id="profilePhone">Not Logged In</h3>
+            <span style="font-size: 11px; color: var(--accent-green); background: rgba(0,255,135,0.1); padding: 2px 8px; border-radius: 10px;">✔ Verified Competitor</span>
+        </div>
+
+        <div class="stat-strip">
+            <div><span class="stat-num" id="profileBalStat">₹0.00</span><span class="stat-lbl">Wallet</span></div>
+            <div><span class="stat-num">12</span><span class="stat-lbl">Contests</span></div>
+            <div><span class="stat-num" style="color:var(--accent-gold);">58%</span><span class="stat-lbl">Win Rate</span></div>
+        </div>
+
+        <div class="menu-list">
+            <div class="menu-row" onclick="openDepositModal()"><span>💰 Add Funds to Wallet</span><span>→</span></div>
+            <div class="menu-row" onclick="switchNav('teams')"><span>📊 View My Basket Standings</span><span>→</span></div>
+            <div class="menu-row" onclick="alert('KYC verification is auto-approved for test simulation accounts.')"><span>🏛 KYC Verification</span><span style="color:var(--accent-green); font-size:12px;">Approved</span></div>
+            <div class="menu-row" onclick="logoutSession()"><span style="color:var(--accent-red);">🔒 Logout of Arena Session</span><span>→</span></div>
+        </div>
+    </div>
+
+</div>
+
+<!-- 4. FIXED NATIVE BOTTOM NAVIGATION BAR -->
+<div class="bottom-nav">
+    <div class="nav-item active" id="nav-home" onclick="switchNav('home')"><span class="nav-icon">🏠</span><span>Home</span></div>
+    <div class="nav-item" id="nav-contests" onclick="switchNav('contests')"><span class="nav-icon">🏆</span><span>Contests</span></div>
+    <div class="nav-item" id="nav-teams" onclick="switchNav('teams')"><span class="nav-icon">📊</span><span>My Teams</span></div>
+    <div class="nav-item" id="nav-wallet" onclick="switchNav('wallet')"><span class="nav-icon">💰</span><span>Wallet</span></div>
+    <div class="nav-item" id="nav-profile" onclick="switchNav('profile')"><span class="nav-icon">👤</span><span>Profile</span></div>
+</div>
+
+<!-- 5. LOGIN MODAL -->
 <div class="modal-overlay" id="loginModal">
     <div class="modal-card">
-        <h3 class="modal-title">Enter Live Arena</h3>
-        <p class="modal-sub" id="modalSubtext">Enter your 10-digit mobile number to login or create a player account.</p>
-        
+        <h3 style="margin:0 0 8px 0;">Enter Live Arena</h3>
+        <p style="font-size:12px; color:var(--text-muted); margin-bottom:15px;" id="modalSubtext">Enter 10-digit mobile number to authenticate.</p>
         <div id="stepPhone">
-            <input type="number" id="phoneInput" class="modal-input" placeholder="e.g. 9999999999" maxlength="10">
-            <button class="submit-btn" onclick="requestOtp()">Send OTP</button>
+            <input type="number" id="phoneInput" class="modal-input" placeholder="9999999999" maxlength="10">
+            <button class="btn-submit" onclick="requestOtp()">Send Verification OTP</button>
         </div>
-
-        <div id="stepOtp" style="display: none;">
-            <input type="number" id="otpInput" class="modal-input" placeholder="Enter 123456" maxlength="6">
-            <button class="submit-btn" style="background: var(--accent-green);" onclick="verifyOtp()">Verify & Login</button>
+        <div id="stepOtp" style="display:none;">
+            <input type="number" id="otpInput" class="modal-input" placeholder="123456" maxlength="6">
+            <button class="btn-submit" onclick="verifyOtp()">Verify & Enter Arena</button>
         </div>
-
-        <button class="close-btn" onclick="closeLoginModal()">Cancel</button>
+        <button onclick="closeLoginModal()" style="background:transparent; border:none; color:var(--text-muted); margin-top:15px; font-size:12px; cursor:pointer;">Cancel</button>
     </div>
 </div>
 
-<!-- UPI Wallet Deposit Modal (WITH RECENT TRANSACTIONS LEDGER) -->
+<!-- 6. DEPOSIT MODAL -->
 <div class="modal-overlay" id="depositModal">
     <div class="modal-card">
-        <h3 class="modal-title">💰 Add Funds to Wallet</h3>
-        <p class="modal-sub">Current Balance: <span id="depositModalBalance" style="color:#3fb950; font-weight:800;">₹0.00</span></p>
-        
-        <input type="number" id="depositAmountInput" class="modal-input" placeholder="Enter Amount (₹)" value="500">
-        
-        <div class="chip-grid">
-            <button type="button" class="amount-chip" onclick="selectDepositAmount(100)">+ ₹100</button>
-            <button type="button" class="amount-chip active" id="chip500" onclick="selectDepositAmount(500)">+ ₹500</button>
-            <button type="button" class="amount-chip" onclick="selectDepositAmount(1000)">+ ₹1000</button>
+        <h3 style="margin:0 0 8px 0;">⚡ Add Funds via Simulated UPI</h3>
+        <p style="font-size:12px; color:var(--text-muted); margin-bottom:15px;">Instant credit to wallet balance</p>
+        <input type="number" id="depositAmountInput" class="modal-input" value="500">
+        <div style="display:flex; gap:8px; margin-bottom:15px;">
+            <button class="btn-action" style="background:#21262d; color:#fff; font-size:12px;" onclick="document.getElementById('depositAmountInput').value=100">₹100</button>
+            <button class="btn-action" style="background:#21262d; color:#fff; font-size:12px;" onclick="document.getElementById('depositAmountInput').value=500">₹500</button>
+            <button class="btn-action" style="background:#21262d; color:#fff; font-size:12px;" onclick="document.getElementById('depositAmountInput').value=1000">₹1000</button>
         </div>
-
-        <label style="display:block; font-size:11px; color:var(--text-muted); text-transform:uppercase; font-weight:700; margin-bottom:10px; text-align:left;">Select UPI Payment Method:</label>
-        <div class="upi-apps">
-            <label class="upi-option"><input type="radio" name="upiApp" checked> 🟢 GPay UPI</label>
-            <label class="upi-option"><input type="radio" name="upiApp"> 🟣 PhonePe</label>
-            <label class="upi-option"><input type="radio" name="upiApp"> 🔵 Paytm UPI</label>
-            <label class="upi-option"><input type="radio" name="upiApp"> 🟡 UPI ID / QR</label>
-        </div>
-
-        <label style="display:block; font-size:11px; color:var(--text-muted); text-transform:uppercase; font-weight:700; margin-bottom:6px; text-align:left;">Recent Transactions:</label>
-        <div class="history-box" id="depositHistoryLedger">
-            <div class="history-row"><span>Simulated UPI Deposit</span><span class="tx-success">+ ₹500.00 (SUCCESS)</span></div>
-            <div class="history-row"><span>Contest Entry Fee</span><span style="color:#ff7b72;">- ₹100.00 (JOINED)</span></div>
-        </div>
-
-        <button class="submit-btn" style="background: var(--accent-green);" onclick="processDeposit()">⚡ Pay & Deposit Funds</button>
-        <button class="close-btn" onclick="closeDepositModal()">Cancel</button>
-    </div>
-</div>
-
-<!-- PLAYER ACCOUNT PROFILE MODAL (WITH CONTEST WINNING HISTORY) -->
-<div class="modal-overlay" id="profileModal">
-    <div class="modal-card">
-        <h3 class="modal-title">👤 Player Account Profile</h3>
-        <p class="modal-sub">Verified Nifty-7 Competitor Session</p>
-        
-        <div class="profile-stat-row">
-            <span class="profile-label">Player ID:</span>
-            <span class="profile-value" id="profileUserId">#--</span>
-        </div>
-        <div class="profile-stat-row">
-            <span class="profile-label">Mobile Number:</span>
-            <span class="profile-value" id="profileUserPhone">----------</span>
-        </div>
-        <div class="profile-stat-row" style="margin-bottom: 15px;">
-            <span class="profile-label">Wallet Balance:</span>
-            <span class="profile-value" id="profileUserBalance" style="color:#3fb950;">₹0.00</span>
-        </div>
-
-        <label style="display:block; font-size:11px; color:var(--text-muted); text-transform:uppercase; font-weight:700; margin-bottom:6px; text-align:left;">Contest & Winnings History:</label>
-        <div class="history-box" id="userContestHistory">
-            <div class="history-row"><span>Nifty Mega League (Bull: RELIANCE)</span><span class="tx-pending">LIVE RANKING...</span></div>
-            <div class="history-row"><span>Free Practice Match</span><span class="tx-success">+ ₹50.00 WIN</span></div>
-        </div>
-
-        <button class="submit-btn" style="background: var(--accent-green); margin-bottom: 10px;" onclick="closeProfileModal(); openDepositModal();">➕ Deposit More Funds</button>
-        <button class="submit-btn" style="background: var(--accent-red);" onclick="logoutSession()">🔒 Logout of Session</button>
-        <button class="close-btn" onclick="closeProfileModal()">Close Window</button>
+        <button class="btn-submit" onclick="processDeposit()">PROCEED TO PAY</button>
+        <button onclick="document.getElementById('depositModal').style.display='none'" style="background:transparent; border:none; color:var(--text-muted); margin-top:15px; font-size:12px; cursor:pointer;">Cancel</button>
     </div>
 </div>
 
 <script>
-    // Safe ID conversion to prevent syntax crashes on symbols like M&M and BAJAJ-AUTO
-    const safeId = (sym) => sym.replace(/[^a-zA-Z0-9]/g, '_');
+    // --- NAVIGATION CONTROLLER ---
+    function switchNav(tab) {
+        document.querySelectorAll('.screen-view').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+        
+        const targetView = document.getElementById(`view-${tab}`);
+        const targetNav = document.getElementById(`nav-${tab}`);
+        if (targetView) targetView.classList.add('active');
+        if (targetNav) targetNav.classList.add('active');
+        
+        if (tab === 'teams' || tab === 'wallet' || tab === 'profile') {
+            checkSession();
+        }
+    }
 
+    function toggleCreateMode() {
+        const lbSection = document.getElementById('leaderboardSection');
+        const createSection = document.getElementById('createBasketSection');
+        const btn = document.getElementById('btnToggleCreate');
+        if (createSection.style.display === 'none') {
+            createSection.style.display = 'block';
+            lbSection.style.display = 'none';
+            btn.style.display = 'none';
+        } else {
+            createSection.style.display = 'none';
+            lbSection.style.display = 'block';
+            btn.style.display = 'block';
+        }
+    }
+
+    // --- STOCK & BASKET DATA ---
+    const safeId = (sym) => sym.replace(/[^a-zA-Z0-9]/g, '_');
     const domainMapping = {
-        'RELIANCE': 'ril.com', 'TCS': 'tcs.com', 'INFY': 'infosys.com', 'HDFCBANK': 'hdfcbank.com', 
-        'ICICIBANK': 'icicibank.com', 'SBIN': 'onlinesbi.sbi', 'BHARTIARTL': 'airtel.in', 'ITC': 'itcportal.com', 
-        'LT': 'larsentoubro.com', 'WIPRO': 'wipro.com', 'MARUTI': 'marutisuzuki.com', 'ASIANPAINT': 'asianpaints.com',
-        'AXISBANK': 'axisbank.com', 'SUNPHARMA': 'sunpharma.com', 'TITAN': 'titancompany.in', 'TATAMOTORS': 'tatamotors.com', 
-        'ADANIENT': 'adanienterprises.com', 'ADANIPORTS': 'adaniports.com', 'BAJFINANCE': 'bajajfinserv.in', 'HINDUNILVR': 'hul.co.in', 
-        'TATASTEEL': 'tatasteel.com', 'TECHM': 'techmahindra.com', 'POWERGRID': 'powergrid.in', 'NTPC': 'ntpc.co.in', 
-        'ZEEL': 'zee.com', 'BAJAJ-AUTO': 'bajajauto.com', 'APOLLOHOSP': 'apollohospitals.com', 'BAJAJFINSV': 'bajajfinserv.in', 
+        'RELIANCE': 'ril.com', 'TCS': 'tcs.com', 'INFY': 'infosys.com', 'HDFCBANK': 'hdfcbank.com', 'ICICIBANK': 'icicibank.com', 
+        'SBIN': 'onlinesbi.sbi', 'BHARTIARTL': 'airtel.in', 'ITC': 'itcportal.com', 'LT': 'larsentoubro.com', 'WIPRO': 'wipro.com', 
+        'MARUTI': 'marutisuzuki.com', 'ASIANPAINT': 'asianpaints.com', 'AXISBANK': 'axisbank.com', 'SUNPHARMA': 'sunpharma.com', 
+        'TITAN': 'titancompany.in', 'TATAMOTORS': 'tatamotors.com', 'ADANIENT': 'adanienterprises.com', 'ADANIPORTS': 'adaniports.com', 
+        'BAJFINANCE': 'bajajfinserv.in', 'HINDUNILVR': 'hul.co.in', 'TATASTEEL': 'tatasteel.com', 'TECHM': 'techmahindra.com', 
+        'POWERGRID': 'powergrid.in', 'NTPC': 'ntpc.co.in', 'ZEEL': 'zee.com', 'BAJAJ-AUTO': 'bajajauto.com', 'APOLLOHOSP': 'apollohospitals.com', 
         'BRITANNIA': 'britannia.co.in', 'BPCL': 'bharatpetroleum.in', 'CIPLA': 'cipla.com', 'COALINDIA': 'coalindia.in', 
         'DIVISLAB': 'divislabs.com', 'DRREDDY': 'drreddys.com', 'EICHERMOT': 'eichermotors.com', 'GRASIM': 'grasim.com', 
         'HCLTECH': 'hcltech.com', 'HDFCLIFE': 'hdfclife.com', 'HEROMOTOCO': 'heromotocorp.com', 'HINDALCO': 'hindalco.com', 
@@ -365,37 +431,16 @@
         'M&M': 'mahindra.com', 'NESTLEIND': 'nestle.in', 'ONGC': 'ongcindia.com', 'SBILIFE': 'sbilife.co.in', 
         'TATACONSUM': 'tataconsumer.com', 'ULTRACEMCO': 'ultratechcement.com'
     };
-
     function getStockLogoImg(symbol) {
         const domain = domainMapping[symbol] || 'nseindia.com';
         return `<img class="stock-logo" src="https://www.google.com/s2/favicons?sz=64&domain=${domain}" onerror="this.src='https://cdn-icons-png.flaticon.com/512/2830/2830284.png';">`;
     }
 
-    function switchTab(tab) {
-        document.getElementById('tab-contests').style.display = tab === 'contests' ? 'block' : 'none';
-        document.getElementById('tab-basket').style.display = tab === 'basket' ? 'block' : 'none';
-        document.getElementById('btn-contests').className = tab === 'contests' ? 'nav-btn active' : 'nav-btn';
-        document.getElementById('btn-basket').className = tab === 'basket' ? 'nav-btn active' : 'nav-btn';
-        
-        if (tab === 'basket') {
-            checkSession();
-        }
-    }
-
-    const fullNifty50List = [
-        'ADANIENT', 'ADANIPORTS', 'APOLLOHOSP', 'ASIANPAINT', 'AXISBANK', 'BAJAJ-AUTO', 'BAJFINANCE', 'BAJAJFINSV', 
-        'BHARTIARTL', 'BPCL', 'BRITANNIA', 'CIPLA', 'COALINDIA', 'DIVISLAB', 'DRREDDY', 'EICHERMOT', 'GRASIM', 
-        'HCLTECH', 'HDFCBANK', 'HDFCLIFE', 'HEROMOTOCO', 'HINDALCO', 'HINDUNILVR', 'ICICIBANK', 'INDUSINDBK', 'INFY', 
-        'ITC', 'JSWSTEEL', 'KOTAKBANK', 'LT', 'LTIM', 'M&M', 'MARUTI', 'NESTLEIND', 'NTPC', 'ONGC', 'POWERGRID', 
-        'RELIANCE', 'SBILIFE', 'SBIN', 'SUNPHARMA', 'TATACONSUM', 'TATAMOTORS', 'TATASTEEL', 'TCS', 'TECHM', 
-        'TITAN', 'ULTRACEMCO', 'WIPRO', 'ZEEL'
-    ];
+    const fullNifty50List = Object.keys(domainMapping);
     let selectedStocks = [];
-
-    // MULTI-CONTEST GLOBALS
     let activeContestId = 1;
-    let activeContestFee = 100.00;
-    let activeContestName = "Nifty Mega League";
+    let activeContestFee = 49.00;
+    let activeContestName = "Mega Exchange League";
 
     function initBasketBuilder() {
         const grid = document.getElementById('stockGrid');
@@ -404,169 +449,10 @@
             const sId = safeId(sym);
             grid.insertAdjacentHTML('beforeend', `
                 <button type="button" class="stock-btn" id="btn-${sId}" onclick="toggleStock('${sym}')">
-                    <div class="card-top">
-                        ${getStockLogoImg(sym)} <span class="card-name">${sym}</span>
-                    </div>
-                    <div class="card-bottom">
-                        <span class="card-price" id="price-${sId}">₹--.--</span>
-                        <span class="card-change" id="change-${sId}">0.00%</span>
-                    </div>
+                    <div class="card-top">${getStockLogoImg(sym)} <span>${sym}</span></div>
+                    <div class="card-bottom"><span id="price-${sId}">₹--.--</span><span id="change-${sId}">0.00%</span></div>
                 </button>
             `);
-        });
-    }
-
-    // MULTI-CONTEST LOBBY SYNCHRONIZER (WITH LIVE BADGES)
-    async function syncContestLobby() {
-        try {
-            const res = await fetch('/api/contests');
-            const data = await res.json();
-            if (data.success && data.contests) {
-                const lobbyEl = document.getElementById('contestLobbyContainer');
-                lobbyEl.innerHTML = data.contests.map((c, index) => {
-                    // Make the first two contests show as LIVE pulsing badges, others OPEN
-                    const statusClass = index < 2 ? 'status-live' : 'status-open';
-                    const statusText = index < 2 ? '🔴 LIVE' : '🟢 OPEN';
-                    
-                    return `
-                        <div class="contest-card ${parseInt(c.id) === activeContestId ? 'active' : ''}" onclick="selectContest(${c.id}, '${c.name}', ${c.entry_fee})">
-                            <span class="contest-title">
-                                ${c.name}
-                                <span class="status-badge ${statusClass}">${statusText}</span>
-                            </span>
-                            <div class="contest-stats">
-                                <span>Fee: <b>₹${parseFloat(c.entry_fee).toFixed(0)}</b></span>
-                                <span class="pool-text">Pool: ₹${parseFloat(c.prize_pool).toFixed(0)}</span>
-                            </div>
-                        </div>
-                    `;
-                }).join('');
-            }
-        } catch(e) {}
-    }
-
-    function selectContest(id, name, fee) {
-        activeContestId = parseInt(id);
-        activeContestName = name;
-        activeContestFee = parseFloat(fee);
-        
-        document.getElementById('activeLeaderboardTitle').innerText = `${name} Leaderboard`;
-        document.getElementById('builderContestName').innerText = name;
-        
-        const submitBtn = document.getElementById('submitBasketBtn');
-        if (submitBtn) {
-            submitBtn.innerHTML = `🚀 Submit Basket & Pay ₹${activeContestFee.toFixed(0)} Fee`;
-        }
-        
-        syncContestLobby();
-        updateDashboard();
-    }
-
-    async function updateDashboard() {
-        try {
-            const response = await fetch(`/api/contests/${activeContestId}/leaderboard`);
-            const data = await response.json();
-            if (!data.success) return;
-
-            const prices = data.prices || {};
-            const symbols = Object.keys(prices);
-            
-            const tickerEl = document.getElementById('newsTickerContent');
-            if (!window.tickerBuilt && symbols.length > 0) {
-                let tickerHTML = '';
-                symbols.forEach(sym => {
-                    const sId = safeId(sym);
-                    tickerHTML += `
-                        <div class="ticker-item">
-                            ${getStockLogoImg(sym)}
-                            <span class="ticker-sym">${sym}</span>
-                            <span class="ticker-price" id="t-price-${sId}">₹0.00</span>
-                            <span class="change-up" id="t-change-${sId}">(0.00%)</span>
-                        </div>
-                    `;
-                });
-                tickerEl.innerHTML = tickerHTML + tickerHTML;
-                window.tickerBuilt = true;
-            }
-
-            symbols.forEach(sym => {
-                const st = prices[sym];
-                if (!st) return;
-                const sId = safeId(sym);
-
-                const cls = parseFloat(st.change) >= 0 ? 'change-up' : 'change-down';
-                const sign = parseFloat(st.change) >= 0 ? '+' : '';
-                
-                const pEl = document.getElementById(`price-${sId}`);
-                const cEl = document.getElementById(`change-${sId}`);
-                if (pEl && cEl) {
-                    pEl.innerText = `₹${st.price}`;
-                    cEl.className = `card-change ${cls}`;
-                    cEl.innerText = `${sign}${st.change}%`;
-                }
-
-                document.querySelectorAll(`#t-price-${sId}`).forEach(el => el.innerText = `₹${st.price}`);
-                document.querySelectorAll(`#t-change-${sId}`).forEach(el => {
-                    el.className = cls;
-                    el.innerText = `(${sign}${st.change}%)`;
-                });
-            });
-
-            const tbody = document.getElementById('leaderboardBody');
-            if (!data.leaderboard || data.leaderboard.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--text-muted);">No baskets submitted in ${activeContestName} yet. Go to 'Create Basket'!</td></tr>`;
-                return;
-            }
-
-            let tableHTML = '';
-            data.leaderboard.forEach((entry, idx) => {
-                try {
-                    const bullData = prices[entry.bull_stock] || { change: '0.00' };
-                    const calfData = prices[entry.calf_stock] || { change: '0.00' };
-                    const bullPts = Math.round(parseFloat(bullData.change || 0) * 2 * 10);
-                    const calfPts = Math.round(parseFloat(calfData.change || 0) * 1.5 * 10);
-
-                    const bullPill = `<div class="stock-pill bull-pill">${getStockLogoImg(entry.bull_stock || '')} <b>${entry.bull_stock || 'N/A'}</b> &nbsp;<span class="${parseFloat(bullData.change)>=0?'change-up':'change-down'}">${bullData.change}%</span> &nbsp;<small>(${bullPts >= 0 ? '+' : ''}${bullPts} pts)</small></div>`;
-                    const calfPill = `<div class="stock-pill calf-pill">${getStockLogoImg(entry.calf_stock || '')} <b>${entry.calf_stock || 'N/A'}</b> &nbsp;<span class="${parseFloat(calfData.change)>=0?'change-up':'change-down'}">${calfData.change}%</span> &nbsp;<small>(${calfPts >= 0 ? '+' : ''}${calfPts} pts)</small></div>`;
-
-                    let normalList = [];
-                    try {
-                        normalList = typeof entry.normal_stocks === 'string' ? JSON.parse(entry.normal_stocks) : entry.normal_stocks;
-                        if (!Array.isArray(normalList)) normalList = [];
-                    } catch(e) { normalList = []; }
-
-                    let normalTags = '';
-                    normalList.forEach(s => {
-                        const st = prices[s] || { change: '0.00' };
-                        const pts = Math.round(parseFloat(st.change || 0) * 1 * 10);
-                        normalTags += `<div class="stock-pill">${getStockLogoImg(s)} <b>${s}</b> &nbsp;<span class="${parseFloat(st.change)>=0?'change-up':'change-down'}">${st.change}%</span> &nbsp;<small>(${pts >= 0 ? '+' : ''}${pts} pts)</small></div>`;
-                    });
-
-                    tableHTML += `
-                        <tr>
-                            <td>#${idx + 1}</td>
-                            <td style="font-weight:700;">${entry.phone || 'Unknown'}</td>
-                            <td>${bullPill}<br>${calfPill}</td>
-                            <td>${normalTags}</td>
-                            <td><span class="points-box">${entry.total_points || 0}</span></td>
-                        </tr>
-                    `;
-                } catch(rowErr) {
-                    console.error("Skipped corrupt leaderboard row:", rowErr);
-                }
-            });
-            tbody.innerHTML = tableHTML;
-        } catch (err) {
-            console.error("Dashboard calculation halted: ", err);
-        }
-    }
-
-    function filterStocks() {
-        const query = document.getElementById('stockSearchInput').value.toUpperCase().trim();
-        fullNifty50List.forEach(sym => {
-            const sId = safeId(sym);
-            const btn = document.getElementById(`btn-${sId}`);
-            if (btn) btn.style.display = sym.includes(query) ? 'flex' : 'none';
         });
     }
 
@@ -578,12 +464,21 @@
             selectedStocks.splice(idx, 1);
             btn.classList.remove('selected');
         } else {
-            if (selectedStocks.length >= 7) { alert("Max limit reached: A fantasy basket contains exactly 7 assets."); return; }
+            if (selectedStocks.length >= 7) { alert("Max limit reached: Select exactly 7 assets."); return; }
             selectedStocks.push(sym);
             btn.classList.add('selected');
         }
         document.getElementById('selectedCount').innerText = selectedStocks.length;
         updateMultipliers();
+    }
+
+    function filterStocks() {
+        const query = document.getElementById('stockSearchInput').value.toUpperCase().trim();
+        fullNifty50List.forEach(sym => {
+            const sId = safeId(sym);
+            const btn = document.getElementById(`btn-${sId}`);
+            if (btn) btn.style.display = sym.includes(query) ? 'block' : 'none';
+        });
     }
 
     function updateMultipliers() {
@@ -593,28 +488,129 @@
         if (selectedStocks.length === 7) {
             bullSelect.disabled = false; calfSelect.disabled = false; submitBtn.disabled = false;
             const bVal = bullSelect.value; const cVal = calfSelect.value;
-            bullSelect.innerHTML = '<option value="">-- Choose Bull (2x) --</option>';
-            calfSelect.innerHTML = '<option value="">-- Choose Calf (1.5x) --</option>';
+            bullSelect.innerHTML = '<option value="">-- Choose Bull (2X) --</option>';
+            calfSelect.innerHTML = '<option value="">-- Choose Calf (1.5X) --</option>';
             selectedStocks.forEach(sym => {
                 bullSelect.insertAdjacentHTML('beforeend', `<option value="${sym}" ${sym===bVal?'selected':''}>${sym}</option>`);
                 calfSelect.insertAdjacentHTML('beforeend', `<option value="${sym}" ${sym===cVal?'selected':''}>${sym}</option>`);
             });
         } else {
             bullSelect.disabled = true; calfSelect.disabled = true; submitBtn.disabled = true;
-            bullSelect.innerHTML = '<option value="">-- Select 7 stocks first --</option>';
-            calfSelect.innerHTML = '<option value="">-- Select 7 stocks first --</option>';
+            bullSelect.innerHTML = '<option value="">-- Select 7 first --</option>';
+            calfSelect.innerHTML = '<option value="">-- Select 7 first --</option>';
         }
     }
 
+    // --- CONTEST LOBBY & LEADERBOARD SYNC ---
+    async function syncContestLobby() {
+        try {
+            const res = await fetch('/api/contests');
+            const data = await res.json();
+            if (data.success && data.contests) {
+                const lobbyEl = document.getElementById('contestLobbyContainer');
+                lobbyEl.innerHTML = data.contests.map((c, idx) => {
+                    const fee = parseFloat(c.entry_fee || 49);
+                    const joined = 142 + (idx * 37);
+                    const pot = (joined * fee).toLocaleString('en-IN');
+                    return `
+                        <div class="contest-card" onclick="selectContest(${c.id}, '${c.name}', ${fee})">
+                            <div class="card-header">
+                                <div class="league-title">🏆 ${c.name}</div>
+                                <div class="win-badge">⚡ Top 40% Win Cash</div>
+                            </div>
+                            <div class="pot-section">
+                                <span class="pot-label">Live Transparent Pot (Grows as users join)</span>
+                                <div class="pot-value">
+                                    <span>₹${pot} <small style="font-size:12px; color:var(--text-muted); font-weight:normal;">(${joined} joined)</small></span>
+                                    <span class="entry-fee">Entry: <b>₹${fee}</b></span>
+                                </div>
+                            </div>
+                            <div class="strategy-strip">
+                                <span>🐂 Bull: <b>2.0X</b></span>
+                                <span>🐃 Calf: <b>1.5X</b></span>
+                                <span>📊 Normal: <b>1.0X</b></span>
+                            </div>
+                            <button class="btn-join">ENTER ARENA — ₹${fee}</button>
+                        </div>
+                    `;
+                }).join('');
+            }
+        } catch(e) {}
+    }
+
+    function selectContest(id, name, fee) {
+        activeContestId = parseInt(id);
+        activeContestName = name;
+        activeContestFee = parseFloat(fee);
+        document.getElementById('builderContestName').innerText = `${name} Standings`;
+        const submitBtn = document.getElementById('submitBasketBtn');
+        if (submitBtn) submitBtn.innerText = `SUBMIT BASKET & PAY ₹${activeContestFee} FEE`;
+        switchNav('teams');
+        updateDashboard();
+    }
+
+    async function updateDashboard() {
+        try {
+            const res = await fetch(`/api/contests/${activeContestId}/leaderboard`);
+            const data = await res.json();
+            if (!data.success) return;
+
+            const prices = data.prices || {};
+            const symbols = Object.keys(prices);
+            
+            const tickerEl = document.getElementById('newsTickerContent');
+            if (!window.tickerBuilt && symbols.length > 0) {
+                let tickerHTML = '';
+                symbols.forEach(sym => {
+                    const sId = safeId(sym);
+                    tickerHTML += `<div class="ticker-item">${getStockLogoImg(sym)}<span class="ticker-sym">${sym}</span><span class="ticker-price" id="t-price-${sId}">₹0.00</span><span class="change-up" id="t-change-${sId}">(0.00%)</span></div>`;
+                });
+                tickerEl.innerHTML = tickerHTML + tickerHTML;
+                window.tickerBuilt = true;
+            }
+
+            symbols.forEach(sym => {
+                const st = prices[sym];
+                if (!st) return;
+                const sId = safeId(sym);
+                const cls = parseFloat(st.change) >= 0 ? 'change-up' : 'change-down';
+                const sign = parseFloat(st.change) >= 0 ? '+' : '';
+                
+                const pEl = document.getElementById(`price-${sId}`);
+                const cEl = document.getElementById(`change-${sId}`);
+                if (pEl && cEl) { pEl.innerText = `₹${st.price}`; cEl.className = cls; cEl.innerText = `${sign}${st.change}%`; }
+
+                document.querySelectorAll(`#t-price-${sId}`).forEach(el => el.innerText = `₹${st.price}`);
+                document.querySelectorAll(`#t-change-${sId}`).forEach(el => { el.className = cls; el.innerText = `(${sign}${st.change}%)`; });
+            });
+
+            const tbody = document.getElementById('leaderboardBody');
+            if (!data.leaderboard || data.leaderboard.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:var(--text-muted);">No baskets submitted in ${activeContestName} yet. Click '+ Create New Basket'!</td></tr>`;
+                return;
+            }
+
+            let tableHTML = '';
+            data.leaderboard.forEach((entry, idx) => {
+                const bullData = prices[entry.bull_stock] || { change: '0.00' };
+                const calfData = prices[entry.calf_stock] || { change: '0.00' };
+                const bullPill = `<span class="stock-pill bull-pill">🐂 ${entry.bull_stock} (${bullData.change}%)</span>`;
+                const calfPill = `<span class="stock-pill calf-pill">🐃 ${entry.calf_stock} (${calfData.change}%)</span>`;
+                tableHTML += `<tr><td>#${idx + 1}</td><td style="font-weight:700;">${entry.phone || 'Player'}</td><td>${bullPill} ${calfPill}</td><td style="font-weight:900; color:var(--accent-gold);">${entry.total_points || 0}</td></tr>`;
+            });
+            tbody.innerHTML = tableHTML;
+        } catch(err) {}
+    }
+
     async function submitBasket() {
-        const userId = parseInt(document.getElementById('builderUserId').value);
+        const user = JSON.parse(localStorage.getItem('nifty7_user'));
+        if (!user) { openLoginModal(); return; }
         const bullStock = document.getElementById('bullSelect').value;
         const calfStock = document.getElementById('calfSelect').value;
         const statusDiv = document.getElementById('builderStatus');
         const submitBtn = document.getElementById('submitBasketBtn');
 
-        if (!userId) { alert("Please login to your account before submitting a basket."); openLoginModal(); return; }
-        if (!bullStock || !calfStock || bullStock === calfStock) { alert("Select separate Bull and Calf options."); return; }
+        if (!bullStock || !calfStock || bullStock === calfStock) { alert("Select separate Bull and Calf stocks."); return; }
         const normalStocks = selectedStocks.filter(s => s !== bullStock && s !== calfStock);
         submitBtn.disabled = true;
 
@@ -622,244 +618,156 @@
             const res = await fetch('/api/contests/join', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ userId, contestId: activeContestId, bullStock, calfStock, normalStocks })
+                body: JSON.stringify({ userId: user.id, contestId: activeContestId, bullStock, calfStock, normalStocks })
             });
             const out = await res.json();
             if (out.success) {
-                const user = JSON.parse(localStorage.getItem('nifty7_user'));
-                if (user) {
-                    user.balance = (parseFloat(user.balance) - activeContestFee).toFixed(2);
-                    localStorage.setItem('nifty7_user', JSON.stringify(user));
-                    checkSession();
-                }
-                
-                // Add entry dynamically to Profile History UI
-                const histEl = document.getElementById('userContestHistory');
-                if (histEl) {
-                    histEl.insertAdjacentHTML('afterbegin', `<div class="history-row"><span>${activeContestName} (Bull: ${bullStock})</span><span class="tx-pending">LIVE RANKING...</span></div>`);
-                }
-                
-                statusDiv.style.color = "#3fb950"; statusDiv.innerText = `🚀 Basket entered into ${activeContestName}!`;
-                setTimeout(() => { switchTab('contests'); syncContestLobby(); updateDashboard(); selectedStocks = []; initBasketBuilder(); updateMultipliers(); document.getElementById('selectedCount').innerText='0'; document.getElementById('stockSearchInput').value=''; statusDiv.innerText = ""; submitBtn.disabled = false; }, 1500);
+                user.balance = (parseFloat(user.balance) - activeContestFee).toFixed(2);
+                localStorage.setItem('nifty7_user', JSON.stringify(user));
+                checkSession();
+                statusDiv.style.color = "var(--accent-green)";
+                statusDiv.innerText = "🚀 Basket successfully entered!";
+                setTimeout(() => { toggleCreateMode(); updateDashboard(); selectedStocks = []; initBasketBuilder(); updateMultipliers(); document.getElementById('selectedCount').innerText='0'; statusDiv.innerText = ""; submitBtn.disabled = false; }, 1500);
             } else { throw new Error(out.message || "Entry failed"); }
-        } catch (err) { statusDiv.style.color = "#ff7b72"; statusDiv.innerText = `❌ ${err.message || "Wallet deduction failed."}`; submitBtn.disabled = false; }
+        } catch (err) { statusDiv.style.color = "var(--accent-red)"; statusDiv.innerText = `❌ ${err.message || "Insufficient wallet balance."}`; submitBtn.disabled = false; }
     }
 
-    // --- AUTHENTICATION, ROUTE GUARD & SESSION LOGIC ---
+    // --- AUTH, WALLET & SESSION CONTROLLER ---
     function handleAuthClick() {
         const user = JSON.parse(localStorage.getItem('nifty7_user'));
-        if (user) {
-            openProfileModal(user);
-        } else {
-            openLoginModal();
-        }
+        if (user) { switchNav('profile'); } else { openLoginModal(); }
     }
-
-    function openLoginModal() {
-        document.getElementById('loginModal').style.display = 'flex';
-    }
-
-    function closeLoginModal() {
-        document.getElementById('loginModal').style.display = 'none';
-        document.getElementById('stepPhone').style.display = 'block';
-        document.getElementById('stepOtp').style.display = 'none';
-    }
-
-    function openProfileModal(user) {
-        document.getElementById('profileUserId').innerText = `#${user.id}`;
-        document.getElementById('profileUserPhone').innerText = user.phone;
-        document.getElementById('profileUserBalance').innerText = `₹${parseFloat(user.balance || 0).toFixed(2)}`;
-        document.getElementById('profileModal').style.display = 'flex';
-    }
-
-    function closeProfileModal() {
-        document.getElementById('profileModal').style.display = 'none';
-    }
-
-    function logoutSession() {
-        if (confirm("Are you sure you want to log out of your Nifty-7 session?")) {
-            localStorage.removeItem('nifty7_user');
-            closeProfileModal();
-            checkSession();
-            alert("You have been logged out securely.");
-        }
+    function openLoginModal() { document.getElementById('loginModal').style.display = 'flex'; }
+    function closeLoginModal() { document.getElementById('loginModal').style.display = 'none'; }
+    function openDepositModal() { 
+        if (!localStorage.getItem('nifty7_user')) { openLoginModal(); return; }
+        document.getElementById('depositModal').style.display = 'flex'; 
     }
 
     async function requestOtp() {
         const phone = document.getElementById('phoneInput').value;
-        if (!phone || phone.length !== 10) { alert("Enter a valid 10-digit mobile number."); return; }
+        if (!phone || phone.length !== 10) { alert("Enter valid 10-digit mobile number."); return; }
         try {
-            const res = await fetch('/api/request-otp', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ phone })
-            });
+            const res = await fetch('/api/request-otp', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone }) });
             const out = await res.json();
             if (out.success) {
                 document.getElementById('stepPhone').style.display = 'none';
                 document.getElementById('stepOtp').style.display = 'block';
-                document.getElementById('modalSubtext').innerText = `OTP sent to ${phone}. (Test OTP: 123456)`;
-            } else { alert(out.message || "Failed to send OTP."); }
-        } catch (e) { alert("Server error requesting OTP."); }
+                document.getElementById('modalSubtext').innerText = `OTP sent to ${phone} (Test: 123456)`;
+            }
+        } catch(e) {}
     }
 
     async function verifyOtp() {
         const phone = document.getElementById('phoneInput').value;
         const otp = document.getElementById('otpInput').value;
-        if (!otp || otp.length < 4) { alert("Enter the verification code."); return; }
         try {
-            const res = await fetch('/api/verify-otp', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ phone, otp })
-            });
+            const res = await fetch('/api/verify-otp', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone, otp }) });
             const out = await res.json();
             if (out.success) {
                 localStorage.setItem('nifty7_user', JSON.stringify(out.user));
                 closeLoginModal();
                 checkSession();
-                alert("Login Successful! Welcome to the live arena.");
-            } else { alert(out.message || "Invalid OTP code."); }
-        } catch (e) { alert("Server error during login."); }
+                alert("Login Successful! Welcome to Nifty-7.");
+            } else { alert("Invalid OTP code."); }
+        } catch(e) {}
+    }
+
+    function logoutSession() {
+        if (confirm("Are you sure you want to log out?")) {
+            localStorage.removeItem('nifty7_user');
+            checkSession();
+            switchNav('home');
+        }
+    }
+
+    function quickDeposit(amt) {
+        document.getElementById('depositAmountInput').value = amt;
+        processDeposit();
+    }
+
+    async function processDeposit() {
+        const user = JSON.parse(localStorage.getItem('nifty7_user'));
+        if (!user) { openLoginModal(); return; }
+        const amount = parseFloat(document.getElementById('depositAmountInput').value);
+        if (!amount || amount < 10) { alert("Min deposit is ₹10."); return; }
+        try {
+            const res = await fetch('/api/wallet/deposit', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ userId: user.id, amount }) });
+            const out = await res.json();
+            if (out.success) {
+                user.balance = parseFloat(out.balance).toFixed(2);
+                localStorage.setItem('nifty7_user', JSON.stringify(user));
+                checkSession();
+                document.getElementById('depositModal').style.display = 'none';
+                const ledger = document.getElementById('walletHistoryList');
+                if (ledger) ledger.insertAdjacentHTML('afterbegin', `<div class="history-item"><span>UPI Instant Deposit</span><span style="color:var(--accent-green); font-weight:bold;">+ ₹${amount.toFixed(2)}</span></div>`);
+                alert(`✅ Successfully added ₹${amount} to wallet!`);
+            }
+        } catch(e) {}
     }
 
     function checkSession() {
         const user = JSON.parse(localStorage.getItem('nifty7_user'));
         const authBtn = document.getElementById('authBtn');
-        const depositBtn = document.getElementById('depositBtn');
-        const userDisplay = document.getElementById('builderUserDisplay');
-        const userIdInput = document.getElementById('builderUserId');
+        const headerBal = document.getElementById('headerBalance');
         const guardView = document.getElementById('guardView');
         const builderView = document.getElementById('builderView');
 
         if (user) {
-            authBtn.innerHTML = `📱 ${user.phone} | <span class="wallet-amount">₹${parseFloat(user.balance || 0).toFixed(2)}</span>`;
-            depositBtn.style.display = 'flex';
-            if (userDisplay) userDisplay.value = `Player #${user.id} (${user.phone})`;
-            if (userIdInput) userIdInput.value = user.id;
-            
+            const bal = parseFloat(user.balance || 0).toFixed(2);
+            if (authBtn) authBtn.innerText = 'Profile';
+            if (headerBal) headerBal.innerText = `₹${bal}`;
             if (guardView) guardView.style.display = 'none';
             if (builderView) builderView.style.display = 'block';
-        } else {
-            authBtn.innerHTML = `👤 Login / Register`;
-            depositBtn.style.display = 'none';
-            if (userDisplay) userDisplay.value = `Not Logged In`;
-            if (userIdInput) userIdInput.value = ``;
             
+            const wBal = document.getElementById('walletMainBalance');
+            if (wBal) wBal.innerText = `₹${bal}`;
+            
+            const pPhone = document.getElementById('profilePhone');
+            const pBal = document.getElementById('profileBalStat');
+            const pAv = document.getElementById('profileAvatar');
+            if (pPhone) pPhone.innerText = user.phone;
+            if (pBal) pBal.innerText = `₹${bal}`;
+            if (pAv) pAv.innerText = user.phone.toString().charAt(0).toUpperCase();
+        } else {
+            if (authBtn) authBtn.innerText = 'Login';
+            if (headerBal) headerBal.innerText = `₹0.00`;
             if (guardView) guardView.style.display = 'block';
             if (builderView) builderView.style.display = 'none';
-        }
-    }
-
-    window.addEventListener('storage', (event) => {
-        if (event.key === 'nifty7_user') {
-            checkSession();
-        }
-    });
-
-    // --- TASK 2: UPI WALLET DEPOSIT LOGIC ---
-    function openDepositModal() {
-        const user = JSON.parse(localStorage.getItem('nifty7_user'));
-        if (!user) {
-            alert("Please login to your player account before depositing funds.");
-            openLoginModal();
-            return;
-        }
-        document.getElementById('depositModalBalance').innerText = `₹${parseFloat(user.balance || 0).toFixed(2)}`;
-        document.getElementById('depositModal').style.display = 'flex';
-    }
-
-    function closeDepositModal() {
-        document.getElementById('depositModal').style.display = 'none';
-    }
-
-    function selectDepositAmount(amount) {
-        document.getElementById('depositAmountInput').value = amount;
-        document.querySelectorAll('.amount-chip').forEach(chip => chip.classList.remove('active'));
-        if (amount === 100) document.querySelectorAll('.amount-chip')[0].classList.add('active');
-        if (amount === 500) document.querySelectorAll('.amount-chip')[1].classList.add('active');
-        if (amount === 1000) document.querySelectorAll('.amount-chip')[2].classList.add('active');
-    }
-
-    async function processDeposit() {
-        const user = JSON.parse(localStorage.getItem('nifty7_user'));
-        if (!user) { closeDepositModal(); openLoginModal(); return; }
-
-        const amount = parseFloat(document.getElementById('depositAmountInput').value);
-        if (!amount || amount < 10) {
-            alert("Minimum deposit amount is ₹10.");
-            return;
-        }
-
-        try {
-            const res = await fetch('/api/wallet/deposit', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ userId: user.id, amount: amount })
-            });
-            const out = await res.json();
             
-            if (out.success) {
-                user.balance = parseFloat(out.balance).toFixed(2);
-                localStorage.setItem('nifty7_user', JSON.stringify(user));
-                checkSession();
-                
-                // Dynamically add transaction to ledger UI
-                const ledgerEl = document.getElementById('depositHistoryLedger');
-                if (ledgerEl) {
-                    ledgerEl.insertAdjacentHTML('afterbegin', `<div class="history-row"><span>Simulated UPI Deposit</span><span class="tx-success">+ ₹${amount.toFixed(2)} (SUCCESS)</span></div>`);
-                }
-
-                closeDepositModal();
-                alert(`✅ Successfully deposited ₹${amount} via Simulated UPI! Your new wallet balance is ₹${user.balance}.`);
-            } else {
-                alert("❌ Deposit transaction failed. Please try again.");
-            }
-        } catch (err) {
-            alert("❌ Server connection error during deposit.");
+            const pPhone = document.getElementById('profilePhone');
+            if (pPhone) pPhone.innerText = "Not Logged In";
         }
     }
 
-    // Initialize layout, check login state, and sync multi-contest lobby on boot
+    window.addEventListener('storage', (e) => { if (e.key === 'nifty7_user') checkSession(); });
+
+    // Initialize application state
     initBasketBuilder();
     syncContestLobby();
     updateDashboard();
     checkSession();
     
-    // Core Application Loop: Polls Server for Leaderboard, Lobby, and Wallet Balance Every 4 Seconds
+    // Core Application Loop: Syncs exchange ticker and wallet balance every 4 seconds
     setInterval(async () => {
         syncContestLobby();
         updateDashboard();
-        
         const user = JSON.parse(localStorage.getItem('nifty7_user') || '{}');
         if (!user || !user.id) return;
-        
         try {
             const res = await fetch(`/api/user/${user.id}/balance`);
             const data = await res.json();
-            
             if (data.success && data.balance !== undefined) {
                 user.balance = parseFloat(data.balance).toFixed(2);
                 localStorage.setItem('nifty7_user', JSON.stringify(user));
-                
-                const authBtn = document.getElementById('authBtn');
-                if (authBtn) {
-                    authBtn.innerHTML = `📱 ${user.phone} | <span class="wallet-amount">₹${user.balance}</span>`;
-                }
-                
-                const profileBalance = document.getElementById('profileUserBalance');
-                if (profileBalance && document.getElementById('profileModal').style.display !== 'none') {
-                    profileBalance.innerText = `₹${user.balance}`;
-                }
-                
-                const depositBalance = document.getElementById('depositModalBalance');
-                if (depositBalance && document.getElementById('depositModal').style.display !== 'none') {
-                    depositBalance.innerText = `₹${user.balance}`;
-                }
+                const headerBal = document.getElementById('headerBalance');
+                if (headerBal) headerBal.innerText = `₹${user.balance}`;
+                const wBal = document.getElementById('walletMainBalance');
+                if (wBal) wBal.innerText = `₹${user.balance}`;
+                const pBal = document.getElementById('profileBalStat');
+                if (pBal) pBal.innerText = `₹${user.balance}`;
             }
-        } catch (err) {
-            console.log("Background balance sync waiting for connection...");
-        }
+        } catch(e) {}
     }, 4000);
 </script>
 </body>

@@ -1,0 +1,16 @@
+{
+    "name": "Nifty-7 Live Fantasy Arena",
+    "short_name": "Nifty-7",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#0d1117",
+    "theme_color": "#0d1117",
+    "icons": [
+      {
+        "src": "https://cdn-icons-png.flaticon.com/512/2830/2830284.png",
+        "sizes": "512x512",
+        "type": "image/png",
+        "purpose": "any maskable"
+      }
+    ]
+  }
