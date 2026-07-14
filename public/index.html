@@ -50,14 +50,19 @@
         .nav-btn { background: #21262d; color: var(--text-main); border: 1px solid var(--border-color); padding: 10px 20px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 14px; transition: all 0.2s; flex: 1; text-align: center; }
         .nav-btn.active { background: var(--accent-green); color: #fff; border-color: #2ea043; }
 
-        /* MULTI-CONTEST LOBBY BADGES */
+        /* MULTI-CONTEST LOBBY BADGES & ANIMATED STATUS */
         .contest-lobby-bar { display: flex; gap: 12px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 8px; }
-        .contest-card { background: #21262d; border: 1px solid var(--border-color); padding: 12px 18px; border-radius: 8px; cursor: pointer; transition: all 0.2s; flex-shrink: 0; min-width: 180px; }
+        .contest-card { background: #21262d; border: 1px solid var(--border-color); padding: 12px 18px; border-radius: 8px; cursor: pointer; transition: all 0.2s; flex-shrink: 0; min-width: 200px; position: relative; }
         .contest-card:hover { border-color: #58a6ff; }
         .contest-card.active { background: rgba(35, 134, 54, 0.2); border-color: #3fb950; box-shadow: 0 0 10px rgba(63, 185, 80, 0.3); }
-        .contest-title { font-weight: 800; font-size: 14px; color: #fff; margin-bottom: 5px; display: block; }
+        .contest-title { font-weight: 800; font-size: 14px; color: #fff; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
         .contest-stats { font-size: 12px; color: var(--text-muted); display: flex; justify-content: space-between; }
         .pool-text { color: var(--accent-gold); font-weight: bold; }
+        
+        .status-badge { font-size: 10px; font-weight: 800; padding: 2px 6px; border-radius: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .status-live { background: rgba(218, 54, 51, 0.2); color: #ff7b72; border: 1px solid rgba(218, 54, 51, 0.5); animation: pulseRed 1.5s infinite; }
+        .status-open { background: rgba(63, 185, 80, 0.2); color: #3fb950; border: 1px solid rgba(63, 185, 80, 0.5); }
+        @keyframes pulseRed { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
 
         /* Authentic Circular Stock Badges */
         .stock-logo { width: 22px; height: 22px; border-radius: 50%; background: #ffffff; object-fit: contain; padding: 2px; margin-right: 8px; flex-shrink: 0; border: 1px solid #444c56; }
@@ -101,7 +106,7 @@
 
         /* Modal Overlay Styling */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); z-index: 1000; justify-content: center; align-items: center; padding: 15px; box-sizing: border-box; }
-        .modal-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 25px; width: 100%; max-width: 380px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.8); box-sizing: border-box; }
+        .modal-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 25px; width: 100%; max-width: 420px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.8); box-sizing: border-box; max-height: 90vh; overflow-y: auto; }
         .modal-title { margin-top: 0; font-size: 18px; color: #fff; margin-bottom: 8px; }
         .modal-sub { font-size: 13px; color: var(--text-muted); margin-bottom: 20px; }
         .modal-input { text-align: center; font-size: 16px; letter-spacing: 1px; margin-bottom: 15px; }
@@ -115,6 +120,13 @@
         .upi-option { background: #21262d; border: 1px solid var(--border-color); padding: 10px; border-radius: 8px; font-size: 13px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 8px; color: #fff; }
         .upi-option:hover { border-color: #58a6ff; }
         .upi-option input[type="radio"] { width: auto; margin: 0; accent-color: #58a6ff; }
+
+        /* Mini Ledgers & History Boxes in Modals */
+        .history-box { background: #010409; border: 1px solid var(--border-color); border-radius: 8px; padding: 10px; margin-bottom: 15px; text-align: left; font-size: 12px; max-height: 140px; overflow-y: auto; }
+        .history-row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .history-row:last-child { border-bottom: none; }
+        .tx-success { color: #3fb950; font-weight: bold; }
+        .tx-pending { color: var(--accent-gold); font-weight: bold; }
 
         /* ROUTE GUARD & PROFILE STYLING */
         .guard-card { background: #161b22; border: 2px dashed #30363d; border-radius: 12px; padding: 50px 20px; text-align: center; margin: 20px 0; box-sizing: border-box; }
@@ -169,7 +181,7 @@
         <button class="nav-btn" id="btn-basket" onclick="switchTab('basket')">🛒 Create Basket</button>
     </div>
 
-    <!-- TAB 1: JOINED CONTESTS (WITH MULTI-CONTEST LOBBY) -->
+    <!-- TAB 1: JOINED CONTESTS (WITH MULTI-CONTEST LOBBY & LIVE STATUS) -->
     <div id="tab-contests">
         <label style="font-size: 12px; color: var(--text-muted); font-weight: 700; text-transform: uppercase; margin-bottom: 8px; display: block;">Select Active Contest League:</label>
         <div class="contest-lobby-bar" id="contestLobbyContainer">
@@ -270,7 +282,7 @@
     </div>
 </div>
 
-<!-- UPI Wallet Deposit Modal -->
+<!-- UPI Wallet Deposit Modal (WITH RECENT TRANSACTIONS LEDGER) -->
 <div class="modal-overlay" id="depositModal">
     <div class="modal-card">
         <h3 class="modal-title">💰 Add Funds to Wallet</h3>
@@ -292,12 +304,18 @@
             <label class="upi-option"><input type="radio" name="upiApp"> 🟡 UPI ID / QR</label>
         </div>
 
+        <label style="display:block; font-size:11px; color:var(--text-muted); text-transform:uppercase; font-weight:700; margin-bottom:6px; text-align:left;">Recent Transactions:</label>
+        <div class="history-box" id="depositHistoryLedger">
+            <div class="history-row"><span>Simulated UPI Deposit</span><span class="tx-success">+ ₹500.00 (SUCCESS)</span></div>
+            <div class="history-row"><span>Contest Entry Fee</span><span style="color:#ff7b72;">- ₹100.00 (JOINED)</span></div>
+        </div>
+
         <button class="submit-btn" style="background: var(--accent-green);" onclick="processDeposit()">⚡ Pay & Deposit Funds</button>
         <button class="close-btn" onclick="closeDepositModal()">Cancel</button>
     </div>
 </div>
 
-<!-- TASK 4: PLAYER ACCOUNT PROFILE MODAL -->
+<!-- PLAYER ACCOUNT PROFILE MODAL (WITH CONTEST WINNING HISTORY) -->
 <div class="modal-overlay" id="profileModal">
     <div class="modal-card">
         <h3 class="modal-title">👤 Player Account Profile</h3>
@@ -311,9 +329,15 @@
             <span class="profile-label">Mobile Number:</span>
             <span class="profile-value" id="profileUserPhone">----------</span>
         </div>
-        <div class="profile-stat-row" style="margin-bottom: 20px;">
+        <div class="profile-stat-row" style="margin-bottom: 15px;">
             <span class="profile-label">Wallet Balance:</span>
             <span class="profile-value" id="profileUserBalance" style="color:#3fb950;">₹0.00</span>
+        </div>
+
+        <label style="display:block; font-size:11px; color:var(--text-muted); text-transform:uppercase; font-weight:700; margin-bottom:6px; text-align:left;">Contest & Winnings History:</label>
+        <div class="history-box" id="userContestHistory">
+            <div class="history-row"><span>Nifty Mega League (Bull: RELIANCE)</span><span class="tx-pending">LIVE RANKING...</span></div>
+            <div class="history-row"><span>Free Practice Match</span><span class="tx-success">+ ₹50.00 WIN</span></div>
         </div>
 
         <button class="submit-btn" style="background: var(--accent-green); margin-bottom: 10px;" onclick="closeProfileModal(); openDepositModal();">➕ Deposit More Funds</button>
@@ -392,22 +416,31 @@
         });
     }
 
-    // MULTI-CONTEST LOBBY SYNCHRONIZER
+    // MULTI-CONTEST LOBBY SYNCHRONIZER (WITH LIVE BADGES)
     async function syncContestLobby() {
         try {
             const res = await fetch('/api/contests');
             const data = await res.json();
             if (data.success && data.contests) {
                 const lobbyEl = document.getElementById('contestLobbyContainer');
-                lobbyEl.innerHTML = data.contests.map(c => `
-                    <div class="contest-card ${parseInt(c.id) === activeContestId ? 'active' : ''}" onclick="selectContest(${c.id}, '${c.name}', ${c.entry_fee})">
-                        <span class="contest-title">${c.name}</span>
-                        <div class="contest-stats">
-                            <span>Fee: <b>₹${parseFloat(c.entry_fee).toFixed(0)}</b></span>
-                            <span class="pool-text">Pool: ₹${parseFloat(c.prize_pool).toFixed(0)}</span>
+                lobbyEl.innerHTML = data.contests.map((c, index) => {
+                    // Make the first two contests show as LIVE pulsing badges, others OPEN
+                    const statusClass = index < 2 ? 'status-live' : 'status-open';
+                    const statusText = index < 2 ? '🔴 LIVE' : '🟢 OPEN';
+                    
+                    return `
+                        <div class="contest-card ${parseInt(c.id) === activeContestId ? 'active' : ''}" onclick="selectContest(${c.id}, '${c.name}', ${c.entry_fee})">
+                            <span class="contest-title">
+                                ${c.name}
+                                <span class="status-badge ${statusClass}">${statusText}</span>
+                            </span>
+                            <div class="contest-stats">
+                                <span>Fee: <b>₹${parseFloat(c.entry_fee).toFixed(0)}</b></span>
+                                <span class="pool-text">Pool: ₹${parseFloat(c.prize_pool).toFixed(0)}</span>
+                            </div>
                         </div>
-                    </div>
-                `).join('');
+                    `;
+                }).join('');
             }
         } catch(e) {}
     }
@@ -599,6 +632,13 @@
                     localStorage.setItem('nifty7_user', JSON.stringify(user));
                     checkSession();
                 }
+                
+                // Add entry dynamically to Profile History UI
+                const histEl = document.getElementById('userContestHistory');
+                if (histEl) {
+                    histEl.insertAdjacentHTML('afterbegin', `<div class="history-row"><span>${activeContestName} (Bull: ${bullStock})</span><span class="tx-pending">LIVE RANKING...</span></div>`);
+                }
+                
                 statusDiv.style.color = "#3fb950"; statusDiv.innerText = `🚀 Basket entered into ${activeContestName}!`;
                 setTimeout(() => { switchTab('contests'); syncContestLobby(); updateDashboard(); selectedStocks = []; initBasketBuilder(); updateMultipliers(); document.getElementById('selectedCount').innerText='0'; document.getElementById('stockSearchInput').value=''; statusDiv.innerText = ""; submitBtn.disabled = false; }, 1500);
             } else { throw new Error(out.message || "Entry failed"); }
@@ -763,6 +803,13 @@
                 user.balance = parseFloat(out.balance).toFixed(2);
                 localStorage.setItem('nifty7_user', JSON.stringify(user));
                 checkSession();
+                
+                // Dynamically add transaction to ledger UI
+                const ledgerEl = document.getElementById('depositHistoryLedger');
+                if (ledgerEl) {
+                    ledgerEl.insertAdjacentHTML('afterbegin', `<div class="history-row"><span>Simulated UPI Deposit</span><span class="tx-success">+ ₹${amount.toFixed(2)} (SUCCESS)</span></div>`);
+                }
+
                 closeDepositModal();
                 alert(`✅ Successfully deposited ₹${amount} via Simulated UPI! Your new wallet balance is ₹${user.balance}.`);
             } else {
