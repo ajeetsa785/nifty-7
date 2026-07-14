@@ -635,13 +635,16 @@ app.post('/api/auth/request-otp', (req, res) => {
         return res.json({ success: true, message: `Test OTP is ${otp}` });
     }
 
-    // Trigger Fast2SMS API using native HTTPS
-    const reqUrl = `/dev/bulkV2?authorization=${apiKey}&route=otp&variables_values=${otp}&flash=0&numbers=${phone}`;
+    // Trigger Fast2SMS API using native HTTPS with required authorization header
+    const reqUrl = `/dev/bulkV2?route=q&message=Your%20Nifty-7%20verification%20code%20is%20${otp}&flash=0&numbers=${phone}`;
     const options = {
         hostname: "www.fast2sms.com",
         path: reqUrl,
         method: "GET",
-        headers: { "cache-control": "no-cache" }
+        headers: { 
+            "authorization": apiKey,
+            "cache-control": "no-cache" 
+        }
     };
 
     const smsReq = https.request(options, (smsRes) => {
@@ -653,6 +656,7 @@ app.post('/api/auth/request-otp', (req, res) => {
                 if (data.return === true) {
                     res.json({ success: true, message: "OTP sent successfully to your mobile number." });
                 } else {
+                    console.error("Fast2SMS Rejection:", data.message);
                     res.status(500).json({ success: false, message: data.message || "Failed to send SMS OTP." });
                 }
             } catch (e) {
