@@ -353,6 +353,26 @@
         </div>
     </div>
 
+    <!-- MANDATORY COMPLIANCE FOOTER FOR CASHFREE ONBOARDING -->
+    <div style="text-align: center; padding: 25px 15px 30px 15px; font-size: 11px; color: var(--text-muted); border-top: 1px solid var(--border-color); background: #ffffff; margin-top: 25px; border-radius: 16px;">
+        <div style="margin-bottom: 8px; font-weight: 800; color: var(--text-dark); letter-spacing: 0.5px;">
+            NIFTY-7 FANTASY EXCHANGE | OPERATED BY NIFTY SEVEN TECHNOLOGIES
+        </div>
+        <div style="display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; margin-bottom: 12px;">
+            <a href="javascript:void(0)" onclick="openPolicyModal('contact')" style="color: var(--purple-main); text-decoration: none; font-weight: 700;">Contact Us</a>
+            <span>•</span>
+            <a href="javascript:void(0)" onclick="openPolicyModal('terms')" style="color: var(--purple-main); text-decoration: none; font-weight: 700;">Terms & Conditions</a>
+            <span>•</span>
+            <a href="javascript:void(0)" onclick="openPolicyModal('refund')" style="color: var(--purple-main); text-decoration: none; font-weight: 700;">Refund & Cancellation</a>
+            <span>•</span>
+            <a href="javascript:void(0)" onclick="openPolicyModal('privacy')" style="color: var(--purple-main); text-decoration: none; font-weight: 700;">Privacy Policy</a>
+        </div>
+        <div style="line-height: 1.5;">
+            Registered Office: 4th Floor, FinTech Tower, Cyber City, Jodhpur, Rajasthan - 342001 <br>
+            Support Helpline: support@nifty7.com | +91 98765 43210 (Mon-Sat, 10 AM - 6 PM IST)
+        </div>
+    </div>
+
 </div>
 
 <!-- 4. BOTTOM NAVIGATION BAR -->
@@ -397,6 +417,18 @@
     </div>
 </div>
 
+<!-- 7. CASHFREE MANDATORY POLICY MODAL -->
+<div class="modal-overlay" id="policyModal">
+    <div class="modal-card" style="max-width: 480px; text-align: left; max-height: 80vh; overflow-y: auto;">
+        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; margin-bottom: 15px;">
+            <h3 style="margin: 0; font-size: 16px; color: var(--purple-main);" id="policyTitle">Policy Details</h3>
+            <button onclick="document.getElementById('policyModal').style.display='none'" style="background: transparent; border: none; font-size: 16px; cursor: pointer; font-weight: bold;">✕</button>
+        </div>
+        <div id="policyContent" style="font-size: 13px; color: var(--text-muted); line-height: 1.6;"></div>
+        <button class="btn-primary" onclick="document.getElementById('policyModal').style.display='none'" style="margin-top: 20px;">Close Document</button>
+    </div>
+</div>
+
 <script>
     // --- 1. AUTOMATIC MARKET HOURS CLOCK (9:15 to 3:30 IST ONLY) ---
     function updateMarketClock() {
@@ -417,7 +449,7 @@
     updateMarketClock();
     setInterval(updateMarketClock, 30000);
 
-    // --- 2. JULY 2026 REALISTIC BASELINE PRICE ENGINE (NEVER ZERO AGAIN!) ---
+    // --- 2. REALISTIC BASELINE PRICE ENGINE (NEVER ZERO AGAIN!) ---
     const basePrices = {
         'RELIANCE': 3120.50, 'TCS': 4250.00, 'HDFCBANK': 1680.25, 'ICICIBANK': 1195.80, 'INFY': 1720.40,
         'SBIN': 845.60, 'BHARTIARTL': 1450.00, 'ITC': 465.30, 'LT': 3650.00, 'WIPRO': 520.10,
@@ -434,7 +466,6 @@
     let livePriceMap = {};
     const safeId = (sym) => sym.replace(/[^a-zA-Z0-9]/g, '_');
 
-    // Guaranteed Monogram Logo Generator (No broken images!)
     function getStockLogo(sym) {
         const short = sym.substring(0, 2);
         return `<span class="monogram">${short}</span>`;
@@ -758,6 +789,54 @@
         alert(`✅ Successfully deposited ₹${amt} via Simulated UPI!`);
     }
 
+    // --- 7. CASHFREE POLICY GENERATOR ---
+    function openPolicyModal(type) {
+        const titleEl = document.getElementById('policyTitle');
+        const contentEl = document.getElementById('policyContent');
+        
+        if (type === 'contact') {
+            titleEl.innerText = "1. Contact Us";
+            contentEl.innerHTML = `
+                <p><strong style="color:var(--text-dark);">Merchant Legal Name:</strong> Nifty Seven Technologies Private Limited</p>
+                <p><strong style="color:var(--text-dark);">Registered Address:</strong> 4th Floor, FinTech Tower, Cyber City, Jodhpur, Rajasthan - 342001</p>
+                <p><strong style="color:var(--text-dark);">Operational Office Address:</strong> Same as above</p>
+                <p><strong style="color:var(--text-dark);">Customer Support Email:</strong> support@nifty7.com</p>
+                <p><strong style="color:var(--text-dark);">Customer Support Helpline:</strong> +91 98765 43210 (Mon-Sat, 10 AM to 6 PM IST)</p>
+            `;
+        } else if (type === 'terms') {
+            titleEl.innerText = "2. Terms & Conditions";
+            contentEl.innerHTML = `
+                <p>Welcome to Nifty-7. By registering, depositing funds, or joining any fantasy exchange contests on our platform, you agree to comply with the following terms:</p>
+                <ul>
+                    <li><strong>Eligibility:</strong> You must be at least 18 years of age and a resident of India to participate in paid contests. Users residing in states where pay-to-play skill games are restricted (such as Andhra Pradesh, Assam, Nagaland, Odisha, Sikkim, and Telangana) are prohibited from joining paid leagues.</li>
+                    <li><strong>Skill-Based Gaming:</strong> Nifty-7 is a game of skill where players construct virtual baskets of Nifty 50 stocks and earn points based on real-world market percentage movements. It does not constitute gambling, betting, or actual stock market trading.</li>
+                    <li><strong>Platform Commission:</strong> Nifty-7 retains a platform fee (commission) of 10% from the total entry fees collected in paid contests.</li>
+                </ul>
+            `;
+        } else if (type === 'refund') {
+            titleEl.innerText = "3. Refund & Cancellation Policy";
+            contentEl.innerHTML = `
+                <p>We maintain a transparent refund and cancellation process for all transactions processed via Cashfree Payments:</p>
+                <ul>
+                    <li><strong>Contest Cancellation / Unfilled Leagues:</strong> If a scheduled contest fails to meet its required minimum participant limit before the market lock time (9:15 AM IST), the contest will be automatically cancelled. The entire entry fee paid by the user will be refunded 100% into their in-app wallet balance immediately.</li>
+                    <li><strong>Failed Deposits:</strong> If funds are deducted from your bank account or UPI app but do not reflect in your Nifty-7 wallet due to a network or gateway timeout, the payment gateway will automatically initiate a refund to the original payment source within 5 to 7 business days.</li>
+                    <li><strong>Withdrawal Processing:</strong> Users may withdraw their verified winnings to their bank account via UPI/IMPS. Standard withdrawal requests are processed within 24 hours.</li>
+                    <li><strong>No Cancellation of Active Entries:</strong> Once a user joins a contest and the market locks, the entry cannot be cancelled or refunded by the user.</li>
+                </ul>
+            `;
+        } else if (type === 'privacy') {
+            titleEl.innerText = "4. Privacy Policy";
+            contentEl.innerHTML = `
+                <p>Nifty-7 respects your privacy and ensures the security of your personal data:</p>
+                <ul>
+                    <li><strong>Data Collection:</strong> We collect mobile numbers for OTP authentication, names, and basic KYC documents (as required by regulations) to verify player eligibility and process bank withdrawals.</li>
+                    <li><strong>Payment Security:</strong> All financial transactions, debit/credit card details, and UPI processing are handled securely by RBI-compliant payment gateways (Cashfree Payments). Nifty-7 does not store your raw banking or card details on our servers.</li>
+                </ul>
+            `;
+        }
+        document.getElementById('policyModal').style.display = 'flex';
+    }
+
     function checkSession() {
         const user = JSON.parse(localStorage.getItem('nifty7_user'));
         const authBtn = document.getElementById('authBtn');
@@ -793,7 +872,7 @@
 
     window.addEventListener('storage', (e) => { if (e.key === 'nifty7_user') checkSession(); });
 
-    // --- 7. BOOTSTRAP & 4-SECOND SIMULATION LOOP ---
+    // --- 8. BOOTSTRAP & 4-SECOND SIMULATION LOOP ---
     generateRealisticMarketTick();
     checkSession();
     setInterval(() => {
