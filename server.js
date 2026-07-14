@@ -840,7 +840,7 @@ app.get(['/contactus', '/termsandcondition', '/refundpolicy', '/privacypolicy'],
 });
 
 // Catch-all SPA route for frontend navigation
-app.get('*', (req, res) => {
+app.get('/*splat', (req, res) => {
     if (!req.path.startsWith('/api/')) {
         res.sendFile(path.join(__dirname, 'public', 'index.html'));
     } else {
