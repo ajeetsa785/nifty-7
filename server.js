@@ -616,34 +616,42 @@ app.post('/api/cashfree/request-payout', (req, res) => {
 
 /**
  * ============================================================================
- * 6. AUTHENTICATION & FAST2SMS LIVE OTP ROUTES (NATIVE HTTPS IMPLEMENTATION)
+ * 6. AUTHENTICATION & FAST2SMS LIVE OTP ROUTES (UPGRADED TO BULK V2 POST JSON)
  * ============================================================================
  */
 app.post('/api/auth/request-otp', (req, res) => {
     const { phone } = req.body;
-    if (!phone || phone.length !== 10 || isNaN(phone)) {
+    if (!phone || String(phone).length !== 10 || isNaN(phone)) {
         return res.status(400).json({ success: false, message: "Enter a valid 10-digit mobile number" });
     }
 
-    // Generate real 6-digit OTP and store in temporary memory
+    // Generate real 6-digit math OTP and store in memory
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
     dbState.otpCache[phone] = otp;
 
     const apiKey = process.env.FAST2SMS_KEY;
     if (!apiKey) {
-        console.warn("⚠️ [FAST2SMS] Key missing in Render environment. Using simulation fallback.");
+        console.warn("⚠️ [FAST2SMS] Key missing in Render environment variables. Using simulation fallback.");
         return res.json({ success: true, message: `Test OTP is ${otp}` });
     }
 
-    // Trigger Fast2SMS API using native HTTPS with required authorization header
-    const reqUrl = `/dev/bulkV2?route=q&message=Your%20Nifty-7%20verification%20code%20is%20${otp}&flash=0&numbers=${phone}`;
+    // Upgraded to Fast2SMS Bulk V2 POST JSON standard for reliable SMS delivery
+    const payload = JSON.stringify({
+        route: "q",
+        message: `Your Nifty-7 verification code is ${otp}`,
+        language: "english",
+        flash: 0,
+        numbers: String(phone)
+    });
+
     const options = {
         hostname: "www.fast2sms.com",
-        path: reqUrl,
-        method: "GET",
+        path: "/dev/bulkV2",
+        method: "POST",
         headers: { 
             "authorization": apiKey,
-            "cache-control": "no-cache" 
+            "Content-Type": "application/json",
+            "Content-Length": Buffer.byteLength(payload)
         }
     };
 
@@ -654,22 +662,25 @@ app.post('/api/auth/request-otp', (req, res) => {
             try {
                 const data = JSON.parse(body);
                 if (data.return === true) {
+                    console.log(`✅ [SMS DELIVERED] OTP sent to ${phone} via Fast2SMS`);
                     res.json({ success: true, message: "OTP sent successfully to your mobile number." });
                 } else {
-                    console.error("Fast2SMS Rejection:", data.message);
-                    res.status(500).json({ success: false, message: data.message || "Failed to send SMS OTP." });
+                    console.error("❌ [FAST2SMS REJECTED]:", data.message || data);
+                    res.status(400).json({ success: false, message: "SMS Gateway rejected delivery", details: data.message });
                 }
             } catch (e) {
+                console.error("❌ [FAST2SMS PARSE ERROR]:", body);
                 res.status(500).json({ success: false, message: "SMS Gateway Parsing Error." });
             }
         });
     });
 
     smsReq.on('error', (err) => {
-        console.error("Fast2SMS Network Error:", err.message);
+        console.error("❌ [FAST2SMS NETWORK ERROR]:", err.message);
         res.status(500).json({ success: false, message: "Network error while sending OTP." });
     });
 
+    smsReq.write(payload);
     smsReq.end();
 });
 

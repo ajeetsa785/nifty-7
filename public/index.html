@@ -613,6 +613,87 @@
         }
     }
 
+    // --- 6. AUTH, PROFILE & PHOTO UPLOAD ---
+    function handleAuthClick() {
+        const user = JSON.parse(localStorage.getItem('nifty7_user'));
+        if (user) switchNav('profile'); else document.getElementById('loginModal').style.display = 'flex';
+    }
+
+    async function requestOtp() {
+        const phoneInput = document.getElementById('phoneInput');
+        const phone = phoneInput.value.trim();
+        const modalSubtext = document.getElementById('modalSubtext');
+        const stepPhone = document.getElementById('stepPhone');
+        const stepOtp = document.getElementById('stepOtp');
+
+        if (!phone || phone.length !== 10) { 
+            alert("Enter a valid 10-digit mobile number."); 
+            return; 
+        }
+
+        try {
+            modalSubtext.innerText = "Sending verification code...";
+            const res = await fetch('/api/auth/request-otp', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ phone: phone })
+            });
+            
+            const data = await res.json();
+
+            if (data.success) {
+                stepPhone.style.display = 'none';
+                stepOtp.style.display = 'block';
+                modalSubtext.innerText = `OTP sent successfully to ${phone}`;
+            } else {
+                alert(data.message || "Failed to send OTP.");
+                modalSubtext.innerText = "Enter your 10-digit mobile number to login.";
+            }
+        } catch (err) {
+            console.error("Authentication Error:", err);
+            alert("Unable to connect to the authentication server.");
+            modalSubtext.innerText = "Enter your 10-digit mobile number to login.";
+        }
+    }
+
+    async function verifyOtp() {
+        const phone = document.getElementById('phoneInput').value.trim();
+        const otp = document.getElementById('otpInput').value.trim();
+
+        if (!otp || otp.length < 4) { 
+            alert("Please enter a valid verification code."); 
+            return; 
+        }
+
+        try {
+            const res = await fetch('/api/auth/verify-otp', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ phone: phone, otp: otp })
+            });
+            
+            const data = await res.json();
+
+            if (data.success) {
+                const user = { 
+                    id: data.user?.id || Date.now(), 
+                    phone: phone, 
+                    balance: data.user?.balance || "500.00", 
+                    handle: data.user?.handle || `@user_${phone.substring(6)}` 
+                };
+                localStorage.setItem('nifty7_user', JSON.stringify(user));
+                document.getElementById('loginModal').style.display = 'none';
+                checkSession();
+                alert("Login Successful! Welcome to Nifty-7.");
+            } else { 
+                alert(data.message || "Invalid OTP."); 
+            }
+        } catch (err) {
+            console.error("Verification Error:", err);
+            alert("Server validation failed. Please try again.");
+        }
+    }
+
     function openCreateBasketForm() {
         document.getElementById('createBasketBox').style.display = 'block';
         initBasketGrid();
@@ -719,29 +800,6 @@
         `).join('');
     }
 
-    // --- 6. AUTH, PROFILE & PHOTO UPLOAD ---
-    function handleAuthClick() {
-        const user = JSON.parse(localStorage.getItem('nifty7_user'));
-        if (user) switchNav('profile'); else document.getElementById('loginModal').style.display = 'flex';
-    }
-    async function requestOtp() {
-        const phone = document.getElementById('phoneInput').value;
-        if (!phone || phone.length !== 10) { alert("Enter 10-digit mobile number."); return; }
-        document.getElementById('stepPhone').style.display = 'none';
-        document.getElementById('stepOtp').style.display = 'block';
-        document.getElementById('modalSubtext').innerText = `OTP sent to ${phone} (Test: 123456)`;
-    }
-    async function verifyOtp() {
-        const phone = document.getElementById('phoneInput').value;
-        const otp = document.getElementById('otpInput').value;
-        if (otp === "123456" || otp.length >= 4) {
-            const user = { id: Date.now(), phone, balance: "500.00", handle: `@user_${phone.substring(6)}` };
-            localStorage.setItem('nifty7_user', JSON.stringify(user));
-            document.getElementById('loginModal').style.display = 'none';
-            checkSession();
-            alert("Login Successful! Welcome to Nifty-7.");
-        } else { alert("Invalid OTP."); }
-    }
     function logoutSession() {
         if (confirm("Are you sure you want to log out?")) {
             localStorage.removeItem('nifty7_user');
