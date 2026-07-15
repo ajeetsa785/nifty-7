@@ -1,17 +1,23 @@
 require('dotenv').config();
 const { Pool } = require('pg');
 
+if (!process.env.DATABASE_URL) {
+    throw new Error('DATABASE_URL is missing');
+}
+
 const pool = new Pool({
-    user: String(process.env.DB_USER || 'postgres'),
-    password: String(process.env.DB_PASSWORD || 'niftypassword123'),
-    host: String(process.env.DB_HOST || 'localhost'),
-    port: Number(process.env.DB_PORT || 5432),
-    database: String(process.env.DB_NAME || 'postgres'),
+    connectionString: process.env.DATABASE_URL,
+    ssl: {
+        rejectUnauthorized: false
+    }
+});
+
+pool.on('connect', () => {
+    console.log('✅ PostgreSQL connected successfully');
 });
 
 pool.on('error', (err) => {
-    console.error('Unexpected error on idle database client', err);
-    process.exit(-1);
+    console.error('❌ PostgreSQL pool error:', err.message);
 });
 
 module.exports = pool;
