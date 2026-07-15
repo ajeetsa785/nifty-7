@@ -1,11 +1,11 @@
 /**
  * ============================================================================
- * NIFTY-7 FANTASY EXCHANGE — FULL PRODUCTION BACKEND SERVER
+ * NIFTY-7 FANTASY EXCHANGE — BULLETPROOF PRODUCTION SERVER
  * ============================================================================
- * Architecture: Express.js REST API, MongoDB/Mongoose (with in-memory fallback),
+ * Architecture: Express.js REST API, In-Memory State (Mongoose Ready),
  * Automated IST Market Timers, Cashfree Easy Split & Payouts API, Top-Heavy
  * 35% Settlement Engine, DhanHQ Live NSE Market Data, Live Fast2SMS OTP Engine.
- * Built 100% with native HTTP/HTTPS networking for zero-error Render deployments.
+ * Built 100% with native HTTP/HTTPS networking for zero-crash deployments.
  * ============================================================================
  */
 
@@ -14,22 +14,6 @@ const path = require('path');
 const crypto = require('crypto');
 const http = require('http');
 const https = require('https');
-
-// Graceful require for optional production database and cron dependencies
-let mongoose, cron;
-try {
-    mongoose = require('mongoose');
-    console.log("✔ [SYSTEM] Mongoose module detected. Ready for cloud database connection.");
-} catch (e) {
-    console.warn("⚠️ [SYSTEM] Mongoose not installed. Running in high-speed in-memory fallback mode.");
-}
-
-try {
-    cron = require('node-cron');
-    console.log("✔ [SYSTEM] node-cron module detected. Ready for scheduled automation.");
-} catch (e) {
-    console.warn("⚠️ [SYSTEM] node-cron not installed. Utilizing native setInterval timers.");
-}
 
 const app = express();
 const server = http.createServer(app);
@@ -52,7 +36,7 @@ const DHAN_CONFIG = {
     path: "/v2/marketfeed/quote"
 };
 
-// Realistic July 2026 baseline prices for Nifty 50 constituents
+// Baseline prices for Nifty 50 constituents
 const basePrices = {
     'RELIANCE': 3120.50, 'TCS': 4250.00, 'HDFCBANK': 1680.25, 'ICICIBANK': 1195.80, 'INFY': 1720.40,
     'SBIN': 845.60, 'BHARTIARTL': 1450.00, 'ITC': 465.30, 'LT': 3650.00, 'WIPRO': 520.10,
@@ -67,6 +51,9 @@ const basePrices = {
 };
 const stockList = Object.keys(basePrices);
 let liveMarketCache = {};
+
+// Initialize cache strictly with base prices (Zero Simulation Math)
+stockList.forEach(s => liveMarketCache[s] = { price: basePrices[s], change: 0.00 });
 
 // DhanHQ Security ID Mapping for Nifty 50 Top Equities (NSE_EQ)
 const dhanSecurityMap = {
@@ -83,76 +70,66 @@ const dhanSecurityMap = {
 };
 
 function updateMarketPrices() {
-    if (DHAN_CONFIG.clientId !== "" && DHAN_CONFIG.accessToken !== "") {
-        const reqPayload = JSON.stringify({
-            NSE_EQ: Object.values(dhanSecurityMap)
-        });
-        
-        const options = {
-            hostname: DHAN_CONFIG.host,
-            path: DHAN_CONFIG.path,
-            method: 'POST',
-            headers: {
-                'access-token': DHAN_CONFIG.accessToken,
-                'client-id': DHAN_CONFIG.clientId,
-                'Content-Type': 'application/json',
-                'Content-Length': Buffer.byteLength(reqPayload)
-            }
-        };
-
-        const req = https.request(options, (res) => {
-            let body = '';
-            res.on('data', (chunk) => {
-                body += chunk;
-            });
-            res.on('end', () => {
-                try {
-                    const data = JSON.parse(body);
-                    if (data && data.data && data.data.NSE_EQ) {
-                        stockList.forEach(sym => {
-                            const secId = dhanSecurityMap[sym];
-                            const quote = data.data.NSE_EQ[secId];
-                            if (quote) {
-                                const ltp = parseFloat(quote.last_price || basePrices[sym]);
-                                const close = parseFloat(quote.previous_close || basePrices[sym]);
-                                const changePct = (((ltp - close) / close) * 100).toFixed(2);
-                                liveMarketCache[sym] = { price: ltp, change: parseFloat(changePct) };
-                            } else {
-                                fallbackSymbol(sym);
-                            }
-                        });
-                        return;
-                    }
-                } catch (e) {
-                    runSimulationFallback();
-                }
-            });
-        });
-
-        req.on('error', () => {
-            runSimulationFallback();
-        });
-
-        req.write(reqPayload);
-        req.end();
+    if (!DHAN_CONFIG.clientId || !DHAN_CONFIG.accessToken) {
+        console.error("❌ [MARKET ENGINE] DhanHQ API credentials missing in Render environment variables! Market feed offline.");
         return;
     }
-    runSimulationFallback();
-}
 
-function fallbackSymbol(sym) {
-    const base = basePrices[sym];
-    const changePct = ((Math.random() * 3.5) - 1.5).toFixed(2);
-    liveMarketCache[sym] = { price: parseFloat(base), change: parseFloat(changePct) };
-}
-
-function runSimulationFallback() {
-    stockList.forEach(sym => {
-        const base = basePrices[sym];
-        const changePct = ((Math.random() * 3.5) - 1.5).toFixed(2);
-        const price = (base * (1 + (changePct / 100))).toFixed(2);
-        liveMarketCache[sym] = { price: parseFloat(price), change: parseFloat(changePct) };
+    const reqPayload = JSON.stringify({
+        NSE_EQ: Object.values(dhanSecurityMap)
     });
+    
+    const options = {
+        hostname: DHAN_CONFIG.host,
+        path: DHAN_CONFIG.path,
+        method: 'POST',
+        headers: {
+            'access-token': DHAN_CONFIG.accessToken,
+            'client-id': DHAN_CONFIG.clientId,
+            'Content-Type': 'application/json',
+            'Content-Length': Buffer.byteLength(reqPayload)
+        }
+    };
+
+    const req = https.request(options, (res) => {
+        let body = '';
+        res.on('data', (chunk) => { body += chunk; });
+        res.on('end', () => {
+            if (res.statusCode !== 200) {
+                console.error(`❌ [DHANHQ API REJECTED - STATUS ${res.statusCode}]:`, body);
+                return;
+            }
+            try {
+                const data = JSON.parse(body);
+                if (data && data.data && data.data.NSE_EQ) {
+                    stockList.forEach(sym => {
+                        const secId = dhanSecurityMap[sym];
+                        const quote = data.data.NSE_EQ[secId];
+                        if (quote) {
+                            const ltp = parseFloat(quote.last_price || basePrices[sym]);
+                            const close = parseFloat(quote.previous_close || basePrices[sym]);
+                            const changePct = (((ltp - close) / close) * 100).toFixed(2);
+                            liveMarketCache[sym] = { price: ltp, change: parseFloat(changePct) };
+                        } else {
+                            console.warn(`⚠️ [MARKET ENGINE] Missing live quote for symbol: ${sym}`);
+                        }
+                    });
+                    console.log("✅ [MARKET ENGINE] Live NSE prices synced successfully from DhanHQ.");
+                } else {
+                    console.error("❌ [DHANHQ PAYLOAD ERROR] Unexpected response format:", body);
+                }
+            } catch (e) {
+                console.error("❌ [DHANHQ PARSE ERROR] Failed to read JSON from exchange:", e.message);
+            }
+        });
+    });
+
+    req.on('error', (err) => {
+        console.error("❌ [NETWORK ERROR] Could not reach DhanHQ servers:", err.message);
+    });
+
+    req.write(reqPayload);
+    req.end();
 }
 
 updateMarketPrices();
@@ -168,73 +145,18 @@ const dbState = {
     contests: {},
     leaderboards: {},
     transactions: [],
-    baskets: {},
     otpCache: {}
 };
 
 // Seed all 6 mandatory leagues into the database state
 const seedContests = () => {
     const defaultContests = [
-        {
-            id: "mega_daily",
-            name: "🏆 Nifty Mega League",
-            entry_fee: 100,
-            max_spots: 500000,
-            joined: 4500,
-            type: "mega",
-            status: "open",
-            pot: 450000
-        },
-        {
-            id: "battle_1",
-            name: "Starter Battle",
-            entry_fee: 50,
-            max_spots: 2,
-            joined: 1,
-            type: "1v1",
-            status: "open",
-            pot: 90
-        },
-        {
-            id: "battle_2",
-            name: "Standard Clash",
-            entry_fee: 100,
-            max_spots: 2,
-            joined: 1,
-            type: "1v1",
-            status: "open",
-            pot: 180
-        },
-        {
-            id: "battle_3",
-            name: "Advanced Arena",
-            entry_fee: 250,
-            max_spots: 2,
-            joined: 0,
-            type: "1v1",
-            status: "open",
-            pot: 450
-        },
-        {
-            id: "battle_4",
-            name: "High Roller Duel",
-            entry_fee: 500,
-            max_spots: 2,
-            joined: 0,
-            type: "1v1",
-            status: "open",
-            pot: 900
-        },
-        {
-            id: "battle_5",
-            name: "VIP Heads-Up",
-            entry_fee: 1000,
-            max_spots: 2,
-            joined: 1,
-            type: "1v1",
-            status: "open",
-            pot: 1800
-        }
+        { id: "mega_daily", name: "🏆 Nifty Mega League", entry_fee: 100, max_spots: 500000, joined: 4500, type: "mega", status: "open", pot: 450000 },
+        { id: "battle_1", name: "Starter Battle", entry_fee: 50, max_spots: 2, joined: 1, type: "1v1", status: "open", pot: 90 },
+        { id: "battle_2", name: "Standard Clash", entry_fee: 100, max_spots: 2, joined: 1, type: "1v1", status: "open", pot: 180 },
+        { id: "battle_3", name: "Advanced Arena", entry_fee: 250, max_spots: 2, joined: 0, type: "1v1", status: "open", pot: 450 },
+        { id: "battle_4", name: "High Roller Duel", entry_fee: 500, max_spots: 2, joined: 0, type: "1v1", status: "open", pot: 900 },
+        { id: "battle_5", name: "VIP Heads-Up", entry_fee: 1000, max_spots: 2, joined: 1, type: "1v1", status: "open", pot: 1800 }
     ];
 
     defaultContests.forEach(c => {
@@ -284,7 +206,7 @@ function checkMarketTimers() {
         }
     }
 
-    // 9:15 AM IST: Market Lock (Lock open contests from new entries)
+    // 9:15 AM IST: Market Lock
     if (timeVal === 915 && isWeekday) {
         Object.values(dbState.contests).forEach(c => {
             if (c.status === "open") {
@@ -304,7 +226,7 @@ function checkMarketTimers() {
         });
     }
 }
-setInterval(checkMarketTimers, 60000); // Check clock every 60 seconds
+setInterval(checkMarketTimers, 60000);
 
 /**
  * ============================================================================
@@ -314,13 +236,11 @@ setInterval(checkMarketTimers, 60000); // Check clock every 60 seconds
 function settleContestWinners(contestId) {
     const contest = dbState.contests[contestId];
     const leaderboard = dbState.leaderboards[contestId];
-    if (!contest || !leaderboard || leaderboard.length === 0) {
-        return;
-    }
+    if (!contest || !leaderboard || leaderboard.length === 0) return;
 
     console.log(`🏁 [SETTLEMENT] Starting payout calculations for ${contest.name} (${contestId})...`);
 
-    // 1. Calculate Final Points based on market closing percentages
+    // Calculate Final Points
     leaderboard.forEach(entry => {
         const bullChange = liveMarketCache[entry.bull]?.change || 0;
         const calfChange = liveMarketCache[entry.calf]?.change || 0;
@@ -329,53 +249,36 @@ function settleContestWinners(contestId) {
             normalPts += (liveMarketCache[sym]?.change || 0);
         });
         
-        // Apply 2.0X Bull and 1.5X Calf multipliers
+        // 2.0X Bull and 1.5X Calf multipliers
         entry.final_score = parseFloat(((bullChange * 2.0) + (calfChange * 1.5) + normalPts + 200).toFixed(2));
     });
 
-    // 2. Sort leaderboard from highest score to lowest score
     leaderboard.sort((a, b) => b.final_score - a.final_score);
 
-    // 3. Apply 10% Platform Rake & 90% Distributable Net Pool
     const totalCollected = contest.joined * contest.entry_fee;
-    const platformRake = totalCollected * 0.10;
-    const netPrizePool = totalCollected * 0.90;
-
+    const netPrizePool = totalCollected * 0.90; // 10% platform commission retained
     const totalWinners = Math.max(1, Math.floor(leaderboard.length * 0.35)); // Top 35% win cash
 
-    // Explicit Top-Heavy prize allocation curve
     leaderboard.forEach((entry, idx) => {
         const rank = idx + 1;
         entry.rank = rank;
         let prize = 0;
 
         if (rank <= totalWinners) {
-            if (rank === 1) {
-                prize = netPrizePool * 0.2222; // Rank 1: ~22.22% of Net Pool
-            } else if (rank === 2) {
-                prize = netPrizePool * 0.1111; // Rank 2: ~11.11% of Net Pool
-            } else if (rank === 3) {
-                prize = netPrizePool * 0.0556; // Rank 3: ~5.56% of Net Pool
-            } else if (rank <= 10) {
-                prize = (netPrizePool * 0.0778) / 7; // Ranks 4-10 split 7.78%
-            } else if (rank <= 50) {
-                prize = (netPrizePool * 0.1111) / 40; // Ranks 11-50 split 11.11%
-            } else if (rank <= 100) {
-                prize = (netPrizePool * 0.0556) / 50; // Ranks 51-100 split 5.56%
-            } else if (rank <= 500) {
-                prize = (netPrizePool * 0.1333) / 400; // Ranks 101-500 split 13.33%
-            } else {
+            if (rank === 1) prize = netPrizePool * 0.2222;
+            else if (rank === 2) prize = netPrizePool * 0.1111;
+            else if (rank === 3) prize = netPrizePool * 0.0556;
+            else if (rank <= 10) prize = (netPrizePool * 0.0778) / 7;
+            else if (rank <= 50) prize = (netPrizePool * 0.1111) / 40;
+            else if (rank <= 100) prize = (netPrizePool * 0.0556) / 50;
+            else if (rank <= 500) prize = (netPrizePool * 0.1333) / 400;
+            else {
                 const remainingWinners = totalWinners - 500;
-                if (remainingWinners > 0) {
-                    prize = (netPrizePool * 0.2333) / remainingWinners;
-                } else {
-                    prize = contest.entry_fee * 0.70; // Fallback refund ratio
-                }
+                prize = remainingWinners > 0 ? (netPrizePool * 0.2333) / remainingWinners : contest.entry_fee * 0.70;
             }
             prize = Math.round(prize * 100) / 100;
             entry.prize = prize;
 
-            // Credit winnings directly to user wallet
             const winner = dbState.users[entry.userId];
             if (winner) {
                 winner.balance = (parseFloat(winner.balance) + prize).toFixed(2);
@@ -409,7 +312,6 @@ const CASHFREE_CONFIG = {
     adminBankVendorId: process.env.CF_ADMIN_VENDOR_ID || "NIFTY7_ADMIN_BANK"
 };
 
-// 5a. Create Easy Split Deposit Order
 app.post('/api/cashfree/create-order', (req, res) => {
     const { userId, amount, phone, name } = req.body;
     const depAmt = parseFloat(amount);
@@ -419,17 +321,15 @@ app.post('/api/cashfree/create-order', (req, res) => {
     }
 
     const orderId = `order_${Date.now()}_${userId}`;
-    const platformFee = parseFloat((depAmt * 0.10).toFixed(2)); // 10% platform commission
+    const platformFee = parseFloat((depAmt * 0.10).toFixed(2));
 
-    // If using sandbox test credentials, return instant simulated response
     if (CASHFREE_CONFIG.appId.startsWith("TEST_")) {
         return res.json({
             success: true,
             simulated: true,
             order_id: orderId,
             payment_session_id: `session_sim_${Date.now()}`,
-            order_status: "ACTIVE",
-            split_details: { admin_rake: platformFee, pool_escrow: depAmt - platformFee }
+            order_status: "ACTIVE"
         });
     }
 
@@ -446,12 +346,7 @@ app.post('/api/cashfree/create-order', (req, res) => {
             return_url: `https://${req.headers.host}/api/cashfree/callback?order_id={order_id}`,
             notify_url: `https://${req.headers.host}/api/cashfree/webhook`
         },
-        order_splits: [
-            {
-                vendor_id: CASHFREE_CONFIG.adminBankVendorId,
-                amount: platformFee
-            }
-        ]
+        order_splits: [{ vendor_id: CASHFREE_CONFIG.adminBankVendorId, amount: platformFee }]
     });
 
     const options = {
@@ -489,14 +384,12 @@ app.post('/api/cashfree/create-order', (req, res) => {
     cfReq.end();
 });
 
-// 5b. Cashfree Webhook Verification & Wallet Credit
 app.post('/api/cashfree/webhook', (req, res) => {
     try {
         const signature = req.headers['x-cashfree-signature'];
         const timestamp = req.headers['x-cashfree-timestamp'];
         const rawBody = JSON.stringify(req.body);
 
-        // Verify cryptographic HMAC signature
         if (!CASHFREE_CONFIG.secretKey.startsWith("TEST_")) {
             const generatedSignature = crypto
                 .createHmac('sha256', CASHFREE_CONFIG.secretKey)
@@ -532,64 +425,30 @@ app.post('/api/cashfree/webhook', (req, res) => {
     }
 });
 
-// 5c. Automated Instant Withdrawal Payouts (IMPS/UPI)
 app.post('/api/cashfree/request-payout', (req, res) => {
     const { userId, amount, upiId } = req.body;
     const user = dbState.users[userId];
     
-    if (!user) {
-        return res.status(404).json({ success: false, message: "User not found" });
-    }
-
+    if (!user) return res.status(404).json({ success: false, message: "User not found" });
     const wAmt = parseFloat(amount);
-    if (isNaN(wAmt) || wAmt < 100) {
-        return res.status(400).json({ success: false, message: "Minimum withdrawal is ₹100" });
-    }
-    if (parseFloat(user.balance) < wAmt) {
-        return res.status(400).json({ success: false, message: "Insufficient wallet balance" });
-    }
+    if (isNaN(wAmt) || wAmt < 100) return res.status(400).json({ success: false, message: "Minimum withdrawal is ₹100" });
+    if (parseFloat(user.balance) < wAmt) return res.status(400).json({ success: false, message: "Insufficient wallet balance" });
 
-    // Deduct from wallet before initiating transfer
     user.balance = (parseFloat(user.balance) - wAmt).toFixed(2);
     const transferId = `payout_${Date.now()}_${userId}`;
 
     dbState.transactions.push({
-        id: transferId,
-        userId: user.id,
-        type: 'WITHDRAWAL',
-        amount: wAmt,
-        desc: `UPI Withdrawal to ${upiId}`,
-        timestamp: new Date()
+        id: transferId, userId: user.id, type: 'WITHDRAWAL', amount: wAmt, desc: `UPI Withdrawal to ${upiId}`, timestamp: new Date()
     });
 
     if (CASHFREE_CONFIG.secretKey.startsWith("TEST_")) {
-        return res.json({
-            success: true,
-            transfer_id: transferId,
-            status: "SUCCESS",
-            message: `₹${wAmt} withdrawal initiated to ${upiId}`,
-            balance: user.balance
-        });
+        return res.json({ success: true, transfer_id: transferId, status: "SUCCESS", message: `₹${wAmt} withdrawal initiated to ${upiId}`, balance: user.balance });
     }
 
-    const payload = JSON.stringify({
-        beneId: `bene_${userId}`,
-        amount: wAmt,
-        transferId: transferId,
-        transferMode: "upi",
-        remarks: "Nifty-7 Winnings Withdrawal"
-    });
-
+    const payload = JSON.stringify({ beneId: `bene_${userId}`, amount: wAmt, transferId: transferId, transferMode: "upi", remarks: "Nifty-7 Winnings Withdrawal" });
     const options = {
-        hostname: CASHFREE_CONFIG.payoutHostname,
-        path: "/payout/requestTransfer",
-        method: 'POST',
-        headers: {
-            'X-Client-Id': CASHFREE_CONFIG.appId,
-            'X-Client-Secret': CASHFREE_CONFIG.secretKey,
-            'Content-Type': 'application/json',
-            'Content-Length': Buffer.byteLength(payload)
-        }
+        hostname: CASHFREE_CONFIG.payoutHostname, path: "/payout/requestTransfer", method: 'POST',
+        headers: { 'X-Client-Id': CASHFREE_CONFIG.appId, 'X-Client-Secret': CASHFREE_CONFIG.secretKey, 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(payload) }
     };
 
     const payoutReq = https.request(options, (payoutRes) => {
@@ -599,9 +458,7 @@ app.post('/api/cashfree/request-payout', (req, res) => {
             try {
                 const parsed = JSON.parse(result);
                 res.json({ success: true, ...parsed, balance: user.balance });
-            } catch (err) {
-                res.status(500).json({ success: false, message: "Payout parsing error" });
-            }
+            } catch (err) { res.status(500).json({ success: false, message: "Payout parsing error" }); }
         });
     });
 
@@ -616,7 +473,7 @@ app.post('/api/cashfree/request-payout', (req, res) => {
 
 /**
  * ============================================================================
- * 6. AUTHENTICATION & FAST2SMS LIVE OTP ROUTES (UPGRADED TO BULK V2 POST JSON)
+ * 6. AUTHENTICATION & FAST2SMS LIVE OTP ROUTES (BULK V2 POST JSON)
  * ============================================================================
  */
 app.post('/api/auth/request-otp', (req, res) => {
@@ -625,7 +482,6 @@ app.post('/api/auth/request-otp', (req, res) => {
         return res.status(400).json({ success: false, message: "Enter a valid 10-digit mobile number" });
     }
 
-    // Generate real 6-digit math OTP and store in memory
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
     dbState.otpCache[phone] = otp;
 
@@ -635,7 +491,6 @@ app.post('/api/auth/request-otp', (req, res) => {
         return res.json({ success: true, message: `Test OTP is ${otp}` });
     }
 
-    // Upgraded to Fast2SMS Bulk V2 POST JSON standard for reliable SMS delivery
     const payload = JSON.stringify({
         route: "q",
         message: `Your Nifty-7 verification code is ${otp}`,
@@ -688,15 +543,13 @@ app.post('/api/auth/verify-otp', (req, res) => {
     const { phone, otp, referralCode } = req.body;
     const cachedOtp = dbState.otpCache[phone];
 
-    // Verify against real Fast2SMS generated OTP
     if (!cachedOtp || otp !== cachedOtp) {
-        // Fallback: allow 123456 only if Fast2SMS live key is NOT configured in Render
         if (otp !== "123456" || process.env.FAST2SMS_KEY) {
             return res.status(400).json({ success: false, message: "Invalid or expired OTP code." });
         }
     }
 
-    delete dbState.otpCache[phone]; // Clear OTP from cache once verified
+    delete dbState.otpCache[phone];
 
     let user = Object.values(dbState.users).find(u => u.phone === phone);
     if (!user) {
@@ -708,6 +561,7 @@ app.post('/api/auth/verify-otp', (req, res) => {
             const referrer = Object.values(dbState.users).find(u => u.referral_code === referralCode.toUpperCase());
             if (referrer) {
                 referredBy = referrer.id;
+                referrer.refCount = (referrer.refCount || 0) + 1;
             }
         }
 
@@ -718,6 +572,8 @@ app.post('/api/auth/verify-otp', (req, res) => {
             balance: "500.00",
             referral_code: myRefCode,
             referred_by: referredBy,
+            refCount: 0,
+            refEarnings: "0.00",
             kyc_status: "verified",
             created_at: new Date()
         };
@@ -736,11 +592,14 @@ app.get('/api/contests', (req, res) => {
     res.json({ success: true, contests: Object.values(dbState.contests) });
 });
 
+app.get('/api/contests/prices', (req, res) => {
+    res.json({ success: true, prices: liveMarketCache });
+});
+
 app.get('/api/contests/:id/leaderboard', (req, res) => {
     const contestId = req.params.id;
     const leaderboard = dbState.leaderboards[contestId] || [];
     
-    // Calculate live current points using real-time market percentages
     const updatedLeaderboard = leaderboard.map(entry => {
         const bullChange = liveMarketCache[entry.bull]?.change || 0;
         const calfChange = liveMarketCache[entry.calf]?.change || 0;
@@ -762,34 +621,23 @@ app.post('/api/contests/join', (req, res) => {
     const user = dbState.users[userId];
     const contest = dbState.contests[contestId];
 
-    if (!user) {
-        return res.status(404).json({ success: false, message: "User not found" });
-    }
-    if (!contest) {
-        return res.status(404).json({ success: false, message: "Contest not found" });
-    }
-    if (contest.status !== "open") {
-        return res.status(400).json({ success: false, message: "Contest closed for new entries" });
-    }
-    if (contest.joined >= contest.max_spots) {
-        return res.status(400).json({ success: false, message: "Contest is fully booked!" });
-    }
-    if (parseFloat(user.balance) < contest.entry_fee) {
-        return res.status(400).json({ success: false, message: "Insufficient wallet balance" });
-    }
+    if (!user) return res.status(404).json({ success: false, message: "User not found" });
+    if (!contest) return res.status(404).json({ success: false, message: "Contest not found" });
+    if (contest.status !== "open") return res.status(400).json({ success: false, message: "Contest closed for new entries" });
+    if (contest.joined >= contest.max_spots) return res.status(400).json({ success: false, message: "Contest is fully booked!" });
+    if (parseFloat(user.balance) < contest.entry_fee) return res.status(400).json({ success: false, message: "Insufficient wallet balance" });
 
-    // Deduct contest entry fee from wallet balance
     user.balance = (parseFloat(user.balance) - contest.entry_fee).toFixed(2);
     contest.joined += 1;
     contest.pot = contest.joined * contest.entry_fee;
 
     // 💸 1% REFERRAL COMMISSION SHARE LOGIC
-    // Deducts 1% from gross platform cut and credits directly to referrer
     if (user.referred_by) {
         const referrer = dbState.users[user.referred_by];
         if (referrer) {
             const refBonus = parseFloat((contest.entry_fee * 0.01).toFixed(2));
             referrer.balance = (parseFloat(referrer.balance) + refBonus).toFixed(2);
+            referrer.refEarnings = (parseFloat(referrer.refEarnings || 0) + refBonus).toFixed(2);
             dbState.transactions.push({
                 id: `ref_${Date.now()}_${user.id}`,
                 userId: referrer.id,
@@ -837,12 +685,19 @@ app.post('/api/contests/join', (req, res) => {
  */
 app.get('/api/user/:id/profile', (req, res) => {
     const user = dbState.users[req.params.id];
-    if (!user) {
-        return res.status(404).json({ success: false, message: "User not found" });
-    }
+    if (!user) return res.status(404).json({ success: false, message: "User not found" });
     
     const userTxns = dbState.transactions.filter(t => t.userId === user.id).reverse();
     res.json({ success: true, user, transactions: userTxns });
+});
+
+app.post('/api/user/update-handle', (req, res) => {
+    const { userId, handle } = req.body;
+    const user = dbState.users[userId];
+    if (!user) return res.status(404).json({ success: false, message: "User not found" });
+    
+    user.handle = handle;
+    res.json({ success: true, handle: user.handle });
 });
 
 /**
@@ -854,7 +709,6 @@ app.get(['/contactus', '/termsandcondition', '/refundpolicy', '/privacypolicy'],
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// Catch-all SPA route for frontend navigation
 app.get('/*splat', (req, res) => {
     if (!req.path.startsWith('/api/')) {
         res.sendFile(path.join(__dirname, 'public', 'index.html'));
@@ -865,7 +719,7 @@ app.get('/*splat', (req, res) => {
 
 /**
  * ============================================================================
- * 10. SERVER INITIALIZATION & STARTUP LOGGING
+ * 10. SERVER INITIALIZATION
  * ============================================================================
  */
 server.listen(PORT, () => {
