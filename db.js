@@ -12,9 +12,16 @@ const pool = new Pool({
     }
 });
 
-pool.on('connect', () => {
-    console.log('✅ PostgreSQL connected successfully');
-});
+// Direct database connection test
+pool.query('SELECT NOW()')
+    .then((result) => {
+        console.log('✅ DATABASE CONNECTED');
+        console.log('🕒 DATABASE TIME:', result.rows[0].now);
+    })
+    .catch((err) => {
+        console.error('❌ DATABASE CONNECTION FAILED');
+        console.error(err.message);
+    });
 
 pool.on('error', (err) => {
     console.error('❌ PostgreSQL pool error:', err.message);
