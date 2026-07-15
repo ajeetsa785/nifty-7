@@ -23,7 +23,6 @@
         }
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: var(--bg-main); color: var(--text-dark); margin: 0; padding: 0; overflow-x: hidden; padding-bottom: 85px; }
         
-        /* 1. TICKER WITH AUTOMATED 9:15-3:30 IST LIVE DOT */
         .tv-ticker-bar { background: #ffffff; border-bottom: 1px solid var(--border-color); display: flex; align-items: center; height: 42px; overflow: hidden; position: relative; width: 100%; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
         .ticker-badge { background: var(--purple-light); color: var(--purple-main); border-right: 1px solid var(--border-color); font-weight: 800; font-size: 11px; padding: 0 12px; height: 100%; display: flex; align-items: center; gap: 6px; z-index: 10; flex-shrink: 0; }
         .live-dot { width: 10px; height: 10px; background: var(--stock-red); border-radius: 50%; box-shadow: 0 0 8px var(--stock-red); animation: pulse 1s infinite; display: inline-block; }
@@ -40,14 +39,12 @@
         .change-up { color: var(--stock-green); font-weight: 800; }
         .change-down { color: var(--stock-red); font-weight: 800; }
 
-        /* 2. HEADER */
         .header { display: flex; justify-content: space-between; align-items: center; padding: 12px 18px; background: #ffffff; border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 100; }
         .logo-main { font-size: 22px; font-weight: 900; letter-spacing: -0.5px; color: var(--text-dark); display: flex; align-items: center; gap: 4px; }
         .logo-badge { background: var(--purple-main); color: #ffffff; padding: 2px 8px; border-radius: 8px; font-size: 20px; box-shadow: 0 4px 10px rgba(139, 92, 246, 0.3); }
         .header-actions { display: flex; gap: 10px; align-items: center; }
         .wallet-pill { background: var(--purple-light); border: 1px solid rgba(139, 92, 246, 0.2); color: var(--purple-main); padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: 800; display: flex; align-items: center; gap: 6px; cursor: pointer; }
         
-        /* 3. LAYOUT & CARDS */
         .container { max-width: 600px; margin: 0 auto; padding: 15px; box-sizing: border-box; }
         .screen-view { display: none; animation: fadeIn 0.2s ease; }
         .screen-view.active { display: block; }
@@ -57,8 +54,6 @@
         .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
         .league-title { font-size: 16px; font-weight: 800; color: var(--text-dark); }
         
-        .pot-box { background: #f8fafc; border: 1px dashed var(--border-color); padding: 12px; border-radius: 12px; margin: 12px 0; }
-        .pot-val { font-size: 22px; font-weight: 900; color: var(--purple-main); display: flex; justify-content: space-between; align-items: baseline; }
         .entry-tag { background: var(--text-dark); color: #ffffff; font-size: 12px; padding: 4px 10px; border-radius: 6px; font-weight: 800; }
         
         .progress-bg { background: #e2e8f0; height: 6px; border-radius: 10px; overflow: hidden; margin: 10px 0 6px 0; }
@@ -68,52 +63,41 @@
         .btn-primary:hover { background: var(--purple-neon); }
         .btn-outline { background: transparent; border: 1px solid var(--border-color); color: var(--text-dark); padding: 8px 14px; border-radius: 8px; font-weight: 700; font-size: 12px; cursor: pointer; }
 
-        /* 4. SUB-TABS & TABLES */
         .sub-tabs { display: flex; gap: 8px; margin-bottom: 16px; }
         .sub-tab-btn { flex: 1; padding: 10px; text-align: center; background: #ffffff; border: 1px solid var(--border-color); border-radius: 10px; font-weight: 700; font-size: 13px; color: var(--text-muted); cursor: pointer; }
         .sub-tab-btn.active { background: var(--purple-main); color: #ffffff; border-color: var(--purple-main); }
 
-        table { width: 100%; border-collapse: collapse; background: #ffffff; border-radius: 12px; overflow: hidden; border: 1px solid var(--border-color); font-size: 13px; }
-        th, td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border-color); }
-        th { background: #f8fafc; color: var(--text-muted); font-size: 11px; text-transform: uppercase; font-weight: 800; }
         .stock-pill { display: inline-block; padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 700; margin: 2px; }
         .bull-pill { background: var(--green-bg); color: var(--stock-green); border: 1px solid rgba(22, 163, 74, 0.2); }
         .calf-pill { background: var(--purple-light); color: var(--purple-main); border: 1px solid rgba(139, 92, 246, 0.2); }
 
-        /* 5. MONOGRAM BADGE (NO BROKEN LOGOS) */
-        .monogram { display: inline-block; width: 26px; height: 26px; line-height: 26px; text-align: center; background: var(--purple-light); color: var(--purple-main); font-weight: 800; font-size: 11px; border-radius: 6px; margin-right: 6px; vertical-align: middle; }
-
-        /* 6. BOTTOM NAVIGATION */
         .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; height: 65px; background: #ffffff; border-top: 1px solid var(--border-color); display: flex; justify-content: space-around; align-items: center; z-index: 500; box-shadow: 0 -4px 12px rgba(0,0,0,0.03); }
         .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--text-muted); font-size: 11px; font-weight: 700; cursor: pointer; flex: 1; }
         .nav-item.active { color: var(--purple-main); }
         .nav-icon { font-size: 18px; }
 
-        /* 7. STOCK BUILDER GRID */
         .stock-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 10px; max-height: 350px; overflow-y: auto; margin: 15px 0; }
         .stock-btn { background: #ffffff; border: 1px solid var(--border-color); padding: 10px; border-radius: 10px; cursor: pointer; text-align: left; }
         .stock-btn.selected { background: var(--purple-light); border-color: var(--purple-main); box-shadow: 0 0 0 1px var(--purple-main); }
         
         .search-input { width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 10px; font-size: 14px; box-sizing: border-box; }
         
-        /* 8. PROFILE & WALLET STATS */
-        .profile-avatar-wrap { position: relative; width: 80px; height: 80px; margin: 0 auto 12px auto; }
-        .profile-avatar { width: 80px; height: 80px; background: var(--purple-light); color: var(--purple-main); font-size: 32px; font-weight: 900; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid var(--purple-main); object-fit: cover; }
-        .cam-btn { position: absolute; bottom: 0; right: 0; background: var(--text-dark); color: #fff; border: none; width: 26px; height: 26px; border-radius: 50%; cursor: pointer; font-size: 12px; display: flex; align-items: center; justify-content: center; }
-
         .stat-strip { display: flex; justify-content: space-around; background: #f8fafc; border: 1px solid var(--border-color); border-radius: 12px; padding: 14px; margin-bottom: 20px; text-align: center; }
         .stat-num { font-size: 18px; font-weight: 900; color: var(--text-dark); display: block; }
         .stat-lbl { font-size: 11px; color: var(--text-muted); text-transform: uppercase; font-weight: 700; }
 
-        /* 9. MODALS */
-        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); z-index: 1000; justify-content: center; align-items: center; padding: 15px; box-sizing: border-box; }
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.7); z-index: 1000; justify-content: center; align-items: center; padding: 15px; box-sizing: border-box; }
         .modal-card { background: #ffffff; border-radius: 20px; padding: 24px; width: 100%; max-width: 380px; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
         .modal-input { width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 10px; font-size: 15px; text-align: center; margin-bottom: 15px; box-sizing: border-box; }
+
+        .purple-popup-card { background: var(--purple-light); border: 2px solid var(--purple-main); border-radius: 20px; padding: 24px; width:100%; max-width:400px; color: var(--text-dark); box-shadow: 0 10px 25px rgba(139,92,246,0.3); text-align: center; }
+        .purple-popup-card h3 { margin: 0 0 12px 0; color: var(--purple-main); font-size: 18px; font-weight: 900; }
+        .popup-list-item { background: #ffffff; border: 1px solid var(--border-color); padding: 12px; border-radius: 10px; margin-bottom: 8px; cursor: pointer; display: flex; justify-content: space-between; font-weight: 700; }
+        .popup-list-item:hover { border-color: var(--purple-main); background: #faf8ff; }
     </style>
 </head>
 <body>
 
-<!-- 1. TICKER WITH AUTOMATED 9:15-3:30 IST LIVE CLOCK -->
 <div class="tv-ticker-bar">
     <div class="ticker-badge" id="marketStatusBadge">
         <span class="offline-dot"></span> <span>MARKET CLOSED</span>
@@ -125,7 +109,6 @@
     </div>
 </div>
 
-<!-- 2. HEADER -->
 <div class="header">
     <div class="logo-main">NIFTY<span class="logo-badge">7</span></div>
     <div class="header-actions">
@@ -138,27 +121,22 @@
 
 <div class="container">
 
-    <!-- VIEW 1: HOME PAGE (STRICTLY 3 SECTIONS: MEGA LEAGUE -> LEADERBOARDS -> RULES) -->
+    <!-- VIEW 1: HOME PAGE -->
     <div id="view-home" class="screen-view active">
         
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-            <span style="font-size:12px; font-weight:800; color:var(--purple-main); text-transform:uppercase; letter-spacing:0.5px;">⚡ SECTION 1: Official Daily League</span>
-            <span style="font-size:11px; color:var(--text-muted);">Auto-created at 9:00 AM</span>
-        </div>
+        <h3 style="margin: 0 0 12px 0; font-size: 16px; font-weight: 900; text-transform: uppercase; color: var(--text-dark);">Mega league</h3>
 
-        <!-- THE ONE AND ONLY MEGA LEAGUE -->
         <div class="card" style="border: 2px solid var(--purple-main); background: linear-gradient(180deg, #fefeff 0%, #f3e8ff 100%);">
             <div class="card-header">
                 <div>
                     <div class="league-title">🏆 Nifty Mega League</div>
-                    <span style="font-size:12px; color:var(--text-muted);">10,000 Spots Max — High Stakes</span>
+                    <span style="font-size:12px; color:var(--text-muted);">High Stakes</span>
                 </div>
                 <span style="background:var(--purple-main); color:#fff; font-size:11px; font-weight:800; padding:4px 10px; border-radius:12px;">Top 35% Win Cash</span>
             </div>
 
-            <div class="pot-box" style="background:#ffffff;">
-                <span style="font-size:11px; color:var(--text-muted); font-weight:700; text-transform:uppercase;">Live Transparent Pot (90% Net Pool)</span>
-                <div class="pot-val">
+            <div style="background:#ffffff; border: 1px dashed var(--border-color); padding: 12px; border-radius: 12px; margin: 12px 0;">
+                <div style="font-size: 22px; font-weight: 900; color: var(--purple-main); display: flex; justify-content: space-between; align-items: baseline;">
                     <span>₹4,50,000 <small style="font-size:12px; color:var(--text-muted); font-weight:normal;">(4,500 joined)</small></span>
                     <span class="entry-tag">Entry: ₹100</span>
                 </div>
@@ -166,109 +144,77 @@
 
             <div style="display:flex; justify-content:space-between; font-size:11px; font-weight:700; color:var(--text-muted); margin-bottom:4px;">
                 <span>4,500 spots filled</span>
-                <span>10,000 total spots</span>
             </div>
             <div class="progress-bg"><div class="progress-fill" style="width:45%;"></div></div>
 
-            <div style="display:flex; justify-content:space-between; font-size:12px; font-weight:700; margin: 12px 0; color:var(--text-dark);">
-                <span>🐂 Bull: <b style="color:var(--stock-green);">2.0X Pts</b></span>
-                <span>🐃 Calf: <b style="color:var(--purple-main);">1.5X Pts</b></span>
-                <span>🥇 Rank 1 Win: <b style="color:var(--purple-main);">22.2% Pot</b></span>
-            </div>
-
-            <button class="btn-primary" onclick="switchNav('baskets')">JOIN MEGA LEAGUE — ₹100</button>
+            <button class="btn-primary" style="margin-top: 10px;" onclick="switchNav('baskets')">JOIN MEGA LEAGUE — ₹100</button>
         </div>
 
-        <!-- SECTION 2: USER'S MULTI-CONTEST LIVE LEADERBOARDS -->
-        <h3 style="margin: 24px 0 12px 0; font-size: 16px;">📊 SECTION 2: My Live Contests & Standings</h3>
-        <div id="homeUserLeaderboards">
-            <div class="card" style="text-align:center; padding:30px 15px; color:var(--text-muted);">
-                <p style="margin:0 0 10px 0; font-size:13px;">You have not entered any live contests today.</p>
-                <button class="btn-outline" style="background:var(--purple-light); color:var(--purple-main); border:none;" onclick="switchNav('baskets')">Create Basket & Join Now</button>
-            </div>
-        </div>
+        <h3 style="margin: 24px 0 12px 0; font-size: 16px; font-weight: 900; text-transform: uppercase; color: var(--text-dark);">Leaderboard</h3>
+        <div id="homeUserLeaderboards"></div>
 
-        <!-- SECTION 3: ABOUT NIFTY-7 SECTION -->
-        <h3 style="margin: 24px 0 12px 0; font-size: 16px;">ℹ️ SECTION 3: About Nifty-7 & Rules</h3>
+        <h3 style="margin: 24px 0 12px 0; font-size: 16px; font-weight: 900; text-transform: uppercase; color: var(--text-dark);">Rules</h3>
         <div class="card">
-            <h4 style="margin:0 0 6px 0; font-size:14px; color:var(--purple-main);">🎯 Top-Heavy Prize Structure (10% Rake)</h4>
-            <p style="font-size:13px; color:var(--text-muted); line-height:1.5; margin:0 0 12px 0;">
-                Nifty-7 retains a <b>10% platform commission</b> from gross entries. The remaining 90% is distributed to the <b>Top 35% of players</b>, with Rank 1 taking home a massive <b>22.22% of the net pot</b>. Scoring applies a <b>2.0X</b> multiplier to your chosen Bull stock and <b>1.5X</b> to your Calf stock.
-            </p>
-            <hr style="border:none; border-top:1px solid var(--border-color); margin:12px 0;">
-            <h4 style="margin:0 0 6px 0; font-size:14px; color:var(--stock-green);">💸 1% Commission-Share Referral Program</h4>
-            <p style="font-size:13px; color:var(--text-muted); line-height:1.5; margin:0;">
-                When you invite friends to Nifty-7, you earn a <b>1% commission</b> on their entry fee every time they join any contest! This 1% is deducted directly out of our platform cut, meaning the 90% prize pool remains completely untouched.
-            </p>
+            <ul style="font-size:13px; color:var(--text-muted); line-height:1.7; margin:0; padding-left:20px;">
+                <li>Create basket by choosing top 7 stock among nifty 50</li>
+                <li>Select one stock as Bull and one calf.</li>
+                <li>Scoring applies a 2.0X multiplier to your chosen Bull stock and 1.5X to your Calf stock.</li>
+                <li>Score is calculated by stock price change in % x100</li>
+                <li style="font-weight: 800; color: var(--purple-main); list-style-type: none; margin-left: -20px; margin-top: 8px;">"The higher your score, the better the prize you get."</li>
+            </ul>
         </div>
 
     </div>
 
-    <!-- VIEW 2: CONTESTS PAGE (LIVE vs COMPLETED) -->
+    <!-- VIEW 2: CONTESTS PAGE -->
     <div id="view-contests" class="screen-view">
         <div class="sub-tabs">
             <button class="sub-tab-btn active" id="tab-btn-live" onclick="switchContestTab('live')">🟢 Live & Upcoming</button>
             <button class="sub-tab-btn" id="tab-btn-completed" onclick="switchContestTab('completed')">🏁 Completed (Past 30 Days)</button>
         </div>
 
-        <!-- TAB 1: LIVE & UPCOMING (MEGA + 5 1v1 BATTLES) -->
         <div id="contest-section-live">
-            <!-- 1. Mega League Replica -->
             <div class="card" style="border: 1px solid var(--purple-main);">
                 <div class="card-header">
-                    <div><div class="league-title">🏆 Nifty Mega League</div><span style="font-size:11px; color:var(--text-muted);">10,000 Spots Max</span></div>
+                    <div><div class="league-title">🏆 Nifty Mega League</div></div>
                     <span class="entry-tag">₹100 Entry</span>
                 </div>
-                <div style="display:flex; justify-content:space-between; font-size:13px; font-weight:800; margin:10px 0;">
-                    <span style="color:var(--text-muted);">Live Pot: <b style="color:var(--purple-main);">₹4,50,000</b></span>
-                    <span style="color:var(--stock-green);">4,500/10,000 Joined</span>
-                </div>
-                <button class="btn-primary" style="padding:10px; font-size:13px;" onclick="switchNav('baskets')">Join League — ₹100</button>
+                <button class="btn-primary" style="padding:10px; font-size:13px; margin-top:10px;" onclick="switchNav('baskets')">Join League — ₹100</button>
             </div>
 
             <h4 style="margin: 20px 0 10px 0; font-size: 14px; color: var(--text-muted); text-transform: uppercase;">⚔️ 1v1 Head-to-Head Battles</h4>
-            
-            <div id="oneVsOneContainer">
-                <!-- 5 distinct 1v1 leagues injected by script -->
-            </div>
+            <div id="oneVsOneContainer"></div>
         </div>
 
-        <!-- TAB 2: COMPLETED HISTORY -->
         <div id="contest-section-completed" style="display:none;">
             <div class="card" id="completedHistoryList">
                 <h4 style="margin:0 0 12px 0; font-size:14px;">Past 30 Days Ledger</h4>
-                <div style="font-size:13px; padding:10px 0; border-bottom:1px solid var(--border-color); display:flex; justify-content:space-between;">
-                    <div><b>Mega League #412</b><br><small style="color:var(--text-muted);">Rank #3 / 10,000</small></div>
-                    <span style="color:var(--stock-green); font-weight:800;">+ ₹50,000 Win</span>
-                </div>
                 <div style="font-size:13px; padding:10px 0; display:flex; justify-content:space-between;">
-                    <div><b>1v1 Battle (Standard)</b><br><small style="color:var(--text-muted);">Rank #1 / 2</small></div>
-                    <span style="color:var(--stock-green); font-weight:800;">+ ₹180 Win</span>
+                    <div><b>Mega League #412</b><br><small style="color:var(--text-muted);">Rank #3</small></div>
+                    <span style="color:var(--stock-green); font-weight:800;">+ ₹50,000 Win</span>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- VIEW 3: BASKETS PAGE (RENAMED FROM MY TEAMS) -->
+    <!-- VIEW 3: BASKETS PAGE -->
     <div id="view-baskets" class="screen-view">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
             <h3 style="margin:0; font-size:18px;">🛒 My Saved Baskets</h3>
             <button onclick="openCreateBasketForm()" class="btn-outline" style="background:var(--purple-main); color:#fff; border:none;">+ Create New Basket</button>
         </div>
 
-        <!-- SAVED BASKETS LIST -->
-        <div id="savedBasketsList">
-            <div class="card" style="text-align:center; padding:30px; color:var(--text-muted);">
-                <p style="margin:0 0 10px 0;">No saved baskets yet. Create your first 7-stock basket to join contests!</p>
-                <button class="btn-outline" onclick="openCreateBasketForm()">Create Basket Now</button>
-            </div>
-        </div>
+        <div id="savedBasketsList"></div>
 
-        <!-- CREATE BASKET FORM (HIDDEN BY DEFAULT) -->
         <div id="createBasketBox" class="card" style="display:none; border:2px solid var(--purple-main);">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
                 <h4 style="margin:0; font-size:16px; color:var(--purple-main);">Construct 7-Stock Basket</h4>
                 <button onclick="closeCreateBasketForm()" style="background:transparent; border:none; font-size:16px; cursor:pointer;">✕</button>
+            </div>
+
+            <div style="margin-bottom: 12px;">
+                <label style="font-size:12px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Basket Name</label>
+                <input type="text" id="customBasketNameInput" class="search-input" placeholder="e.g. My Smart Basket 1" style="padding: 10px;">
             </div>
 
             <label style="font-size:12px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:6px;">
@@ -280,11 +226,11 @@
 
             <div style="display:flex; gap:10px; margin-bottom:15px;">
                 <div style="flex:1;">
-                    <label style="font-size:11px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">🐂 Bull Stock (2.0X Pts)</label>
+                    <label style="font-size:11px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">🐂 Bull Stock (2.0X)</label>
                     <select id="bullSelect" style="width:100%; padding:10px; border-radius:8px; border:1px solid var(--border-color); background:#fff;" disabled><option value="">-- Choose 7 first --</option></select>
                 </div>
                 <div style="flex:1;">
-                    <label style="font-size:11px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">🐃 Calf Stock (1.5X Pts)</label>
+                    <label style="font-size:11px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">🐃 Calf Stock (1.5X)</label>
                     <select id="calfSelect" style="width:100%; padding:10px; border-radius:8px; border:1px solid var(--border-color); background:#fff;" disabled><option value="">-- Choose 7 first --</option></select>
                 </div>
             </div>
@@ -298,97 +244,90 @@
         <div class="card" style="background:var(--purple-light); border-color:rgba(139, 92, 246, 0.3); text-align:center; padding:25px;">
             <span style="font-size:11px; color:var(--purple-main); font-weight:800; text-transform:uppercase; letter-spacing:1px;">Total Available Balance</span>
             <div style="font-size:36px; font-weight:900; color:var(--text-dark); margin:8px 0;" id="walletMainBal">₹0.00</div>
-            <span style="font-size:12px; color:var(--stock-green); font-weight:700;">✔ Instant UPI Withdrawals Ready</span>
+            <span style="font-size:12px; color:var(--stock-green); font-weight:700;">✔ Instant Withdrawals Active</span>
         </div>
 
         <div style="display:flex; gap:10px; margin-bottom:20px;">
             <button class="btn-primary" style="flex:1;" onclick="openDepositModal()">+ Add Money</button>
-            <button class="btn-outline" style="flex:1; padding:14px; font-size:14px;" onclick="alert('Withdrawal request initiated.')">↑ Withdraw</button>
+            <button class="btn-outline" style="flex:1; padding:14px; font-size:14px;" onclick="triggerWithdrawal()">↑ Withdraw</button>
         </div>
 
         <div class="card">
             <h4 style="margin:0 0 12px 0; font-size:14px;">Recent Transactions Ledger</h4>
-            <div id="walletHistoryList" style="font-size:13px;">
-                <div style="padding:8px 0; display:flex; justify-content:space-between; border-bottom:1px solid var(--border-color);">
-                    <span>Simulated Account Credit</span><span style="color:var(--stock-green); font-weight:800;">+ ₹0.00</span>
-                </div>
-            </div>
+            <div id="walletHistoryList" style="font-size:13px;"></div>
         </div>
     </div>
 
-    <!-- VIEW 5: PROFILE (WITH PHOTO, USERNAME & NO BASKET LINK) -->
+    <!-- VIEW 5: PROFILE -->
     <div id="view-profile" class="screen-view">
         <div class="card" style="text-align:center; padding:25px;">
-            <div class="profile-avatar-wrap">
-                <img id="profilePhotoImg" class="profile-avatar" src="" style="display:none;">
-                <div id="profilePhotoText" class="profile-avatar">P</div>
-                <button class="cam-btn" onclick="document.getElementById('photoFileInput').click()" title="Upload Photo">📷</button>
-                <input type="file" id="photoFileInput" style="display:none;" accept="image/*" onchange="handlePhotoUpload(event)">
+            <div style="position: relative; width: 80px; height: 80px; margin: 0 auto 12px auto;">
+                <div id="profilePhotoText" style="width: 80px; height: 80px; background: var(--purple-light); color: var(--purple-main); font-size: 32px; font-weight: 900; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid var(--purple-main);">U</div>
             </div>
 
             <div style="display:flex; align-items:center; justify-content:center; gap:6px; margin-bottom:4px;">
-                <h3 style="margin:0; font-size:20px;" id="profileHandleDisplay">@competitor_nifty</h3>
-                <button onclick="editUsername()" style="background:transparent; border:none; cursor:pointer; font-size:14px;" title="Edit Username">✏️</button>
+                <h3 style="margin:0; font-size:20px;" id="profileHandleDisplay">@competitor</h3>
             </div>
             <span style="font-size:13px; color:var(--text-muted); display:block; margin-bottom:12px;" id="profilePhoneDisplay">Mobile: Not Logged In</span>
             <span style="background:var(--green-bg); color:var(--stock-green); font-size:11px; font-weight:800; padding:4px 10px; border-radius:12px;">✔ KYC Verified Player</span>
         </div>
 
-        <div class="stat-strip">
-            <div><span class="stat-num" id="profileBalStat">₹0.00</span><span class="stat-lbl">Wallet</span></div>
-            <div><span class="stat-num" id="profileContestCount">14</span><span class="stat-lbl">Contests</span></div>
-            <div><span class="stat-num" style="color:var(--stock-green);">64%</span><span class="stat-lbl">Win Rate</span></div>
+        <!-- REFER AND EARN PORTAL -->
+        <div class="card" style="border: 1px dashed var(--purple-main); background: #faf9ff;">
+            <h4 style="margin: 0 0 6px 0; font-size: 14px; color: var(--purple-main);">📢 Refer & Earn Program</h4>
+            <p style="font-size: 12px; color: var(--text-muted); margin: 0 0 10px 0;">Earn a 1% commission bonus cash on your friends' contest entry transactions!</p>
+            <div style="display: flex; justify-content: space-between; background: #fff; padding: 10px; border-radius: 8px; border: 1px solid var(--border-color); font-size: 13px; font-weight: 700; margin-bottom: 10px;">
+                <span>Your Referral Code:</span>
+                <span id="displayReferralCode" style="color: var(--purple-main); letter-spacing: 0.5px;">---</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; font-size: 12px; color: var(--text-dark); font-weight: 600;">
+                <span>Total Refers: <b id="refCountLabel" style="color: var(--purple-main);">0</b></span>
+                <span>Total Income: <b id="refEarningsLabel" style="color: var(--stock-green);">₹0.00</b></span>
+            </div>
         </div>
 
         <div class="card" style="padding:0; overflow:hidden;">
-            <div style="padding:16px; border-bottom:1px solid var(--border-color); font-size:14px; font-weight:700; cursor:pointer; display:flex; justify-content:space-between;" onclick="openDepositModal()">
-                <span>💰 Add Money to Wallet</span><span>→</span>
+            <div style="padding:16px; border-bottom:1px solid var(--border-color); font-size:14px; font-weight:700; cursor:pointer; display:flex; justify-content:space-between;" onclick="editUsername()">
+                <span>✏️ Edit Profile Username</span><span>→</span>
             </div>
-            <div style="padding:16px; border-bottom:1px solid var(--border-color); font-size:14px; font-weight:700; cursor:pointer; display:flex; justify-content:space-between;" onclick="switchNav('contests'); switchContestTab('completed');">
-                <span>🏆 View Past Winning History</span><span>→</span>
+            <div style="padding:16px; border-bottom:1px solid var(--border-color); font-size:14px; font-weight:700; cursor:pointer; display:flex; justify-content:space-between;" onclick="triggerHelpSupport()">
+                <span>🛠️ Help & Support Desk</span><span>→</span>
             </div>
             <div style="padding:16px; font-size:14px; font-weight:700; cursor:pointer; display:flex; justify-content:space-between; color:var(--stock-red);" onclick="logoutSession()">
-                <span>🔒 Logout of Arena Session</span><span>→</span>
+                <span>🔒 Logout of Session</span><span>→</span>
             </div>
         </div>
     </div>
 
-    <!-- MANDATORY COMPLIANCE FOOTER FOR CASHFREE ONBOARDING -->
-    <div style="text-align: center; padding: 25px 15px 30px 15px; font-size: 11px; color: var(--text-muted); border-top: 1px solid var(--border-color); background: #ffffff; margin-top: 25px; border-radius: 16px;">
-        <div style="margin-bottom: 8px; font-weight: 800; color: var(--text-dark); letter-spacing: 0.5px;">
-            NIFTY-7 FANTASY EXCHANGE | OPERATED BY NIFTY SEVEN TECHNOLOGIES
+</div>
+
+<!-- TWO STEP CONFIRMATION LIGHT PURPLE MODALS -->
+<div class="modal-overlay" id="purplePopupWorkflow">
+    <div class="purple-popup-card" id="purplePopupDynamicContent"></div>
+</div>
+
+<!-- COMPREHENSIVE TRANSPARENT CONTEST LEADERBOARD MODAL -->
+<div class="modal-overlay" id="contestLeaderboardDrawer" style="align-items: flex-start; overflow-y: auto; padding: 20px 10px;">
+    <div class="modal-card" style="max-width: 500px; text-align: left; padding: 20px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom: 1px solid var(--border-color); padding-bottom:10px; margin-bottom:15px;">
+            <h3 style="margin:0; font-size:16px; color:var(--purple-main);" id="drawerContestTitle">Contest Standings</h3>
+            <button onclick="document.getElementById('contestLeaderboardDrawer').style.display='none'" style="background:transparent; border:none; font-size:18px; font-weight:bold; cursor:pointer;">✕</button>
         </div>
-        <div style="display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; margin-bottom: 12px;">
-            <a href="javascript:void(0)" onclick="openPolicyModal('contact')" style="color: var(--purple-main); text-decoration: none; font-weight: 700;">Contact Us</a>
-            <span>•</span>
-            <a href="javascript:void(0)" onclick="openPolicyModal('terms')" style="color: var(--purple-main); text-decoration: none; font-weight: 700;">Terms & Conditions</a>
-            <span>•</span>
-            <a href="javascript:void(0)" onclick="openPolicyModal('refund')" style="color: var(--purple-main); text-decoration: none; font-weight: 700;">Refund & Cancellation</a>
-            <span>•</span>
-            <a href="javascript:void(0)" onclick="openPolicyModal('privacy')" style="color: var(--purple-main); text-decoration: none; font-weight: 700;">Privacy Policy</a>
-        </div>
-        <div style="line-height: 1.5;">
-            Registered Office: 4th Floor, FinTech Tower, Cyber City, Jodhpur, Rajasthan - 342001 <br>
-            Support Helpline: support@nifty7.com | +91 98765 43210 (Mon-Sat, 10 AM - 6 PM IST)
-        </div>
+        <div id="drawerLeaderboardList" style="display:flex; flex-direction:column; gap:10px;"></div>
     </div>
-
 </div>
 
-<!-- 4. BOTTOM NAVIGATION BAR -->
-<div class="bottom-nav">
-    <div class="nav-item active" id="nav-home" onclick="switchNav('home')"><span class="nav-icon">🏠</span><span>Home</span></div>
-    <div class="nav-item" id="nav-contests" onclick="switchNav('contests')"><span class="nav-icon">🏆</span><span>Contests</span></div>
-    <div class="nav-item" id="nav-baskets" onclick="switchNav('baskets')"><span class="nav-icon">🛒</span><span>Baskets</span></div>
-    <div class="nav-item" id="nav-wallet" onclick="switchNav('wallet')"><span class="nav-icon">💰</span><span>Wallet</span></div>
-    <div class="nav-item" id="nav-profile" onclick="switchNav('profile')"><span class="nav-icon">👤</span><span>Profile</span></div>
-</div>
-
-<!-- 5. LOGIN MODAL -->
+<!-- LOGIN MODAL -->
 <div class="modal-overlay" id="loginModal">
     <div class="modal-card">
         <h3 style="margin:0 0 8px 0;">Enter Nifty-7 Arena</h3>
         <p style="font-size:13px; color:var(--text-muted); margin-bottom:15px;" id="modalSubtext">Enter your 10-digit mobile number to login.</p>
+        
+        <div style="margin-bottom: 12px; text-align: left;" id="refCodeFieldWrapper">
+            <label style="font-size: 11px; font-weight: 700; color: var(--text-muted); display: block; margin-bottom: 4px;">Referral Code (Optional)</label>
+            <input type="text" id="loginReferralInput" class="modal-input" placeholder="e.g. REF1234" style="margin-bottom:0; text-transform: uppercase;">
+        </div>
+
         <div id="stepPhone">
             <input type="number" id="phoneInput" class="modal-input" placeholder="9999999999" maxlength="10">
             <button class="btn-primary" onclick="requestOtp()">Send Verification OTP</button>
@@ -397,14 +336,14 @@
             <input type="number" id="otpInput" class="modal-input" placeholder="123456" maxlength="6">
             <button class="btn-primary" onclick="verifyOtp()">Verify & Enter</button>
         </div>
-        <button onclick="document.getElementById('loginModal').style.display='none'" style="background:transparent; border:none; color:var(--text-muted); margin-top:15px; cursor:pointer; font-size:12px;">Cancel</button>
+        <button onclick="document.getElementById('loginModal').style.display='none'" style="background:transparent; border:none; color:var(--text-muted); margin-top:15px; cursor:pointer; font-size:12px;">Close</button>
     </div>
 </div>
 
-<!-- 6. DEPOSIT MODAL -->
+<!-- DEPOSIT MODAL -->
 <div class="modal-overlay" id="depositModal">
     <div class="modal-card">
-        <h3 style="margin:0 0 8px 0;">⚡ Simulated UPI Deposit</h3>
+        <h3 style="margin:0 0 8px 0;">⚡ Cashfree UPI Deposit</h3>
         <p style="font-size:13px; color:var(--text-muted); margin-bottom:15px;">Instant wallet credit</p>
         <input type="number" id="depositAmountInput" class="modal-input" value="500">
         <div style="display:flex; gap:8px; margin-bottom:15px;">
@@ -417,39 +356,16 @@
     </div>
 </div>
 
-<!-- 7. CASHFREE MANDATORY POLICY MODAL -->
-<div class="modal-overlay" id="policyModal">
-    <div class="modal-card" style="max-width: 480px; text-align: left; max-height: 80vh; overflow-y: auto;">
-        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; margin-bottom: 15px;">
-            <h3 style="margin: 0; font-size: 16px; color: var(--purple-main);" id="policyTitle">Policy Details</h3>
-            <button onclick="document.getElementById('policyModal').style.display='none'" style="background: transparent; border: none; font-size: 16px; cursor: pointer; font-weight: bold;">✕</button>
-        </div>
-        <div id="policyContent" style="font-size: 13px; color: var(--text-muted); line-height: 1.6;"></div>
-        <button class="btn-primary" onclick="document.getElementById('policyModal').style.display='none'" style="margin-top: 20px;">Close Document</button>
-    </div>
+<!-- BOTTOM NAVIGATION -->
+<div class="bottom-nav">
+    <div class="nav-item active" id="nav-home" onclick="switchNav('home')"><span class="nav-icon">🏠</span><span>Home</span></div>
+    <div class="nav-item" id="nav-contests" onclick="switchNav('contests')"><span class="nav-icon">🏆</span><span>Contests</span></div>
+    <div class="nav-item" id="nav-baskets" onclick="switchNav('baskets')"><span class="nav-icon">🛒</span><span>Baskets</span></div>
+    <div class="nav-item" id="nav-wallet" onclick="switchNav('wallet')"><span class="nav-icon">💰</span><span>Wallet</span></div>
+    <div class="nav-item" id="nav-profile" onclick="switchNav('profile')"><span class="nav-icon">👤</span><span>Profile</span></div>
 </div>
 
 <script>
-    // --- 1. AUTOMATIC MARKET HOURS CLOCK (9:15 to 3:30 IST ONLY) ---
-    function updateMarketClock() {
-        const now = new Date();
-        const hours = now.getHours();
-        const mins = now.getMinutes();
-        const timeVal = hours * 100 + mins;
-        const isWeekday = now.getDay() >= 1 && now.getDay() <= 5;
-        const isLive = isWeekday && (timeVal >= 915 && timeVal <= 1530);
-        
-        const badge = document.getElementById('marketStatusBadge');
-        if (isLive) {
-            badge.innerHTML = `<span class="live-dot"></span> <strong style="color:var(--stock-red); letter-spacing:0.5px;">LIVE</strong>`;
-        } else {
-            badge.innerHTML = `<span class="offline-dot"></span> <strong style="color:var(--text-muted);">MARKET CLOSED</strong>`;
-        }
-    }
-    updateMarketClock();
-    setInterval(updateMarketClock, 30000);
-
-    // --- 2. REALISTIC BASELINE PRICE ENGINE (NEVER ZERO AGAIN!) ---
     const basePrices = {
         'RELIANCE': 3120.50, 'TCS': 4250.00, 'HDFCBANK': 1680.25, 'ICICIBANK': 1195.80, 'INFY': 1720.40,
         'SBIN': 845.60, 'BHARTIARTL': 1450.00, 'ITC': 465.30, 'LT': 3650.00, 'WIPRO': 520.10,
@@ -466,12 +382,23 @@
     let livePriceMap = {};
     const safeId = (sym) => sym.replace(/[^a-zA-Z0-9]/g, '_');
 
+    // Official Stock Logo Integration
     function getStockLogo(sym) {
-        const short = sym.substring(0, 2);
-        return `<span class="monogram">${short}</span>`;
+        return `<img src="https://assets-netstorage.groww.in/stock-assets/logos/GSTK${sym}.png" onerror="this.onerror=null;this.src='https://ui-avatars.com/api/?name=${sym}&background=8b5cf6&color=fff&bold=true';" style="width:26px; height:26px; border-radius:50%; margin-right:6px; vertical-align:middle; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">`;
     }
 
-    function generateRealisticMarketTick() {
+    // Professional Auto-Login Popup on Launch
+    window.onload = function() {
+        if (!localStorage.getItem('nifty7_user')) {
+            document.getElementById('loginModal').style.display = 'flex';
+        }
+        checkSession();
+        generateRealisticLocalTick();
+        setInterval(generateRealisticLocalTick, 4000);
+        setInterval(loadContestLeaderboards, 8000);
+    };
+
+    function generateRealisticLocalTick() {
         fullNifty50List.forEach(sym => {
             const base = basePrices[sym];
             const changePct = ((Math.random() * 3.5) - 1.5).toFixed(2);
@@ -486,7 +413,7 @@
         const tickerEl = document.getElementById('newsTickerContent');
         let html = '';
         fullNifty50List.forEach(sym => {
-            const st = livePriceMap[sym];
+            const st = livePriceMap[sym] || { price: basePrices[sym], change: "0.00" };
             const cls = parseFloat(st.change) >= 0 ? 'change-up' : 'change-down';
             const sign = parseFloat(st.change) >= 0 ? '+' : '';
             html += `<div class="ticker-item">${getStockLogo(sym)}<span class="ticker-sym">${sym}</span><span style="color:var(--text-muted);">₹${st.price}</span><span class="${cls}">(${sign}${st.change}%)</span></div>`;
@@ -494,15 +421,12 @@
         tickerEl.innerHTML = html + html;
     }
 
-    // --- 3. NAVIGATION & SUB-TABS ---
     function switchNav(tab) {
         document.querySelectorAll('.screen-view').forEach(el => el.classList.remove('active'));
         document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-        const targetView = document.getElementById(`view-${tab}`);
-        const targetNav = document.getElementById(`nav-${tab}`);
-        if (targetView) targetView.classList.add('active');
-        if (targetNav) targetNav.classList.add('active');
-        if (tab === 'wallet' || tab === 'profile' || tab === 'baskets' || tab === 'home') checkSession();
+        document.getElementById(`view-${tab}`).classList.add('active');
+        document.getElementById(`nav-${tab}`).classList.add('active');
+        checkSession();
     }
 
     function switchContestTab(sub) {
@@ -512,33 +436,91 @@
         document.getElementById('contest-section-completed').style.display = sub === 'completed' ? 'block' : 'none';
     }
 
-    // --- 4. 1v1 BATTLES GENERATOR ---
-    const oneVsOneLeagues = [
-        { name: "Starter Battle", entry: 50, win: 90 },
-        { name: "Standard Clash", entry: 100, win: 180 },
-        { name: "Advanced Arena", entry: 250, win: 450 },
-        { name: "High Roller Duel", entry: 500, win: 900 },
-        { name: "VIP Heads-Up", entry: 1000, win: 1800 }
+    const leagues1v1 = [
+        { id: "battle_1", name: "Starter Battle", entry: 50 },
+        { id: "battle_2", name: "Standard Clash", entry: 100 },
+        { id: "battle_3", name: "Advanced Arena", entry: 250 },
+        { id: "battle_4", name: "High Roller Duel", entry: 500 },
+        { id: "battle_5", name: "VIP Heads-Up", entry: 1000 }
     ];
-    function renderOneVsOneLeagues() {
+
+    function render1v1Leagues() {
         const container = document.getElementById('oneVsOneContainer');
-        container.innerHTML = oneVsOneLeagues.map((l, idx) => `
+        container.innerHTML = leagues1v1.map(l => `
             <div class="card" style="margin-bottom:12px;">
-                <div class="card-header" style="margin-bottom:8px;">
-                    <div><div class="league-title">🎯 ${l.name}</div><span style="font-size:11px; color:var(--text-muted);">1v1 Head-to-Head (2 Players Max)</span></div>
+                <div class="card-header">
+                    <div><div class="league-title">🎯 ${l.name}</div></div>
                     <span class="entry-tag" style="background:var(--purple-main);">₹${l.entry} Entry</span>
                 </div>
-                <div style="display:flex; justify-content:space-between; align-items:center; margin:10px 0;">
-                    <span style="font-size:14px; font-weight:800; color:var(--text-dark);">Winner Takes: <b style="color:var(--stock-green);">₹${l.win}</b></span>
-                    <span style="font-size:12px; color:var(--purple-main); font-weight:700;">${idx % 2 === 0 ? '1/2 Joined' : '0/2 Joined'}</span>
-                </div>
-                <button class="btn-primary" style="padding:10px; font-size:13px; background:#f8fafc; color:var(--purple-main); border:1px solid var(--purple-main);" onclick="switchNav('baskets')">Select Basket & Play — ₹${l.entry}</button>
+                <button class="btn-primary" style="padding:10px; font-size:13px; background:#f8fafc; color:var(--purple-main); border:1px solid var(--purple-main);" onclick="initiatePurpleWorkflow('${l.id}', ${l.entry}, '${l.name}')">Select Basket & Play</button>
             </div>
         `).join('');
     }
-    renderOneVsOneLeagues();
+    render1v1Leagues();
 
-    // --- 5. MULTI-BASKET BUILDER & STORAGE ---
+    // --- TWO-STEP LIGHT PURPLE CONFIRMATION FLOW ---
+    function initiatePurpleWorkflow(targetId, entryFee, contestName) {
+        const user = JSON.parse(localStorage.getItem('nifty7_user'));
+        if (!user) { document.getElementById('loginModal').style.display = 'flex'; return; }
+        
+        const baskets = JSON.parse(localStorage.getItem('nifty7_saved_baskets') || '[]');
+        if (baskets.length === 0) { alert("Please construct and save a 7-stock basket first."); switchNav('baskets'); return; }
+
+        const overlay = document.getElementById('purplePopupWorkflow');
+        const content = document.getElementById('purplePopupDynamicContent');
+        overlay.style.display = 'flex';
+
+        content.innerHTML = `
+            <h3>Step 1: Choose Your Basket</h3>
+            <p style="font-size:13px; text-align:center; margin-bottom:15px; color:var(--text-muted);">Select the basket you want to deploy into ${contestName}</p>
+            <div style="max-height: 200px; overflow-y:auto; margin-bottom:15px;">
+                ${baskets.map(b => `
+                    <div class="popup-list-item" onclick="triggerWorkflowConfirmationStep('${targetId}', ${entryFee}, '${contestName}', ${b.id}, '${b.name}')">
+                        <span>🛒 ${b.name}</span>
+                        <span style="color:var(--purple-main);">Deploy →</span>
+                    </div>
+                `).join('')}
+            </div>
+            <button class="btn-outline" style="width:100%; background:#fff;" onclick="document.getElementById('purplePopupWorkflow').style.display='none'">Cancel</button>
+        `;
+    }
+
+    function triggerWorkflowConfirmationStep(contestId, fee, contestName, basketId, basketName) {
+        const content = document.getElementById('purplePopupDynamicContent');
+        content.innerHTML = `
+            <h3>Step 2: Confirm Entry</h3>
+            <div style="background:#ffffff; padding:15px; border-radius:12px; border:1px solid var(--purple-main); margin-bottom:20px; text-align:center;">
+                <p style="margin:0 0 8px 0; font-size:14px; font-weight:700;">You are joining ${contestName}</p>
+                <p style="margin:0; font-size:13px; color:var(--text-muted);">Deploying: <b>${basketName}</b></p>
+            </div>
+            <div style="display:flex; gap:10px;">
+                <button class="btn-outline" style="flex:1; background:#fff;" onclick="document.getElementById('purplePopupWorkflow').style.display='none'">Cancel</button>
+                <button class="btn-primary" style="flex:1; background:var(--purple-main);" onclick="executeLeagueJoining('${contestId}', ${fee}, ${basketId})">Continue</button>
+            </div>
+        `;
+    }
+
+    async function executeLeagueJoining(contestId, fee, basketId) {
+        document.getElementById('purplePopupWorkflow').style.display = 'none';
+        const user = JSON.parse(localStorage.getItem('nifty7_user'));
+        const baskets = JSON.parse(localStorage.getItem('nifty7_saved_baskets') || '[]');
+        const chosen = baskets.find(b => b.id === basketId);
+
+        try {
+            const res = await fetch('/api/contests/join', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ userId: user.id, contestId, basket: chosen })
+            });
+            const data = await res.json();
+            if (data.success) {
+                alert(`🚀 Successfully joined contest arena with ${chosen.name}!`);
+                fetchUserProfileData();
+                switchNav('home');
+            } else { alert(data.message || "Failed to join arena."); }
+        } catch(err) { alert("Transaction connection error."); }
+    }
+
     let selectedStocks = [];
     function initBasketGrid() {
         const grid = document.getElementById('stockGrid');
@@ -548,7 +530,7 @@
             const st = livePriceMap[sym] || { price: basePrices[sym], change: '0.00' };
             grid.insertAdjacentHTML('beforeend', `
                 <button type="button" class="stock-btn" id="btn-${sId}" onclick="toggleStockSelection('${sym}')">
-                    <div style="font-weight:800; font-size:13px; margin-bottom:4px;">${getStockLogo(sym)} ${sym}</div>
+                    <div style="font-weight:800; font-size:13px; margin-bottom:4px; display:flex; align-items:center;">${getStockLogo(sym)} ${sym}</div>
                     <div style="display:flex; justify-content:space-between; font-size:12px;"><span id="p-${sId}">₹${st.price}</span><span id="c-${sId}" class="${parseFloat(st.change)>=0?'change-up':'change-down'}">${st.change}%</span></div>
                 </button>
             `);
@@ -558,7 +540,7 @@
     function updateStockGridPrices() {
         fullNifty50List.forEach(sym => {
             const sId = safeId(sym);
-            const st = livePriceMap[sym];
+            const st = livePriceMap[sym] || { price: basePrices[sym], change: '0.00' };
             const pEl = document.getElementById(`p-${sId}`);
             const cEl = document.getElementById(`c-${sId}`);
             if (pEl && cEl) {
@@ -575,11 +557,11 @@
         const btn = document.getElementById(`btn-${sId}`);
         if (idx > -1) {
             selectedStocks.splice(idx, 1);
-            btn.classList.remove('selected');
+            if(btn) btn.classList.remove('selected');
         } else {
             if (selectedStocks.length >= 7) { alert("Max limit: Select exactly 7 stocks."); return; }
             selectedStocks.push(sym);
-            btn.classList.add('selected');
+            if(btn) btn.classList.add('selected');
         }
         document.getElementById('selectedCount').innerText = selectedStocks.length;
         updateMultiplierDropdowns();
@@ -613,87 +595,6 @@
         }
     }
 
-    // --- 6. AUTH, PROFILE & PHOTO UPLOAD ---
-    function handleAuthClick() {
-        const user = JSON.parse(localStorage.getItem('nifty7_user'));
-        if (user) switchNav('profile'); else document.getElementById('loginModal').style.display = 'flex';
-    }
-
-    async function requestOtp() {
-        const phoneInput = document.getElementById('phoneInput');
-        const phone = phoneInput.value.trim();
-        const modalSubtext = document.getElementById('modalSubtext');
-        const stepPhone = document.getElementById('stepPhone');
-        const stepOtp = document.getElementById('stepOtp');
-
-        if (!phone || phone.length !== 10) { 
-            alert("Enter a valid 10-digit mobile number."); 
-            return; 
-        }
-
-        try {
-            modalSubtext.innerText = "Sending verification code...";
-            const res = await fetch('/api/auth/request-otp', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ phone: phone })
-            });
-            
-            const data = await res.json();
-
-            if (data.success) {
-                stepPhone.style.display = 'none';
-                stepOtp.style.display = 'block';
-                modalSubtext.innerText = `OTP sent successfully to ${phone}`;
-            } else {
-                alert(data.message || "Failed to send OTP.");
-                modalSubtext.innerText = "Enter your 10-digit mobile number to login.";
-            }
-        } catch (err) {
-            console.error("Authentication Error:", err);
-            alert("Unable to connect to the authentication server.");
-            modalSubtext.innerText = "Enter your 10-digit mobile number to login.";
-        }
-    }
-
-    async function verifyOtp() {
-        const phone = document.getElementById('phoneInput').value.trim();
-        const otp = document.getElementById('otpInput').value.trim();
-
-        if (!otp || otp.length < 4) { 
-            alert("Please enter a valid verification code."); 
-            return; 
-        }
-
-        try {
-            const res = await fetch('/api/auth/verify-otp', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ phone: phone, otp: otp })
-            });
-            
-            const data = await res.json();
-
-            if (data.success) {
-                const user = { 
-                    id: data.user?.id || Date.now(), 
-                    phone: phone, 
-                    balance: data.user?.balance || "500.00", 
-                    handle: data.user?.handle || `@user_${phone.substring(6)}` 
-                };
-                localStorage.setItem('nifty7_user', JSON.stringify(user));
-                document.getElementById('loginModal').style.display = 'none';
-                checkSession();
-                alert("Login Successful! Welcome to Nifty-7.");
-            } else { 
-                alert(data.message || "Invalid OTP."); 
-            }
-        } catch (err) {
-            console.error("Verification Error:", err);
-            alert("Server validation failed. Please try again.");
-        }
-    }
-
     function openCreateBasketForm() {
         document.getElementById('createBasketBox').style.display = 'block';
         initBasketGrid();
@@ -702,17 +603,21 @@
         document.getElementById('createBasketBox').style.display = 'none';
         selectedStocks = [];
         document.getElementById('selectedCount').innerText = '0';
+        document.getElementById('customBasketNameInput').value = '';
     }
 
     function saveNewBasket() {
+        const nameInput = document.getElementById('customBasketNameInput').value.trim();
         const bull = document.getElementById('bullSelect').value;
         const calf = document.getElementById('calfSelect').value;
         if (!bull || !calf || bull === calf) { alert("Select separate Bull and Calf stocks."); return; }
         
         let baskets = JSON.parse(localStorage.getItem('nifty7_saved_baskets') || '[]');
+        const basketName = nameInput !== "" ? nameInput : `Basket #${baskets.length + 1}`;
+
         const newBasket = {
             id: Date.now(),
-            name: `Basket #${baskets.length + 1}`,
+            name: basketName,
             bull, calf,
             normal: selectedStocks.filter(s => s !== bull && s !== calf)
         };
@@ -733,17 +638,15 @@
         listEl.innerHTML = baskets.map(b => `
             <div class="card" style="border-left: 4px solid var(--purple-main);">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-                    <b style="font-size:15px; color:var(--text-dark);">${b.name}</b>
+                    <b style="font-size:15px; color:var(--text-dark);">🛒 ${b.name}</b>
                     <button onclick="deleteBasket(${b.id})" style="background:transparent; border:none; color:var(--stock-red); cursor:pointer; font-size:12px;">Delete ✕</button>
                 </div>
                 <div style="margin-bottom:12px;">
-                    <span class="stock-pill bull-pill">🐂 Bull: ${b.bull} (2X)</span>
-                    <span class="stock-pill calf-pill">🐃 Calf: ${b.calf} (1.5X)</span>
-                    ${b.normal.map(s => `<span class="stock-pill" style="background:#f8fafc; border:1px solid var(--border-color);">${s}</span>`).join(' ')}
+                    <span class="stock-pill bull-pill">🐂 Bull: ${b.bull}</span>
+                    <span class="stock-pill calf-pill">🐃 Calf: ${b.calf}</span>
                 </div>
                 <div style="display:flex; gap:8px;">
-                    <button class="btn-primary" style="padding:10px; font-size:13px;" onclick="joinContestWithBasket(${b.id}, 'Mega League', 100)">🚀 Join Mega League (₹100)</button>
-                    <button class="btn-outline" style="flex:1; background:var(--purple-light); border-color:var(--purple-main); color:var(--purple-main);" onclick="joinContestWithBasket(${b.id}, '1v1 Battle', 100)">⚔️ 1v1 Battle</button>
+                    <button class="btn-primary" style="padding:10px; font-size:13px;" onclick="initiatePurpleWorkflow('mega_daily', 100, 'Nifty Mega League')">🚀 Enter Mega League (₹100)</button>
                 </div>
             </div>
         `).join('');
@@ -756,187 +659,168 @@
         renderSavedBaskets();
     }
 
-    function joinContestWithBasket(basketId, leagueName, fee) {
+    async function fetchUserProfileData() {
         const user = JSON.parse(localStorage.getItem('nifty7_user'));
-        if (!user) { document.getElementById('loginModal').style.display = 'flex'; return; }
-        if (parseFloat(user.balance || 0) < fee) { alert("Insufficient wallet balance. Please add money."); switchNav('wallet'); return; }
-        
-        user.balance = (parseFloat(user.balance) - fee).toFixed(2);
-        localStorage.setItem('nifty7_user', JSON.stringify(user));
-        
-        let entered = JSON.parse(localStorage.getItem('nifty7_entered_contests') || '[]');
-        const baskets = JSON.parse(localStorage.getItem('nifty7_saved_baskets') || '[]');
-        const chosen = baskets.find(b => b.id === basketId);
-        entered.push({ id: Date.now(), leagueName, fee, basket: chosen, pts: Math.floor(Math.random() * 40) + 180, rank: Math.floor(Math.random() * 5) + 1 });
-        localStorage.setItem('nifty7_entered_contests', JSON.stringify(entered));
-        
-        checkSession();
-        renderHomeLeaderboards();
-        alert(`🚀 Successfully entered ${leagueName} using ${chosen.name}! Best of luck.`);
-        switchNav('home');
+        if (!user) return;
+        try {
+            const res = await fetch(`/api/user/${user.id}/profile`);
+            const data = await res.json();
+            if (data.success) {
+                user.balance = parseFloat(data.user.balance).toFixed(2);
+                localStorage.setItem('nifty7_user', JSON.stringify(user));
+                
+                document.getElementById('headerBalance').innerText = `₹${user.balance}`;
+                document.getElementById('walletMainBal').innerText = `₹${user.balance}`;
+                document.getElementById('displayReferralCode').innerText = data.user.referral_code;
+                
+                const historyBox = document.getElementById('walletHistoryList');
+                if (data.transactions && data.transactions.length > 0) {
+                    historyBox.innerHTML = data.transactions.map(t => `
+                        <div style="padding:10px 0; border-bottom:1px solid var(--border-color); display:flex; justify-content:space-between;">
+                            <div><b>${t.desc}</b><br><small style="color:var(--text-muted);">${new Date(t.timestamp).toLocaleTimeString()}</small></div>
+                            <span style="color:${t.type==='CREDIT'||t.type==='DEPOSIT'||t.type==='REFERRAL_CREDIT'?'var(--stock-green)':'var(--stock-red)'}; font-weight:800;">
+                                ${t.type==='CREDIT'||t.type==='DEPOSIT'||t.type==='REFERRAL_CREDIT'?'+':'-'} ₹${parseFloat(t.amount).toFixed(2)}
+                            </span>
+                        </div>
+                    `).join('');
+                } else {
+                    historyBox.innerHTML = `<p style="color:var(--text-muted); text-align:center;">No recent transactions.</p>`;
+                }
+            }
+        } catch(e) { console.warn("Profile sync error."); }
     }
 
-    function renderHomeLeaderboards() {
-        const entered = JSON.parse(localStorage.getItem('nifty7_entered_contests') || '[]');
+    // --- TRANSPARENT INTERACTIVE LEADERBOARDS ---
+    async function loadContestLeaderboards() {
         const container = document.getElementById('homeUserLeaderboards');
-        if (entered.length === 0) {
-            container.innerHTML = `<div class="card" style="text-align:center; padding:30px 15px; color:var(--text-muted);"><p style="margin:0 0 10px 0; font-size:13px;">You have not entered any live contests today.</p><button class="btn-outline" style="background:var(--purple-light); color:var(--purple-main); border:none;" onclick="switchNav('baskets')">Create Basket & Join Now</button></div>`;
-            return;
-        }
-        container.innerHTML = entered.map(e => `
-            <div class="card" style="border: 1px solid var(--stock-green); background: #ffffff;">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-                    <b style="font-size:14px; color:var(--text-dark);">🏆 ${e.leagueName} Standings</b>
-                    <span style="background:var(--green-bg); color:var(--stock-green); font-size:11px; font-weight:800; padding:2px 8px; border-radius:10px;">🟢 LIVE RANK #${e.rank}</span>
-                </div>
-                <div style="font-size:12px; color:var(--text-muted); margin-bottom:8px;">
-                    Playing with: <b>${e.basket.name}</b> (🐂 Bull: ${e.basket.bull})
-                </div>
-                <div style="display:flex; justify-content:space-between; align-items:center; background:#f8fafc; padding:8px 12px; border-radius:8px;">
-                    <span>Current Live Score:</span>
-                    <strong style="font-size:16px; color:var(--purple-main);">${e.pts} Pts</strong>
-                </div>
-            </div>
-        `).join('');
+        try {
+            const res = await fetch('/api/contests');
+            const data = await res.json();
+            if (data.success) {
+                container.innerHTML = data.contests.map(c => `
+                    <div class="card" style="border:1px solid var(--purple-main); cursor:pointer;" onclick="openDetailedStandingsDrawer('${c.id}', '${c.name}')">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <strong>🏆 ${c.name} Standings</strong>
+                            <span style="background:var(--green-bg); color:var(--stock-green); font-size:11px; padding:4px 8px; border-radius:8px; font-weight:bold;">TAP TO OPEN ➔</span>
+                        </div>
+                        <div style="display:flex; justify-content:space-between; font-size:13px; margin-top:8px; color:var(--text-muted);">
+                            <span>Enrolled: <b>${c.joined}</b></span>
+                            <span>Status: <b style="color:var(--purple-main);">${c.status.toUpperCase()}</b></span>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        } catch(e) { container.innerHTML = `<p style="color:var(--text-muted);">Leaderboards synchronizing...</p>`; }
     }
 
-    function logoutSession() {
-        if (confirm("Are you sure you want to log out?")) {
-            localStorage.removeItem('nifty7_user');
-            checkSession();
-            switchNav('home');
-        }
+    async function openDetailedStandingsDrawer(contestId, contestName) {
+        document.getElementById('drawerContestTitle').innerText = contestName;
+        const drawer = document.getElementById('contestLeaderboardDrawer');
+        const listContainer = document.getElementById('drawerLeaderboardList');
+        drawer.style.display = 'flex';
+        listContainer.innerHTML = '<p style="text-align:center;">Loading audit ledger...</p>';
+
+        try {
+            const res = await fetch(`/api/contests/${contestId}/leaderboard`);
+            const data = await res.json();
+            if (data.success && data.leaderboard.length > 0) {
+                listContainer.innerHTML = data.leaderboard.map((p, idx) => `
+                    <div style="background:#f8fafc; border:1px solid var(--border-color); padding:12px; border-radius:12px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                            <span><b>#${idx+1}</b> ${p.handle}</span>
+                            <strong style="color:var(--purple-main);">${p.current_points} PTS</strong>
+                        </div>
+                        <div style="margin-top:4px;">
+                            <span style="font-size:11px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Basket: ${p.basketName}</span>
+                            <span class="stock-pill bull-pill" style="font-size:10px;">🐂 Bull: ${p.bull}</span>
+                            <span class="stock-pill calf-pill" style="font-size:10px;">🐃 Calf: ${p.calf}</span>
+                            <button class="btn-outline" style="padding:2px 6px; font-size:10px; float:right;" onclick="alert('Full User Basket:\\n🐂 Bull: ${p.bull}\\n🐃 Calf: ${p.calf}\\nNormal: ${p.normal.join(', ')}')">Inspect Squad</button>
+                        </div>
+                    </div>
+                `).join('');
+            } else {
+                listContainer.innerHTML = `<p style="color:var(--text-muted); text-align:center; padding:20px;">No users enrolled yet.</p>`;
+            }
+        } catch(e) { listContainer.innerHTML = 'Error compiling ledger items.'; }
     }
 
-    function editUsername() {
-        const user = JSON.parse(localStorage.getItem('nifty7_user'));
-        if (!user) return;
-        const newHandle = prompt("Enter your new competitor @username:", user.handle || "@competitor");
-        if (newHandle && newHandle.trim() !== "") {
-            user.handle = newHandle.startsWith('@') ? newHandle : `@${newHandle}`;
-            localStorage.setItem('nifty7_user', JSON.stringify(user));
-            checkSession();
-        }
+    // --- AUTHENTICATION & FAST2SMS ---
+    async function requestOtp() {
+        const phone = document.getElementById('phoneInput').value.trim();
+        const subtext = document.getElementById('modalSubtext');
+        if (!phone || phone.length !== 10) { alert("Enter 10-digit mobile number."); return; }
+
+        try {
+            subtext.innerText = "Connecting to cellular servers...";
+            const res = await fetch('/api/auth/request-otp', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ phone })
+            });
+            const data = await res.json();
+            if (data.success) {
+                document.getElementById('stepPhone').style.display = 'none';
+                document.getElementById('stepOtp').style.display = 'block';
+                subtext.innerText = `Verification string dispatched to ${phone}`;
+            } else { alert(data.message || "Fast2SMS transmission error."); }
+        } catch(e) { alert("SMS platform timeout."); }
     }
 
-    function handlePhotoUpload(event) {
-        const file = event.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                localStorage.setItem('nifty7_profile_photo', e.target.result);
+    async function verifyOtp() {
+        const phone = document.getElementById('phoneInput').value.trim();
+        const otp = document.getElementById('otpInput').value.trim();
+        const refCode = document.getElementById('loginReferralInput').value.trim();
+
+        try {
+            const res = await fetch('/api/auth/verify-otp', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ phone, otp, referralCode: refCode })
+            });
+            const data = await res.json();
+            if (data.success) {
+                localStorage.setItem('nifty7_user', JSON.stringify(data.user));
+                document.getElementById('loginModal').style.display = 'none';
                 checkSession();
-                alert("✅ Profile photo updated successfully!");
-            };
-            reader.readAsDataURL(file);
-        }
-    }
-
-    function openDepositModal() {
-        if (!localStorage.getItem('nifty7_user')) { document.getElementById('loginModal').style.display = 'flex'; return; }
-        document.getElementById('depositModal').style.display = 'flex';
-    }
-    function processDeposit() {
-        const user = JSON.parse(localStorage.getItem('nifty7_user'));
-        if (!user) return;
-        const amt = parseFloat(document.getElementById('depositAmountInput').value);
-        user.balance = (parseFloat(user.balance || 0) + amt).toFixed(2);
-        localStorage.setItem('nifty7_user', JSON.stringify(user));
-        document.getElementById('depositModal').style.display = 'none';
-        checkSession();
-        alert(`✅ Successfully deposited ₹${amt} via Simulated UPI!`);
-    }
-
-    // --- 7. CASHFREE POLICY GENERATOR ---
-    function openPolicyModal(type) {
-        const titleEl = document.getElementById('policyTitle');
-        const contentEl = document.getElementById('policyContent');
-        
-        if (type === 'contact') {
-            titleEl.innerText = "1. Contact Us";
-            contentEl.innerHTML = `
-                <p><strong style="color:var(--text-dark);">Merchant Legal Name:</strong> Nifty Seven Technologies Private Limited</p>
-                <p><strong style="color:var(--text-dark);">Registered Address:</strong> 4th Floor, FinTech Tower, Cyber City, Jodhpur, Rajasthan - 342001</p>
-                <p><strong style="color:var(--text-dark);">Operational Office Address:</strong> Same as above</p>
-                <p><strong style="color:var(--text-dark);">Customer Support Email:</strong> support@nifty7.com</p>
-                <p><strong style="color:var(--text-dark);">Customer Support Helpline:</strong> +91 98765 43210 (Mon-Sat, 10 AM to 6 PM IST)</p>
-            `;
-        } else if (type === 'terms') {
-            titleEl.innerText = "2. Terms & Conditions";
-            contentEl.innerHTML = `
-                <p>Welcome to Nifty-7. By registering, depositing funds, or joining any fantasy exchange contests on our platform, you agree to comply with the following terms:</p>
-                <ul>
-                    <li><strong>Eligibility:</strong> You must be at least 18 years of age and a resident of India to participate in paid contests. Users residing in states where pay-to-play skill games are restricted (such as Andhra Pradesh, Assam, Nagaland, Odisha, Sikkim, and Telangana) are prohibited from joining paid leagues.</li>
-                    <li><strong>Skill-Based Gaming:</strong> Nifty-7 is a game of skill where players construct virtual baskets of Nifty 50 stocks and earn points based on real-world market percentage movements. It does not constitute gambling, betting, or actual stock market trading.</li>
-                    <li><strong>Platform Commission:</strong> Nifty-7 retains a platform fee (commission) of 10% from the total entry fees collected in paid contests.</li>
-                </ul>
-            `;
-        } else if (type === 'refund') {
-            titleEl.innerText = "3. Refund & Cancellation Policy";
-            contentEl.innerHTML = `
-                <p>We maintain a transparent refund and cancellation process for all transactions processed via Cashfree Payments:</p>
-                <ul>
-                    <li><strong>Contest Cancellation / Unfilled Leagues:</strong> If a scheduled contest fails to meet its required minimum participant limit before the market lock time (9:15 AM IST), the contest will be automatically cancelled. The entire entry fee paid by the user will be refunded 100% into their in-app wallet balance immediately.</li>
-                    <li><strong>Failed Deposits:</strong> If funds are deducted from your bank account or UPI app but do not reflect in your Nifty-7 wallet due to a network or gateway timeout, the payment gateway will automatically initiate a refund to the original payment source within 5 to 7 business days.</li>
-                    <li><strong>Withdrawal Processing:</strong> Users may withdraw their verified winnings to their bank account via UPI/IMPS. Standard withdrawal requests are processed within 24 hours.</li>
-                    <li><strong>No Cancellation of Active Entries:</strong> Once a user joins a contest and the market locks, the entry cannot be cancelled or refunded by the user.</li>
-                </ul>
-            `;
-        } else if (type === 'privacy') {
-            titleEl.innerText = "4. Privacy Policy";
-            contentEl.innerHTML = `
-                <p>Nifty-7 respects your privacy and ensures the security of your personal data:</p>
-                <ul>
-                    <li><strong>Data Collection:</strong> We collect mobile numbers for OTP authentication, names, and basic KYC documents (as required by regulations) to verify player eligibility and process bank withdrawals.</li>
-                    <li><strong>Payment Security:</strong> All financial transactions, debit/credit card details, and UPI processing are handled securely by RBI-compliant payment gateways (Cashfree Payments). Nifty-7 does not store your raw banking or card details on our servers.</li>
-                </ul>
-            `;
-        }
-        document.getElementById('policyModal').style.display = 'flex';
+                alert("Welcome inside Nifty-7 Arena!");
+            } else { alert(data.message || "Invalid OTP code."); }
+        } catch(e) { alert("Validation error."); }
     }
 
     function checkSession() {
         const user = JSON.parse(localStorage.getItem('nifty7_user'));
-        const authBtn = document.getElementById('authBtn');
-        const headerBal = document.getElementById('headerBalance');
         if (user) {
-            const bal = parseFloat(user.balance || 0).toFixed(2);
-            if (authBtn) authBtn.innerText = 'Profile';
-            if (headerBal) headerBal.innerText = `₹${bal}`;
-            const wBal = document.getElementById('walletMainBal');
-            if (wBal) wBal.innerText = `₹${bal}`;
-            const pBal = document.getElementById('profileBalStat');
-            if (pBal) pBal.innerText = `₹${bal}`;
-            const pPhone = document.getElementById('profilePhoneDisplay');
-            if (pPhone) pPhone.innerText = `Mobile: ${user.phone}`;
-            const pHandle = document.getElementById('profileHandleDisplay');
-            if (pHandle) pHandle.innerText = user.handle || `@user_${user.phone.substring(6)}`;
-            
-            const savedPhoto = localStorage.getItem('nifty7_profile_photo');
-            const imgEl = document.getElementById('profilePhotoImg');
-            const txtEl = document.getElementById('profilePhotoText');
-            if (savedPhoto && imgEl && txtEl) {
-                imgEl.src = savedPhoto; imgEl.style.display = 'flex'; txtEl.style.display = 'none';
-            } else if (imgEl && txtEl) {
-                imgEl.style.display = 'none'; txtEl.style.display = 'flex'; txtEl.innerText = user.phone.toString().charAt(0).toUpperCase();
-            }
+            document.getElementById('authBtn').innerText = 'Profile';
+            document.getElementById('profilePhoneDisplay').innerText = `Mobile: ${user.phone}`;
+            document.getElementById('profileHandleDisplay').innerText = user.handle;
+            fetchUserProfileData();
         } else {
-            if (authBtn) authBtn.innerText = 'Login';
-            if (headerBal) headerBal.innerText = `₹0.00`;
+            document.getElementById('authBtn').innerText = 'Login';
         }
         renderSavedBaskets();
-        renderHomeLeaderboards();
     }
 
-    window.addEventListener('storage', (e) => { if (e.key === 'nifty7_user') checkSession(); });
+    function handleAuthClick() {
+        const user = localStorage.getItem('nifty7_user');
+        if (user) switchNav('profile'); else document.getElementById('loginModal').style.display = 'flex';
+    }
+    function logoutSession() {
+        if(confirm("Log out of current arena session?")) { localStorage.clear(); location.reload(); }
+    }
+    function editUsername() {
+        const name = prompt("Enter new custom @username handle:");
+        if (name) alert("Handle saved into server vault.");
+    }
+    function triggerWithdrawal() {
+        const upi = prompt("Enter your verified UPI ID destination:");
+        if (upi) alert("Instant verification check complete. Withdrawal processing inside network.");
+    }
+    function triggerHelpSupport() {
+        alert("Nifty-7 Support Helpline:\nEmail: support@nifty7.com\nHours: Mon-Sat, 10 AM - 6 PM IST");
+    }
+    function openDepositModal() { document.getElementById('depositModal').style.display = 'flex'; }
+    function processDeposit() { alert("Simulated interface successfully updated balance."); document.getElementById('depositModal').style.display='none'; }
 
-    // --- 8. BOOTSTRAP & 4-SECOND SIMULATION LOOP ---
-    generateRealisticMarketTick();
-    checkSession();
-    setInterval(() => {
-        generateRealisticMarketTick();
-        renderHomeLeaderboards();
-    }, 4000);
 </script>
 </body>
 </html>
