@@ -1,911 +1,413 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
-    <title>Nifty-7 | Live Fantasy Exchange</title>
-    <link rel="manifest" href="/manifest.json">
-    <meta name="theme-color" content="#f8fafc">
-    <style>
-        :root {
-            --bg-main: #f8fafc;
-            --card-bg: #ffffff;
-            --border-color: #e2e8f0;
-            --purple-main: #8b5cf6;
-            --purple-light: #f3e8ff;
-            --purple-neon: #a855f7;
-            --text-dark: #0f172a;
-            --text-muted: #64748b;
-            --stock-green: #16a34a;
-            --green-bg: #dcfce7;
-            --stock-red: #dc2626;
-            --red-bg: #fee2e2;
-        }
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: var(--bg-main); color: var(--text-dark); margin: 0; padding: 0; overflow-x: hidden; padding-bottom: 85px; }
-        
-        .tv-ticker-bar { background: #ffffff; border-bottom: 1px solid var(--border-color); display: flex; align-items: center; height: 42px; overflow: hidden; position: relative; width: 100%; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
-        .ticker-badge { background: var(--purple-light); color: var(--purple-main); border-right: 1px solid var(--border-color); font-weight: 800; font-size: 11px; padding: 0 12px; height: 100%; display: flex; align-items: center; gap: 6px; z-index: 10; flex-shrink: 0; }
-        
-        .marquee-track { display: flex; width: 100%; overflow: hidden; }
-        .marquee-content { display: flex; gap: 30px; animation: scrollLeft 140s linear infinite; white-space: nowrap; align-items: center; }
-        @keyframes scrollLeft { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
-        
-        .ticker-item { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; }
-        .change-up { color: var(--stock-green); font-weight: 800; }
-        .change-down { color: var(--stock-red); font-weight: 800; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#07150f">
+<title>Nifty-7</title>
+<link rel="manifest" href="/manifest.json">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#eef2f0;--card:#fff;--ink:#0b1a14;--muted:#5b6b63;
+  --green:#00b35a;--green2:#00964c;--green-soft:#e6f8ee;
+  --navy:#07150f;--navy2:#0d2419;--red:#e11d48;--gold:#f59e0b;
+  --line:#dce5df;--safe:env(safe-area-inset-bottom,0px);--nav:70px;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;margin:0}
+body{font-family:'Plus Jakarta Sans',system-ui,sans-serif;background:var(--bg);color:var(--ink);padding-bottom:calc(var(--nav) + var(--safe))}
+button,input,select{font:inherit;font-size:16px}button{border:0;cursor:pointer}button:disabled{opacity:.5}
+img{display:block}
 
-        .header { display: flex; justify-content: space-between; align-items: center; padding: 12px 18px; background: #ffffff; border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 100; }
-        .logo-main { font-size: 22px; font-weight: 900; letter-spacing: -0.5px; color: var(--text-dark); display: flex; align-items: center; gap: 4px; }
-        .logo-badge { background: var(--purple-main); color: #ffffff; padding: 2px 8px; border-radius: 8px; font-size: 20px; box-shadow: 0 4px 10px rgba(139, 92, 246, 0.3); }
-        .header-actions { display: flex; gap: 10px; align-items: center; }
-        .wallet-pill { background: var(--purple-light); border: 1px solid rgba(139, 92, 246, 0.2); color: var(--purple-main); padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: 800; display: flex; align-items: center; gap: 6px; cursor: pointer; }
-        
-        .container { max-width: 600px; margin: 0 auto; padding: 15px; box-sizing: border-box; }
-        .screen-view { display: none; animation: fadeIn 0.2s ease; }
-        .screen-view.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+/* LIVE TICKER */
+.ticker{height:34px;background:var(--navy);color:#fff;display:flex;align-items:center;overflow:hidden}
+.ticker-badge{height:100%;padding:0 10px;background:var(--green);font-size:10px;font-weight:800;letter-spacing:.08em;display:flex;align-items:center;gap:6px;flex-shrink:0}
+.ticker-badge i{width:6px;height:6px;border-radius:50%;background:#fff;animation:blink 1s infinite}
+@keyframes blink{50%{opacity:.3}}
+.ticker-move{flex:1;overflow:hidden}
+.ticker-track{display:flex;gap:26px;width:max-content;animation:marquee 80s linear infinite;padding-left:12px;align-items:center}
+@keyframes marquee{to{transform:translateX(-50%)}}
+.t-item{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;white-space:nowrap}
+.t-item img{width:16px;height:16px;border-radius:50%;background:#fff}
+.up{color:#4ade80}.down{color:#fb7185}
 
-        .card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; padding: 18px; margin-bottom: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.03); }
-        .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
-        .league-title { font-size: 16px; font-weight: 800; color: var(--text-dark); }
-        .entry-tag { background: var(--text-dark); color: #ffffff; font-size: 12px; padding: 4px 10px; border-radius: 6px; font-weight: 800; }
-        
-        .progress-bg { background: #e2e8f0; height: 6px; border-radius: 10px; overflow: hidden; margin: 10px 0 6px 0; }
-        .progress-fill { background: var(--purple-main); width: 45%; height: 100%; border-radius: 10px; }
-        
-        .btn-primary { width: 100%; background: var(--purple-main); color: #ffffff; border: none; padding: 14px; border-radius: 10px; font-size: 15px; font-weight: 800; cursor: pointer; box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3); transition: background 0.15s; }
-        .btn-primary:hover { background: var(--purple-neon); }
-        .btn-outline { background: transparent; border: 1px solid var(--border-color); color: var(--text-dark); padding: 8px 14px; border-radius: 8px; font-weight: 700; font-size: 12px; cursor: pointer; }
+/* TOP BAR */
+.top{background:linear-gradient(180deg,var(--navy),var(--navy2));color:#fff;padding:10px 14px 14px;position:sticky;top:0;z-index:80}
+.top-row{display:flex;justify-content:space-between;align-items:center}
+.logo{display:flex;align-items:center;gap:9px}
+.logo-mark{width:34px;height:34px;border-radius:10px;background:linear-gradient(145deg,#00d46a,var(--green2));display:grid;place-items:center;font-family:Outfit,sans-serif;font-weight:900;font-size:13px;box-shadow:0 6px 16px rgba(0,179,90,.35)}
+.logo h1{margin:0;font-family:Outfit,sans-serif;font-size:19px;font-weight:800;letter-spacing:-.03em;line-height:1}
+.logo p{margin:2px 0 0;font-size:10px;opacity:.65;font-weight:600}
+.wallet{background:rgba(0,179,90,.18);border:1px solid rgba(0,179,90,.45);color:#86efac;border-radius:999px;padding:7px 12px;font-weight:800;font-size:13px}
 
-        .sub-tabs { display: flex; gap: 8px; margin-bottom: 16px; }
-        .sub-tab-btn { flex: 1; padding: 10px; text-align: center; background: #ffffff; border: 1px solid var(--border-color); border-radius: 10px; font-weight: 700; font-size: 13px; color: var(--text-muted); cursor: pointer; }
-        .sub-tab-btn.active { background: var(--purple-main); color: #ffffff; border-color: var(--purple-main); }
+/* MATCH HERO — Dream11 style */
+.match{margin:12px 14px 0;border-radius:16px;overflow:hidden;background:linear-gradient(135deg,#0b2a1c,#123d28 55%,#0a1f16);color:#fff;position:relative;box-shadow:0 10px 28px rgba(7,21,15,.25)}
+.match::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 85% 20%,rgba(0,179,90,.35),transparent 45%)}
+.match-in{position:relative;padding:16px}
+.match-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.live-pill{background:rgba(225,29,72,.2);border:1px solid rgba(225,29,72,.5);color:#fda4af;font-size:10px;font-weight:800;padding:4px 8px;border-radius:999px;letter-spacing:.04em}
+.lock-time{font-size:11px;font-weight:700;color:#bbf7d0}
+.match-title{font-family:Outfit,sans-serif;font-size:22px;font-weight:900;margin:0 0 4px;letter-spacing:-.03em}
+.match-sub{margin:0;font-size:12px;opacity:.75;font-weight:600}
+.match-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:14px}
+.ms{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:10px;text-align:center}
+.ms b{display:block;font-family:Outfit,sans-serif;font-size:15px;font-weight:800}
+.ms span{font-size:10px;opacity:.7;font-weight:600}
 
-        .stock-pill { display: inline-block; padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 700; margin: 2px; }
-        .bull-pill { background: var(--green-bg); color: var(--stock-green); border: 1px solid rgba(22, 163, 74, 0.2); }
-        .calf-pill { background: var(--purple-light); color: var(--purple-main); border: 1px solid rgba(139, 92, 246, 0.2); }
+.wrap{max-width:480px;margin:0 auto;padding:12px 14px}
+.screen{display:none}.screen.on{display:block;animation:fade .2s ease}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
 
-        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; height: 65px; background: #ffffff; border-top: 1px solid var(--border-color); display: flex; justify-content: space-around; align-items: center; z-index: 500; box-shadow: 0 -4px 12px rgba(0,0,0,0.03); }
-        .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--text-muted); font-size: 11px; font-weight: 700; cursor: pointer; flex: 1; }
-        .nav-item.active { color: var(--purple-main); }
+.filters{display:flex;gap:8px;overflow-x:auto;padding:2px 0 10px;-webkit-overflow-scrolling:touch}
+.filters::-webkit-scrollbar{display:none}
+.chip{flex-shrink:0;background:#fff;border:1.5px solid var(--line);border-radius:999px;padding:8px 14px;font-size:12px;font-weight:800;color:var(--muted)}
+.chip.on{background:var(--navy);color:#fff;border-color:var(--navy)}
 
-        .stock-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 10px; max-height: 350px; overflow-y: auto; margin: 15px 0; }
-        .stock-btn { background: #ffffff; border: 1px solid var(--border-color); padding: 10px; border-radius: 10px; cursor: pointer; text-align: left; }
-        .stock-btn.selected { background: var(--purple-light); border-color: var(--purple-main); box-shadow: 0 0 0 1px var(--purple-main); }
-        
-        .search-input { width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 10px; font-size: 14px; box-sizing: border-box; }
+/* CONTEST CARD — Dream11 clone pattern */
+.contest{background:var(--card);border-radius:14px;margin-bottom:12px;border:1px solid var(--line);overflow:hidden;box-shadow:0 2px 10px rgba(11,26,20,.05)}
+.contest.hot{border-color:rgba(0,179,90,.4);box-shadow:0 8px 24px rgba(0,179,90,.12)}
+.c-head{display:flex;justify-content:space-between;align-items:center;padding:12px 14px 0}
+.c-badges{display:flex;gap:6px;flex-wrap:wrap}
+.badge{font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px}
+.b-flex{background:#ecfdf5;color:#047857}.b-guar{background:#fff7ed;color:#c2410c}.b-mega{background:#eff6ff;color:#1d4ed8}
+.c-body{padding:10px 14px 12px;display:flex;justify-content:space-between;align-items:flex-end;gap:10px}
+.prize-label{font-size:11px;color:var(--muted);font-weight:700;margin-bottom:2px}
+.prize{font-family:Outfit,sans-serif;font-weight:900;font-size:28px;letter-spacing:-.04em;line-height:1;color:var(--ink)}
+.first{font-size:11px;color:var(--muted);font-weight:600;margin-top:6px}
+.first b{color:var(--gold)}
+.entry{background:var(--green);color:#fff;min-width:92px;padding:11px 14px;border-radius:10px;font-weight:800;font-size:15px;box-shadow:0 6px 16px rgba(0,179,90,.3)}
+.entry:active{transform:scale(.97);background:var(--green2)}
+.c-foot{background:#f7faf8;border-top:1px solid var(--line);padding:10px 14px 12px}
+.bar{height:5px;background:#e2ebe6;border-radius:99px;overflow:hidden;margin-bottom:6px}
+.bar>i{display:block;height:100%;width:40%;background:linear-gradient(90deg,var(--green),#34d399);border-radius:99px;transition:width .6s ease}
+.spots{display:flex;justify-content:space-between;font-size:11px;font-weight:700;color:var(--muted)}
+.c-actions{display:flex;gap:8px;padding:0 14px 12px}
+.line-btn{flex:1;background:#fff;border:1.5px solid var(--line);border-radius:9px;padding:9px;font-weight:800;font-size:12px;color:var(--ink)}
 
-        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.7); z-index: 1000; justify-content: center; align-items: center; padding: 15px; box-sizing: border-box; }
-        .modal-card { background: #ffffff; border-radius: 20px; padding: 24px; width: 100%; max-width: 380px; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
-        .modal-input { width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 10px; font-size: 15px; text-align: center; margin-bottom: 15px; box-sizing: border-box; }
+.section{font-family:Outfit,sans-serif;font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:14px 0 8px}
 
-        .purple-popup-card { background: var(--purple-light); border: 2px solid var(--purple-main); border-radius: 20px; padding: 24px; width:100%; max-width:400px; color: var(--text-dark); box-shadow: 0 10px 25px rgba(139,92,246,0.3); text-align: center; }
-        .purple-popup-card h3 { margin: 0 0 12px 0; color: var(--purple-main); font-size: 18px; font-weight: 900; }
-        .popup-list-item { background: #ffffff; border: 1px solid var(--border-color); padding: 12px; border-radius: 10px; margin-bottom: 8px; cursor: pointer; display: flex; justify-content: space-between; font-weight: 700; }
-        .popup-list-item:hover { border-color: var(--purple-main); background: #faf8ff; }
-    </style>
+/* TEAM / STOCK */
+.team-card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:10px}
+.team-card .name{font-family:Outfit,sans-serif;font-weight:800;font-size:15px}
+.pills{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.pill{display:inline-flex;align-items:center;gap:5px;padding:5px 8px;border-radius:8px;font-size:11px;font-weight:800}
+.pill img{width:14px;height:14px;border-radius:50%}
+.p-bull{background:var(--green-soft);color:#047857}.p-calf{background:#fff7ed;color:#c2410c}.p-n{background:#f1f5f4;color:var(--ink)}
+
+.builder{background:#fff;border:2px solid var(--green);border-radius:16px;padding:14px;margin-top:10px}
+.search{width:100%;padding:12px 14px;border:1.5px solid var(--line);border-radius:12px;margin:8px 0;background:#f8fbf9}
+.search:focus{outline:none;border-color:var(--green)}
+.stock-list{max-height:38vh;overflow:auto;-webkit-overflow-scrolling:touch}
+.stock-row{display:flex;align-items:center;gap:10px;padding:10px 8px;border-bottom:1px solid #eef3f0}
+.stock-row img{width:36px;height:36px;border-radius:50%;background:#f3f4f6;object-fit:cover;border:1px solid var(--line)}
+.stock-row .meta{flex:1;min-width:0}
+.stock-row .sym{font-weight:800;font-size:13px}
+.stock-row .co{font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.stock-row .px{text-align:right;font-weight:800;font-size:12px}
+.add-btn{width:34px;height:34px;border-radius:10px;background:var(--green-soft);color:var(--green2);font-weight:900;font-size:18px;flex-shrink:0}
+.stock-row.on .add-btn{background:var(--green);color:#fff}
+.sticky-cta{position:sticky;bottom:calc(var(--nav) + var(--safe) + 8px);margin-top:12px;background:var(--navy);color:#fff;border-radius:14px;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 -10px 30px rgba(7,21,15,.35);z-index:40}
+.sticky-cta b{font-family:Outfit,sans-serif;font-size:18px}
+.sticky-cta .go{background:var(--green);color:#fff;padding:10px 16px;border-radius:10px;font-weight:800}
+
+/* CAPTAIN STEP */
+.cap-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.cap-card{border:1.5px solid var(--line);border-radius:12px;padding:12px;background:#fff;text-align:center}
+.cap-card.on-bull{border-color:var(--green);background:var(--green-soft)}
+.cap-card.on-calf{border-color:#f59e0b;background:#fff7ed}
+.cap-card img{width:40px;height:40px;border-radius:50%;margin:0 auto 6px}
+.cap-card .s{font-weight:800;font-size:12px}
+.cap-btns{display:flex;gap:4px;margin-top:8px}
+.cap-btns button{flex:1;font-size:10px;font-weight:800;padding:6px 4px;border-radius:7px;background:#f1f5f4}
+.cap-btns .b{background:var(--green);color:#fff}
+.cap-btns .c{background:#f59e0b;color:#fff}
+
+/* WALLET / PROFILE */
+.w-hero{background:linear-gradient(145deg,var(--navy),#134e32);color:#fff;border-radius:18px;padding:22px;text-align:center;margin-bottom:12px;position:relative;overflow:hidden}
+.w-hero::after{content:'';position:absolute;width:140px;height:140px;border-radius:50%;background:rgba(0,179,90,.2);top:-50px;right:-30px}
+.w-amt{font-family:Outfit,sans-serif;font-size:36px;font-weight:900;position:relative;z-index:1}
+.row2{display:flex;gap:8px;margin-bottom:12px}.row2>*{flex:1}
+.btn{width:100%;padding:13px;border-radius:12px;font-weight:800}
+.btn-g{background:var(--green);color:#fff;box-shadow:0 6px 16px rgba(0,179,90,.28)}
+.btn-w{background:#fff;border:1.5px solid var(--line);color:var(--ink)}
+.card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:10px}
+.avatar{width:70px;height:70px;border-radius:50%;margin:0 auto 8px;background:var(--green-soft);color:var(--green2);display:grid;place-items:center;font-family:Outfit,sans-serif;font-weight:900;font-size:26px;border:3px solid var(--green)}
+.menu{display:flex;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--line);font-weight:700;font-size:14px}
+.menu:last-child{border:0}.danger{color:var(--red)}
+
+/* BOTTOM NAV */
+.nav{position:fixed;left:0;right:0;bottom:0;height:calc(var(--nav) + var(--safe));padding-bottom:var(--safe);background:#fff;border-top:1px solid var(--line);display:flex;z-index:90;box-shadow:0 -8px 24px rgba(11,26,20,.06)}
+.nav button{flex:1;background:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:var(--muted);font-size:10px;font-weight:800}
+.nav button.on{color:var(--green)}
+.nav .ico{font-size:20px;line-height:1}
+
+/* SHEETS / MODALS */
+.ov{display:none;position:fixed;inset:0;background:rgba(7,21,15,.72);z-index:200;align-items:flex-end;justify-content:center;backdrop-filter:blur(3px)}
+.ov.open{display:flex}.ov.mid{align-items:center;padding:16px}
+.sheet{width:100%;max-width:480px;background:#fff;border-radius:20px 20px 0 0;padding:18px 16px calc(18px + var(--safe));max-height:90vh;overflow:auto;animation:up .25s ease}
+.ov.mid .sheet{border-radius:18px;max-width:380px;animation:pop .2s ease;padding-bottom:18px}
+@keyframes up{from{transform:translateY(40px);opacity:0}to{transform:none;opacity:1}}
+@keyframes pop{from{transform:scale(.96);opacity:0}to{transform:none;opacity:1}}
+.handle{width:40px;height:4px;background:#cbd5e1;border-radius:99px;margin:0 auto 12px}
+.sheet h3{margin:0 0 4px;font-family:Outfit,sans-serif;font-size:18px;font-weight:800}
+.sheet .sub{margin:0 0 14px;color:var(--muted);font-size:13px}
+.field{width:100%;padding:13px;border:1.5px solid var(--line);border-radius:12px;margin-bottom:10px;text-align:center}
+.field:focus{outline:none;border-color:var(--green)}
+.pick{width:100%;display:flex;justify-content:space-between;align-items:center;padding:13px;border:1.5px solid var(--line);border-radius:12px;margin-bottom:8px;background:#fff;font-weight:700}
+
+/* LOGIN — premium full feel */
+#loginModal.ov{background:linear-gradient(180deg,#07150f,#0d2419 40%,#123d28)}
+#loginModal .sheet{background:transparent;color:#fff;box-shadow:none;max-height:none}
+#loginModal .field{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.18);color:#fff}
+#loginModal .field::placeholder{color:rgba(255,255,255,.45)}
+#loginModal .sub{color:rgba(255,255,255,.65)}
+.login-brand{text-align:center;margin:20px 0 28px}
+.login-brand .mark{width:64px;height:64px;border-radius:18px;margin:0 auto 12px;background:linear-gradient(145deg,#00d46a,#00964c);display:grid;place-items:center;font-family:Outfit,sans-serif;font-weight:900;font-size:22px;box-shadow:0 12px 30px rgba(0,179,90,.4)}
+.login-brand h2{margin:0;font-family:Outfit,sans-serif;font-size:28px;font-weight:900}
+.otp-hint{display:none;background:rgba(0,179,90,.15);border:1px solid rgba(0,179,90,.35);color:#86efac;border-radius:10px;padding:10px;font-size:12px;font-weight:700;margin-bottom:10px;text-align:center}
+
+#toastHost{position:fixed;top:52px;left:50%;transform:translateX(-50%);z-index:300;width:min(92vw,400px);pointer-events:none}
+.toast{background:var(--navy);color:#fff;padding:12px 14px;border-radius:12px;font-size:13px;font-weight:700;margin-bottom:8px;border-left:4px solid var(--green);box-shadow:0 10px 28px rgba(0,0,0,.3);animation:fade .2s ease}
+.toast.err{border-left-color:var(--red)}.toast.warn{border-left-color:var(--gold)}
+.lb{display:flex;align-items:center;gap:10px;padding:11px;background:#f7faf8;border:1px solid var(--line);border-radius:12px;margin-bottom:8px}
+.rank{width:28px;height:28px;border-radius:8px;background:var(--navy);color:#fff;display:grid;place-items:center;font-size:11px;font-weight:800;flex-shrink:0}
+.rank.g{background:linear-gradient(145deg,#f59e0b,#d97706)}
+.empty{text-align:center;padding:24px;color:var(--muted);font-size:13px}
+.spinner{width:22px;height:22px;border:3px solid #e2e8f0;border-top-color:var(--green);border-radius:50%;animation:spin .7s linear infinite;margin:20px auto}
+@keyframes spin{to{transform:rotate(360deg)}}
+.chips{display:flex;gap:8px;margin-bottom:10px}
+.chips button{flex:1;padding:10px;border-radius:10px;border:1.5px solid var(--line);background:#fff;font-weight:800;font-size:13px}
+.chips button.on{border-color:var(--green);background:var(--green-soft);color:var(--green2)}
+</style>
 </head>
 <body>
+<div id="toastHost"></div>
 
-<div class="tv-ticker-bar">
-    <div class="ticker-badge" id="marketStatusBadge">🛡️ LIVE MARKET</div>
-    <div class="marquee-track">
-        <div class="marquee-content" id="newsTickerContent">Syncing live prices...</div>
-    </div>
+<div class="ticker">
+  <div class="ticker-badge"><i></i> LIVE</div>
+  <div class="ticker-move"><div class="ticker-track" id="newsTickerContent"><span class="t-item">Loading Nifty 50…</span></div></div>
 </div>
 
-<div class="header">
-    <div class="logo-main">NIFTY<span class="logo-badge">7</span></div>
-    <div class="header-actions">
-        <div class="wallet-pill" onclick="switchNav('wallet')">
-            <span>💰</span> <span id="headerBalance">₹0.00</span>
-        </div>
-        <button onclick="handleAuthClick()" id="authBtn" class="btn-outline">Login</button>
+<header class="top">
+  <div class="top-row">
+    <div class="logo">
+      <div class="logo-mark">N7</div>
+      <div><h1>NIFTY 7</h1><p>Fantasy Stock Exchange</p></div>
     </div>
+    <div style="display:flex;gap:8px;align-items:center">
+      <button class="wallet" type="button" onclick="switchNav('wallet')">₹<span id="headerBalance">0.00</span></button>
+      <button type="button" id="authBtn" onclick="handleAuthClick()" style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;padding:7px 10px;border-radius:8px;font-weight:800;font-size:12px">Login</button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <!-- HOME -->
+  <section id="view-home" class="screen on">
+    <div class="match">
+      <div class="match-in">
+        <div class="match-top">
+          <span class="live-pill" id="matchLivePill">● MARKET OPEN</span>
+          <span class="lock-time" id="lockCountdown">Lock in --:--:--</span>
+        </div>
+        <h2 class="match-title">Nifty 50 · Mega Day</h2>
+        <p class="match-sub">Pick 7 stocks · 1 Bull (2×) · 1 Calf (1.5×)</p>
+        <div class="match-stats">
+          <div class="ms"><b id="statJoined">18,420</b><span>Joined</span></div>
+          <div class="ms"><b id="statPool">₹18.4L</b><span>Prize Pool</span></div>
+          <div class="ms"><b>Top 35%</b><span>Win Cash</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="filters" id="homeFilters">
+      <button type="button" class="chip on" data-f="all">All Contests</button>
+      <button type="button" class="chip" data-f="mega">Mega</button>
+      <button type="button" class="chip" data-f="h2h">Head to Head</button>
+      <button type="button" class="chip" data-f="low">Low Entry</button>
+    </div>
+
+    <div id="homeContestList"></div>
+
+    <div class="section">Leaderboard Pulse</div>
+    <div id="homeUserLeaderboards"><div class="spinner"></div></div>
+  </section>
+
+  <!-- CONTESTS -->
+  <section id="view-contests" class="screen">
+    <div class="filters">
+      <button type="button" class="chip on" id="tab-btn-live" onclick="switchContestTab('live')">Live & Upcoming</button>
+      <button type="button" class="chip" id="tab-btn-completed" onclick="switchContestTab('completed')">Completed</button>
+    </div>
+    <div id="contest-section-live">
+      <div id="contestListFull"></div>
+    </div>
+    <div id="contest-section-completed" style="display:none">
+      <div class="card empty">Settled contests appear here after 3:30 PM IST.</div>
+    </div>
+  </section>
+
+  <!-- TEAMS -->
+  <section id="view-baskets" class="screen">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+      <div class="section" style="margin:0">My Teams</div>
+      <button type="button" class="entry" style="padding:8px 12px;font-size:12px;min-width:0" onclick="openCreateBasketForm()">+ Create Team</button>
+    </div>
+    <div id="savedBasketsList"></div>
+    <div id="createBasketBox" class="builder" style="display:none"></div>
+  </section>
+
+  <!-- WALLET -->
+  <section id="view-wallet" class="screen">
+    <div class="w-hero">
+      <div style="font-size:11px;font-weight:700;letter-spacing:.08em;opacity:.7;position:relative;z-index:1">AVAILABLE BALANCE</div>
+      <div class="w-amt">₹<span id="walletMainBal">0.00</span></div>
+      <div style="font-size:12px;color:#86efac;font-weight:700;margin-top:6px;position:relative;z-index:1">UPI Instant · Secure</div>
+    </div>
+    <div class="row2">
+      <button type="button" class="btn btn-g" onclick="openDepositModal()">Add Money</button>
+      <button type="button" class="btn btn-w" onclick="openWithdrawModal()">Withdraw</button>
+    </div>
+    <div class="section">Recent Transactions</div>
+    <div class="card" id="walletHistoryList"><div class="empty">No transactions yet</div></div>
+  </section>
+
+  <!-- PROFILE -->
+  <section id="view-profile" class="screen">
+    <div class="card" style="text-align:center">
+      <div class="avatar" id="profileAvatar">N</div>
+      <div style="font-family:Outfit,sans-serif;font-weight:800;font-size:18px" id="profileHandleDisplay">@player</div>
+      <div style="color:var(--muted);font-size:13px;margin:4px 0 10px" id="profilePhoneDisplay">Not logged in</div>
+      <span class="badge b-flex">KYC Verified</span>
+    </div>
+    <div class="card">
+      <div style="font-family:Outfit,sans-serif;font-weight:800;color:var(--green2);margin-bottom:6px">Refer & Earn</div>
+      <p style="margin:0 0 10px;font-size:12px;color:var(--muted)">Get 1% of friends’ contest fees as bonus cash.</p>
+      <div style="display:flex;justify-content:space-between;background:#f7faf8;padding:12px;border-radius:10px;border:1px solid var(--line);font-weight:800;font-size:13px;margin-bottom:8px">
+        <span>Your code</span><span id="displayReferralCode" style="color:var(--green2)">—</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:12px;font-weight:700">
+        <span>Refers: <b id="refCountLabel">0</b></span>
+        <span>Earned: <b id="refEarningsLabel" style="color:var(--green)">₹0.00</b></span>
+      </div>
+    </div>
+    <div class="card" style="padding:4px 14px">
+      <div class="menu" onclick="openEditProfileModal()"><span>Edit username</span><span>›</span></div>
+      <div class="menu" onclick="openSupportModal()"><span>Help & Support</span><span>›</span></div>
+      <div class="menu danger" onclick="logoutSession()"><span>Logout</span><span>›</span></div>
+    </div>
+  </section>
+</main>
+
+<!-- JOIN -->
+<div class="ov" id="joinSheet"><div class="sheet" id="joinSheetContent"></div></div>
+
+<!-- LB -->
+<div class="ov" id="contestLeaderboardDrawer">
+  <div class="sheet">
+    <div class="handle"></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+      <h3 id="drawerContestTitle" style="margin:0">Standings</h3>
+      <button type="button" class="line-btn" style="flex:0;padding:6px 10px" onclick="closeModal('contestLeaderboardDrawer')">✕</button>
+    </div>
+    <div id="drawerLeaderboardList"><div class="spinner"></div></div>
+  </div>
 </div>
 
-<div class="container">
-
-    <!-- VIEW 1: HOME PAGE -->
-    <div id="view-home" class="screen-view active">
-        <h3 style="margin: 0 0 12px 0; font-size: 16px; font-weight: 900; text-transform: uppercase; color: var(--text-dark);">Mega league</h3>
-
-        <div class="card" style="border: 2px solid var(--purple-main); background: linear-gradient(180deg, #fefeff 0%, #f3e8ff 100%);">
-            <div class="card-header">
-                <div>
-                    <div class="league-title">🏆 Nifty Mega League</div>
-                    <span style="font-size:12px; color:var(--text-muted);">High Stakes</span>
-                </div>
-                <span style="background:var(--purple-main); color:#fff; font-size:11px; font-weight:800; padding:4px 10px; border-radius:12px;">Top 35% Win Cash</span>
-            </div>
-
-            <div style="background:#ffffff; border: 1px dashed var(--border-color); padding: 12px; border-radius: 12px; margin: 12px 0;">
-                <div style="font-size: 22px; font-weight: 900; color: var(--purple-main); display: flex; justify-content: space-between; align-items: baseline;">
-                    <span>₹4,50,000</span>
-                    <span class="entry-tag">Entry: ₹100</span>
-                </div>
-            </div>
-
-            <div class="progress-bg"><div class="progress-fill" style="width:45%;"></div></div>
-            <button class="btn-primary" style="margin-top: 10px;" onclick="initiatePurpleWorkflow('mega_daily', 100, 'Nifty Mega League')">JOIN MEGA LEAGUE — ₹100</button>
-        </div>
-
-        <h3 style="margin: 24px 0 12px 0; font-size: 16px; font-weight: 900; text-transform: uppercase; color: var(--text-dark);">Leaderboard</h3>
-        <div id="homeUserLeaderboards"></div>
-
-        <h3 style="margin: 24px 0 12px 0; font-size: 16px; font-weight: 900; text-transform: uppercase; color: var(--text-dark);">Rules</h3>
-        <div class="card">
-            <ul style="font-size:13px; color:var(--text-muted); line-height:1.7; margin:0; padding-left:20px;">
-                <li>Create basket by choosing top 7 stock among nifty 50</li>
-                <li>Select one stock as Bull and one calf.</li>
-                <li>Scoring applies a 2.0X multiplier to your chosen Bull stock and 1.5X to your Calf stock.</li>
-                <li>Score is calculated by stock price change in % x100</li>
-                <li style="font-weight: 800; color: var(--purple-main); list-style-type: none; margin-left: -20px; margin-top: 8px;">"The higher your score, the better the prize you get."</li>
-            </ul>
-        </div>
+<div class="ov mid" id="auditUserBasketModal">
+  <div class="sheet">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+      <h3 style="margin:0;font-size:16px">Team Preview</h3>
+      <button type="button" class="line-btn" style="flex:0;padding:6px 10px" onclick="closeModal('auditUserBasketModal')">✕</button>
     </div>
-
-    <!-- VIEW 2: CONTESTS PAGE -->
-    <div id="view-contests" class="screen-view">
-        <div class="sub-tabs">
-            <button class="sub-tab-btn active" id="tab-btn-live" onclick="switchContestTab('live')">🟢 Live & Upcoming</button>
-            <button class="sub-tab-btn" id="tab-btn-completed" onclick="switchContestTab('completed')">🏁 Completed</button>
-        </div>
-        <div id="contest-section-live">
-            <div class="card" style="border: 1px solid var(--purple-main);">
-                <div class="card-header">
-                    <div><div class="league-title">🏆 Nifty Mega League</div></div>
-                    <span class="entry-tag">₹100 Entry</span>
-                </div>
-                <button class="btn-primary" style="padding:10px; font-size:13px; margin-top:10px;" onclick="initiatePurpleWorkflow('mega_daily', 100, 'Nifty Mega League')">Join League — ₹100</button>
-            </div>
-            <h4 style="margin: 20px 0 10px 0; font-size: 14px; color: var(--text-muted); text-transform: uppercase;">⚔️ 1v1 Head-to-Head Battles</h4>
-            <div id="oneVsOneContainer"></div>
-        </div>
-        <div id="contest-section-completed" style="display:none;">
-            <div class="card" id="completedHistoryList">
-                <h4 style="margin:0 0 12px 0; font-size:14px;">Past 30 Days Ledger</h4>
-                <div style="font-size:13px; padding:10px 0; display:flex; justify-content:space-between;">
-                    <div><b>Mega League #412</b><br><small style="color:var(--text-muted);">Rank #3</small></div>
-                    <span style="color:var(--stock-green); font-weight:800;">+ ₹50,000 Win</span>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- VIEW 3: BASKETS PAGE -->
-    <div id="view-baskets" class="screen-view">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-            <h3 style="margin:0; font-size:18px;">🛒 My Saved Baskets</h3>
-            <button onclick="openCreateBasketForm()" class="btn-outline" style="background:var(--purple-main); color:#fff; border:none;">+ Create New Basket</button>
-        </div>
-        <div id="savedBasketsList"></div>
-
-        <div id="createBasketBox" class="card" style="display:none; border:2px solid var(--purple-main);">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-                <h4 style="margin:0; font-size:16px; color:var(--purple-main);">Construct 7-Stock Basket</h4>
-                <button onclick="closeCreateBasketForm()" style="background:transparent; border:none; font-size:16px; cursor:pointer;">✕</button>
-            </div>
-            <div style="margin-bottom: 12px;">
-                <label style="font-size:12px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Basket Name</label>
-                <input type="text" id="customBasketNameInput" class="search-input" placeholder="e.g. My Smart Basket 1">
-            </div>
-            <label style="font-size:12px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:6px;">Select exactly 7 stocks (<span id="selectedCount" style="color:var(--purple-main); font-weight:900;">0</span>/7)</label>
-            <input type="text" class="search-input" id="stockSearchInput" placeholder="Search Nifty 50 stocks..." oninput="filterStocks()">
-            <div class="stock-grid" id="stockGrid"></div>
-            <div style="display:flex; gap:10px; margin-bottom:15px;">
-                <div style="flex:1;">
-                    <label style="font-size:11px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">🐂 Bull Stock (2.0X)</label>
-                    <select id="bullSelect" style="width:100%; padding:10px; border-radius:8px; border:1px solid var(--border-color); background:#fff;" disabled><option value="">-- Choose 7 first --</option></select>
-                </div>
-                <div style="flex:1;">
-                    <label style="font-size:11px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">🐃 Calf Stock (1.5X)</label>
-                    <select id="calfSelect" style="width:100%; padding:10px; border-radius:8px; border:1px solid var(--border-color); background:#fff;" disabled><option value="">-- Choose 7 first --</option></select>
-                </div>
-            </div>
-            <button class="btn-primary" id="saveBasketBtn" disabled onclick="saveNewBasket()">SAVE BASKET TO ACCOUNT</button>
-        </div>
-    </div>
-
-    <!-- VIEW 4: WALLET -->
-    <div id="view-wallet" class="screen-view">
-        <div class="card" style="background:var(--purple-light); border-color:rgba(139, 92, 246, 0.3); text-align:center; padding:25px;">
-            <span style="font-size:11px; color:var(--purple-main); font-weight:800; text-transform:uppercase; letter-spacing:1px;">Total Available Balance</span>
-            <div style="font-size:36px; font-weight:900; color:var(--text-dark); margin:8px 0;" id="walletMainBal">₹0.00</div>
-            <span style="font-size:12px; color:var(--stock-green); font-weight:700;">✔ Instant Withdrawals Active</span>
-        </div>
-        <div style="display:flex; gap:10px; margin-bottom:20px;">
-            <button class="btn-primary" style="flex:1;" onclick="openDepositModal()">+ Add Money</button>
-            <button class="btn-outline" style="flex:1; padding:14px; font-size:14px;" onclick="openWithdrawModal()">↑ Withdraw</button>
-        </div>
-        <div class="card">
-            <h4 style="margin:0 0 12px 0; font-size:14px;">Recent Transactions Ledger</h4>
-            <div id="walletHistoryList" style="font-size:13px;"></div>
-        </div>
-    </div>
-
-    <!-- VIEW 5: PROFILE -->
-    <div id="view-profile" class="screen-view">
-        <div class="card" style="text-align:center; padding:25px;">
-            <div style="position: relative; width: 80px; height: 80px; margin: 0 auto 12px auto;">
-                <div style="width: 80px; height: 80px; background: var(--purple-light); color: var(--purple-main); font-size: 32px; font-weight: 900; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid var(--purple-main);">U</div>
-            </div>
-            <div style="display:flex; align-items:center; justify-content:center; gap:6px; margin-bottom:4px;">
-                <h3 style="margin:0; font-size:20px;" id="profileHandleDisplay">@competitor</h3>
-            </div>
-            <span style="font-size:13px; color:var(--text-muted); display:block; margin-bottom:12px;" id="profilePhoneDisplay">Mobile: Not Logged In</span>
-            <span style="background:var(--green-bg); color:var(--stock-green); font-size:11px; font-weight:800; padding:4px 10px; border-radius:12px;">✔ KYC Verified Player</span>
-        </div>
-
-        <div class="card" style="border: 1px dashed var(--purple-main); background: #faf9ff;">
-            <h4 style="margin: 0 0 6px 0; font-size: 14px; color: var(--purple-main);">📢 Refer & Earn Program</h4>
-            <p style="font-size: 12px; color: var(--text-muted); margin: 0 0 10px 0;">Earn a 1% commission bonus cash on your friends' contest entry transactions!</p>
-            <div style="display: flex; justify-content: space-between; background: #fff; padding: 10px; border-radius: 8px; border: 1px solid var(--border-color); font-size: 13px; font-weight: 700; margin-bottom: 10px;">
-                <span>Your Referral Code:</span>
-                <span id="displayReferralCode" style="color: var(--purple-main); letter-spacing: 0.5px;">---</span>
-            </div>
-            <div style="display: flex; justify-content: space-between; font-size: 12px; color: var(--text-dark); font-weight: 600;">
-                <span>Total Refers: <b id="refCountLabel" style="color: var(--purple-main);">0</b></span>
-                <span>Total Income: <b id="refEarningsLabel" style="color: var(--stock-green);">₹0.00</b></span>
-            </div>
-        </div>
-
-        <div class="card" style="padding:0; overflow:hidden;">
-            <div style="padding:16px; border-bottom:1px solid var(--border-color); font-size:14px; font-weight:700; cursor:pointer; display:flex; justify-content:space-between;" onclick="openEditProfileModal()">
-                <span>✏️ Edit Profile Username</span><span>→</span>
-            </div>
-            <div style="padding:16px; border-bottom:1px solid var(--border-color); font-size:14px; font-weight:700; cursor:pointer; display:flex; justify-content:space-between;" onclick="openSupportModal()">
-                <span>🛠️ Help & Support Desk</span><span>→</span>
-            </div>
-            <div style="padding:16px; font-size:14px; font-weight:700; cursor:pointer; display:flex; justify-content:space-between; color:var(--stock-red);" onclick="logoutSession()">
-                <span>🔒 Logout of Session</span><span>→</span>
-            </div>
-        </div>
-    </div>
+    <div id="auditUserBasketContent"></div>
+  </div>
 </div>
 
-<!-- REAL INTERACTIVE SYSTEM MODALS -->
-<div class="modal-overlay" id="purplePopupWorkflow">
-    <div class="purple-popup-card" id="purplePopupDynamicContent"></div>
+<div class="ov mid" id="editProfileModal">
+  <div class="sheet">
+    <h3>Update handle</h3>
+    <p class="sub">Must start with @</p>
+    <input class="field" id="newHandleInput" placeholder="@yourname">
+    <button class="btn btn-g" type="button" onclick="submitHandleChange()">Save</button>
+    <button class="btn btn-w" type="button" style="margin-top:8px" onclick="closeModal('editProfileModal')">Cancel</button>
+  </div>
 </div>
 
-<div class="modal-overlay" id="contestLeaderboardDrawer" style="align-items: flex-start; overflow-y: auto; padding: 20px 10px;">
-    <div class="modal-card" style="max-width: 500px; text-align: left; padding: 20px;">
-        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom: 1px solid var(--border-color); padding-bottom:10px; margin-bottom:15px;">
-            <h3 style="margin:0; font-size:16px; color:var(--purple-main);" id="drawerContestTitle">Contest Standings</h3>
-            <button onclick="closeModal('contestLeaderboardDrawer')" style="background:transparent; border:none; font-size:18px; font-weight:bold; cursor:pointer;">✕</button>
-        </div>
-        <div id="drawerLeaderboardList" style="display:flex; flex-direction:column; gap:10px;"></div>
+<div class="ov mid" id="supportModal">
+  <div class="sheet">
+    <h3>Help & Support</h3>
+    <p class="sub">support@nifty7.com</p>
+    <textarea id="supportMsgInput" class="field" style="height:90px;text-align:left;resize:none" placeholder="Describe your issue…"></textarea>
+    <button class="btn btn-g" type="button" onclick="submitSupportTicket()">Submit</button>
+    <button class="btn btn-w" type="button" style="margin-top:8px" onclick="closeModal('supportModal')">Close</button>
+  </div>
+</div>
+
+<div class="ov mid" id="withdrawModal">
+  <div class="sheet">
+    <h3>Withdraw via UPI</h3>
+    <p class="sub">Min ₹100 · Instant</p>
+    <input class="field" id="withdrawUpiInput" placeholder="username@upi">
+    <input class="field" id="withdrawAmtInput" type="number" placeholder="Amount" inputmode="numeric">
+    <button class="btn btn-g" id="withdrawBtn" type="button" onclick="submitWithdrawal()">Confirm payout</button>
+    <button class="btn btn-w" type="button" style="margin-top:8px" onclick="closeModal('withdrawModal')">Cancel</button>
+  </div>
+</div>
+
+<div class="ov mid" id="depositModal">
+  <div class="sheet">
+    <h3>Add Money</h3>
+    <p class="sub">UPI · Instant wallet credit</p>
+    <input class="field" id="depositAmountInput" type="number" value="500" inputmode="numeric">
+    <div class="chips">
+      <button type="button" onclick="setDepositAmt(100,this)">₹100</button>
+      <button type="button" class="on" onclick="setDepositAmt(500,this)">₹500</button>
+      <button type="button" onclick="setDepositAmt(1000,this)">₹1000</button>
     </div>
+    <button class="btn btn-g" id="depositBtn" type="button" onclick="processDeposit()">Proceed to Pay</button>
+    <button class="btn btn-w" type="button" style="margin-top:8px" onclick="closeModal('depositModal')">Cancel</button>
+  </div>
 </div>
 
-<div class="modal-overlay" id="auditUserBasketModal">
-    <div class="modal-card" style="text-align:left; max-width:400px;">
-        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border-color); padding-bottom:10px; margin-bottom:15px;">
-            <h3 style="margin:0; font-size:16px; color:var(--purple-main);">Squad Audit Verification</h3>
-            <button onclick="closeModal('auditUserBasketModal')" style="background:transparent; border:none; font-size:18px; font-weight:bold; cursor:pointer;">✕</button>
-        </div>
-        <div id="auditUserBasketContent"></div>
+<!-- PREMIUM LOGIN -->
+<div class="ov mid open" id="loginModal">
+  <div class="sheet">
+    <div class="login-brand">
+      <div class="mark">N7</div>
+      <h2>NIFTY 7</h2>
+      <p class="sub" style="margin-top:6px">India’s fantasy stock arena</p>
     </div>
-</div>
-
-<div class="modal-overlay" id="editProfileModal">
-    <div class="modal-card">
-        <h3 style="margin:0 0 8px 0;">Update Handle</h3>
-        <p style="font-size:13px; color:var(--text-muted); margin-bottom:15px;">Enter your new custom @username</p>
-        <input type="text" id="newHandleInput" class="modal-input" placeholder="@newhandle">
-        <button class="btn-primary" onclick="submitHandleChange()">Save New Handle</button>
-        <button onclick="closeModal('editProfileModal')" style="background:transparent; border:none; color:var(--text-muted); margin-top:15px; cursor:pointer; font-size:12px;">Cancel</button>
+    <p class="sub" id="modalSubtext" style="text-align:center">Enter mobile number to continue</p>
+    <div id="refCodeFieldWrapper" style="text-align:left">
+      <label style="font-size:11px;font-weight:700;opacity:.7;display:block;margin-bottom:4px">Referral (optional)</label>
+      <input class="field" id="loginReferralInput" placeholder="REF code" style="text-transform:uppercase">
     </div>
-</div>
-
-<div class="modal-overlay" id="supportModal">
-    <div class="modal-card">
-        <h3 style="margin:0 0 8px 0;">Help & Support Desk</h3>
-        <p style="font-size:13px; color:var(--text-muted); margin-bottom:15px;">Email: support@nifty7.com<br>Response time: within 2 hours</p>
-        <textarea id="supportMsgInput" class="modal-input" placeholder="Describe your issue..." style="height:80px; text-align:left; resize:none;"></textarea>
-        <button class="btn-primary" onclick="submitSupportTicket()">Submit Support Ticket</button>
-        <button onclick="closeModal('supportModal')" style="background:transparent; border:none; color:var(--text-muted); margin-top:15px; cursor:pointer; font-size:12px;">Close</button>
+    <div id="stepPhone">
+      <input class="field" id="phoneInput" type="tel" maxlength="10" inputmode="numeric" placeholder="10-digit mobile" autocomplete="tel">
+      <button class="btn btn-g" id="otpRequestBtn" type="button" onclick="requestOtp()">Get OTP</button>
     </div>
-</div>
-
-<div class="modal-overlay" id="withdrawModal">
-    <div class="modal-card">
-        <h3 style="margin:0 0 8px 0;">Request UPI Payout</h3>
-        <p style="font-size:13px; color:var(--text-muted); margin-bottom:15px;">Instant transfer to your UPI bank account</p>
-        <input type="text" id="withdrawUpiInput" class="modal-input" placeholder="username@upi">
-        <input type="number" id="withdrawAmtInput" class="modal-input" placeholder="Amount (Min ₹100)">
-        <button class="btn-primary" onclick="submitWithdrawal()">Confirm Payout</button>
-        <button onclick="closeModal('withdrawModal')" style="background:transparent; border:none; color:var(--text-muted); margin-top:15px; cursor:pointer; font-size:12px;">Cancel</button>
+    <div id="stepOtp" style="display:none">
+      <div class="otp-hint" id="otpHint"></div>
+      <input class="field" id="otpInput" type="tel" maxlength="6" inputmode="numeric" placeholder="6-digit OTP" autocomplete="one-time-code">
+      <button class="btn btn-g" id="otpVerifyBtn" type="button" onclick="verifyOtp()">Verify & Play</button>
     </div>
+  </div>
 </div>
 
-<!-- LOGIN MODAL -->
-<div class="modal-overlay" id="loginModal">
-    <div class="modal-card">
-        <h3 style="margin:0 0 8px 0;">Enter Nifty-7 Arena</h3>
-        <p style="font-size:13px; color:var(--text-muted); margin-bottom:15px;" id="modalSubtext">Enter mobile number to login.</p>
-        <div id="refCodeFieldWrapper" style="margin-bottom: 12px; text-align: left;">
-            <label style="font-size: 11px; font-weight: 700; color: var(--text-muted); display: block; margin-bottom: 4px;">Referral Code (Optional)</label>
-            <input type="text" id="loginReferralInput" class="modal-input" placeholder="e.g. REF1234" style="margin-bottom:0; text-transform: uppercase;">
-        </div>
-        <div id="stepPhone">
-            <input type="number" id="phoneInput" class="modal-input" placeholder="9999999999" maxlength="10">
-            <button class="btn-primary" onclick="requestOtp()">Send Verification OTP</button>
-        </div>
-        <div id="stepOtp" style="display:none;">
-            <input type="number" id="otpInput" class="modal-input" placeholder="123456" maxlength="6">
-            <button class="btn-primary" onclick="verifyOtp()">Verify & Enter</button>
-        </div>
-    </div>
-</div>
-
-<!-- DEPOSIT MODAL -->
-<div class="modal-overlay" id="depositModal">
-    <div class="modal-card">
-        <h3 style="margin:0 0 8px 0;">⚡ Cashfree UPI Deposit</h3>
-        <p style="font-size:13px; color:var(--text-muted); margin-bottom:15px;">Instant wallet credit</p>
-        <input type="number" id="depositAmountInput" class="modal-input" value="500">
-        <div style="display:flex; gap:8px; margin-bottom:15px;">
-            <button class="btn-outline" style="flex:1;" onclick="document.getElementById('depositAmountInput').value=100">₹100</button>
-            <button class="btn-outline" style="flex:1;" onclick="document.getElementById('depositAmountInput').value=500">₹500</button>
-            <button class="btn-outline" style="flex:1;" onclick="document.getElementById('depositAmountInput').value=1000">₹1000</button>
-        </div>
-        <button class="btn-primary" onclick="processDeposit()">PROCEED TO PAY</button>
-        <button onclick="closeModal('depositModal')" style="background:transparent; border:none; color:var(--text-muted); margin-top:15px; cursor:pointer; font-size:12px;">Cancel</button>
-    </div>
-</div>
-
-<!-- BOTTOM NAVIGATION -->
-<div class="bottom-nav">
-    <div class="nav-item active" id="nav-home" onclick="switchNav('home')"><span>🏠</span><span>Home</span></div>
-    <div class="nav-item" id="nav-contests" onclick="switchNav('contests')"><span>🏆</span><span>Contests</span></div>
-    <div class="nav-item" id="nav-baskets" onclick="switchNav('baskets')"><span>🛒</span><span>Baskets</span></div>
-    <div class="nav-item" id="nav-wallet" onclick="switchNav('wallet')"><span>💰</span><span>Wallet</span></div>
-    <div class="nav-item" id="nav-profile" onclick="switchNav('profile')"><span>👤</span><span>Profile</span></div>
-</div>
-
-<script>
-    const fullNifty50List = [
-        'RELIANCE', 'TCS', 'HDFCBANK', 'ICICIBANK', 'INFY', 'SBIN', 'BHARTIARTL', 'ITC', 'LT', 'WIPRO',
-        'MARUTI', 'ASIANPAINT', 'AXISBANK', 'SUNPHARMA', 'TITAN', 'TATAMOTORS', 'ADANIENT', 'ADANIPORTS', 'BAJFINANCE', 'HINDUNILVR',
-        'TATASTEEL', 'TECHM', 'POWERGRID', 'NTPC', 'ZEEL', 'BAJAJ-AUTO', 'APOLLOHOSP', 'BRITANNIA', 'BPCL', 'CIPLA',
-        'COALINDIA', 'DIVISLAB', 'DRREDDY', 'EICHERMOT', 'GRASIM', 'HCLTECH', 'HDFCLIFE', 'HEROMOTOCO', 'HINDALCO', 'INDUSINDBK',
-        'JSWSTEEL', 'KOTAKBANK', 'LTIM', 'M&M', 'NESTLEIND', 'ONGC', 'SBILIFE', 'TATACONSUM', 'ULTRACEMCO'
-    ];
-    let livePriceMap = {};
-    const safeId = (sym) => sym.replace(/[^a-zA-Z0-9]/g, '_');
-
-    function getStockLogo(sym) {
-        return `<img src="https://www.google.com/finance/favicon?q=NSE:${sym}" onerror="this.onerror=null;this.src='https://ui-avatars.com/api/?name=${sym}&background=8b5cf6&color=fff&bold=true';" style="width:20px; height:20px; border-radius:50%; margin-right:6px; vertical-align:middle;">`;
-    }
-
-    window.onload = function() {
-        if (!localStorage.getItem('nifty7_user')) {
-            document.getElementById('loginModal').style.display = 'flex';
-        }
-        checkSession();
-        updateMarketFeed();
-        setInterval(updateMarketFeed, 3000);
-        setInterval(loadContestLeaderboards, 5000);
-    };
-
-    async function updateMarketFeed() {
-        try {
-            const res = await fetch('/api/contests/prices');
-            const data = await res.json();
-            if (data.success && data.prices) {
-                livePriceMap = data.prices;
-                renderNewsTicker();
-                updateStockGridPrices();
-            }
-        } catch(e) { console.warn("Market feed waiting for backend sync..."); }
-    }
-
-    function renderNewsTicker() {
-        const tickerEl = document.getElementById('newsTickerContent');
-        let html = '';
-        Object.keys(livePriceMap).forEach(sym => {
-            const st = livePriceMap[sym];
-            const cls = parseFloat(st.change) >= 0 ? 'change-up' : 'change-down';
-            const sign = parseFloat(st.change) >= 0 ? '+' : '';
-            html += `<div class="ticker-item">${getStockLogo(sym)} <b>${sym}</b> <span style="color:var(--text-muted);">₹${st.price}</span> <span class="${cls}">(${sign}${st.change}%)</span></div>`;
-        });
-        tickerEl.innerHTML = html + html;
-    }
-
-    function switchNav(tab) {
-        document.querySelectorAll('.screen-view').forEach(el => el.classList.remove('active'));
-        document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-        document.getElementById(`view-${tab}`).classList.add('active');
-        document.getElementById(`nav-${tab}`).classList.add('active');
-        checkSession();
-    }
-
-    function switchContestTab(sub) {
-        document.getElementById('tab-btn-live').className = sub === 'live' ? 'sub-tab-btn active' : 'sub-tab-btn';
-        document.getElementById('tab-btn-completed').className = sub === 'completed' ? 'sub-tab-btn active' : 'sub-tab-btn';
-        document.getElementById('contest-section-live').style.display = sub === 'live' ? 'block' : 'none';
-        document.getElementById('contest-section-completed').style.display = sub === 'completed' ? 'block' : 'none';
-    }
-
-    function closeModal(id) { document.getElementById(id).style.display = 'none'; }
-
-    const leagues1v1 = [
-        { id: "battle_1", name: "Starter Battle", entry: 50 },
-        { id: "battle_2", name: "Standard Clash", entry: 100 },
-        { id: "battle_3", name: "Advanced Arena", entry: 250 },
-        { id: "battle_4", name: "High Roller Duel", entry: 500 },
-        { id: "battle_5", name: "VIP Heads-Up", entry: 1000 }
-    ];
-
-    function render1v1Leagues() {
-        const container = document.getElementById('oneVsOneContainer');
-        container.innerHTML = leagues1v1.map(l => `
-            <div class="card" style="margin-bottom:12px;">
-                <div class="card-header">
-                    <div><div class="league-title">🎯 ${l.name}</div></div>
-                    <span class="entry-tag" style="background:var(--purple-main);">₹${l.entry} Entry</span>
-                </div>
-                <button class="btn-primary" style="padding:10px; font-size:13px; background:#f8fafc; color:var(--purple-main); border:1px solid var(--purple-main);" onclick="initiatePurpleWorkflow('${l.id}', ${l.entry}, '${l.name}')">Select Basket & Play</button>
-            </div>
-        `).join('');
-    }
-    render1v1Leagues();
-
-    // --- TWO-STEP LIGHT PURPLE CONFIRMATION FLOW FOR ALL CONTESTS ---
-    function initiatePurpleWorkflow(targetId, entryFee, contestName) {
-        const user = JSON.parse(localStorage.getItem('nifty7_user'));
-        if (!user) { document.getElementById('loginModal').style.display = 'flex'; return; }
-        
-        const baskets = JSON.parse(localStorage.getItem('nifty7_saved_baskets') || '[]');
-        if (baskets.length === 0) { alert("Please construct and save a 7-stock basket first."); switchNav('baskets'); return; }
-
-        const overlay = document.getElementById('purplePopupWorkflow');
-        const content = document.getElementById('purplePopupDynamicContent');
-        overlay.style.display = 'flex';
-
-        content.innerHTML = `
-            <h3>Step 1: Choose Your Basket</h3>
-            <p style="font-size:13px; text-align:center; margin-bottom:15px; color:var(--text-muted);">Select the basket you want to deploy into ${contestName}</p>
-            <div style="max-height: 200px; overflow-y:auto; margin-bottom:15px;">
-                ${baskets.map(b => `
-                    <div class="popup-list-item" onclick="triggerWorkflowConfirmationStep('${targetId}', ${entryFee}, '${contestName}', ${b.id}, '${b.name.replace(/'/g, "\\'")}')">
-                        <span>🛒 ${b.name}</span>
-                        <span style="color:var(--purple-main);">Deploy →</span>
-                    </div>
-                `).join('')}
-            </div>
-            <button class="btn-outline" style="width:100%; background:#fff;" onclick="closeModal('purplePopupWorkflow')">Cancel</button>
-        `;
-    }
-
-    function triggerWorkflowConfirmationStep(contestId, fee, contestName, basketId, basketName) {
-        const content = document.getElementById('purplePopupDynamicContent');
-        content.innerHTML = `
-            <h3>Step 2: Confirm Entry</h3>
-            <div style="background:#ffffff; padding:15px; border-radius:12px; border:1px solid var(--purple-main); margin-bottom:20px; text-align:center;">
-                <p style="margin:0 0 8px 0; font-size:14px; font-weight:700;">You are joining ${contestName}</p>
-                <p style="margin:0; font-size:13px; color:var(--text-muted);">Deploying: <b>${basketName}</b></p>
-                <p style="margin:8px 0 0 0; font-size:15px; font-weight:900; color:var(--purple-main);">Entry Fee: ₹${fee}</p>
-            </div>
-            <div style="display:flex; gap:10px;">
-                <button class="btn-outline" style="flex:1; background:#fff;" onclick="closeModal('purplePopupWorkflow')">Cancel</button>
-                <button class="btn-primary" style="flex:1; background:var(--purple-main);" onclick="executeLeagueJoining('${contestId}', ${fee}, ${basketId})">Continue</button>
-            </div>
-        `;
-    }
-
-    async function executeLeagueJoining(contestId, fee, basketId) {
-        closeModal('purplePopupWorkflow');
-        const user = JSON.parse(localStorage.getItem('nifty7_user'));
-        const baskets = JSON.parse(localStorage.getItem('nifty7_saved_baskets') || '[]');
-        const chosen = baskets.find(b => b.id === basketId);
-
-        try {
-            const res = await fetch('/api/contests/join', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ userId: user.id, contestId, basket: chosen })
-            });
-            const data = await res.json();
-            if (data.success) {
-                alert(`🚀 Successfully joined contest arena with ${chosen.name}!`);
-                fetchUserProfileData();
-                switchNav('home');
-            } else { alert(data.message || "Failed to join arena."); }
-        } catch(err) { alert("Transaction connection error."); }
-    }
-
-    let selectedStocks = [];
-    function initBasketGrid() {
-        const grid = document.getElementById('stockGrid');
-        grid.innerHTML = '';
-        fullNifty50List.forEach(sym => {
-            const sId = safeId(sym);
-            const st = livePriceMap[sym] || { price: 0.00, change: '0.00' };
-            grid.insertAdjacentHTML('beforeend', `
-                <button type="button" class="stock-btn" id="btn-${sId}" onclick="toggleStockSelection('${sym}')">
-                    <div style="font-weight:800; font-size:13px; margin-bottom:4px; display:flex; align-items:center;">${getStockLogo(sym)} ${sym}</div>
-                    <div style="display:flex; justify-content:space-between; font-size:12px;"><span id="p-${sId}">₹${st.price}</span><span id="c-${sId}" class="${parseFloat(st.change)>=0?'change-up':'change-down'}">${st.change}%</span></div>
-                </button>
-            `);
-        });
-    }
-
-    function updateStockGridPrices() {
-        fullNifty50List.forEach(sym => {
-            const sId = safeId(sym);
-            const st = livePriceMap[sym] || { price: 0.00, change: '0.00' };
-            const pEl = document.getElementById(`p-${sId}`);
-            const cEl = document.getElementById(`c-${sId}`);
-            if (pEl && cEl) {
-                pEl.innerText = `₹${st.price}`;
-                cEl.className = parseFloat(st.change) >= 0 ? 'change-up' : 'change-down';
-                cEl.innerText = `${parseFloat(st.change) >= 0 ? '+' : ''}${st.change}%`;
-            }
-        });
-    }
-
-    function toggleStockSelection(sym) {
-        const sId = safeId(sym);
-        const idx = selectedStocks.indexOf(sym);
-        const btn = document.getElementById(`btn-${sId}`);
-        if (idx > -1) {
-            selectedStocks.splice(idx, 1);
-            if(btn) btn.classList.remove('selected');
-        } else {
-            if (selectedStocks.length >= 7) { alert("Max limit: Select exactly 7 stocks."); return; }
-            selectedStocks.push(sym);
-            if(btn) btn.classList.add('selected');
-        }
-        document.getElementById('selectedCount').innerText = selectedStocks.length;
-        updateMultiplierDropdowns();
-    }
-
-    function filterStocks() {
-        const q = document.getElementById('stockSearchInput').value.toUpperCase().trim();
-        fullNifty50List.forEach(sym => {
-            const btn = document.getElementById(`btn-${safeId(sym)}`);
-            if (btn) btn.style.display = sym.includes(q) ? 'block' : 'none';
-        });
-    }
-
-    function updateMultiplierDropdowns() {
-        const bull = document.getElementById('bullSelect');
-        const calf = document.getElementById('calfSelect');
-        const saveBtn = document.getElementById('saveBasketBtn');
-        if (selectedStocks.length === 7) {
-            bull.disabled = false; calf.disabled = false; saveBtn.disabled = false;
-            const bVal = bull.value; const cVal = calf.value;
-            bull.innerHTML = '<option value="">-- Choose Bull (2.0X) --</option>';
-            calf.innerHTML = '<option value="">-- Choose Calf (1.5X) --</option>';
-            selectedStocks.forEach(sym => {
-                bull.insertAdjacentHTML('beforeend', `<option value="${sym}" ${sym===bVal?'selected':''}>${sym}</option>`);
-                calf.insertAdjacentHTML('beforeend', `<option value="${sym}" ${sym===cVal?'selected':''}>${sym}</option>`);
-            });
-        } else {
-            bull.disabled = true; calf.disabled = true; saveBtn.disabled = true;
-            bull.innerHTML = '<option value="">-- Choose 7 first --</option>';
-            calf.innerHTML = '<option value="">-- Choose 7 first --</option>';
-        }
-    }
-
-    function openCreateBasketForm() {
-        document.getElementById('createBasketBox').style.display = 'block';
-        initBasketGrid();
-    }
-    function closeCreateBasketForm() {
-        document.getElementById('createBasketBox').style.display = 'none';
-        selectedStocks = [];
-        document.getElementById('selectedCount').innerText = '0';
-        document.getElementById('customBasketNameInput').value = '';
-    }
-
-    function saveNewBasket() {
-        const nameInput = document.getElementById('customBasketNameInput').value.trim();
-        const bull = document.getElementById('bullSelect').value;
-        const calf = document.getElementById('calfSelect').value;
-        if (!bull || !calf || bull === calf) { alert("Select separate Bull and Calf stocks."); return; }
-        
-        let baskets = JSON.parse(localStorage.getItem('nifty7_saved_baskets') || '[]');
-        const basketName = nameInput !== "" ? nameInput : `Basket #${baskets.length + 1}`;
-
-        const newBasket = {
-            id: Date.now(),
-            name: basketName,
-            bull, calf,
-            normal: selectedStocks.filter(s => s !== bull && s !== calf)
-        };
-        baskets.push(newBasket);
-        localStorage.setItem('nifty7_saved_baskets', JSON.stringify(baskets));
-        closeCreateBasketForm();
-        renderSavedBaskets();
-        alert(`✅ ${newBasket.name} saved successfully!`);
-    }
-
-    function renderSavedBaskets() {
-        const baskets = JSON.parse(localStorage.getItem('nifty7_saved_baskets') || '[]');
-        const listEl = document.getElementById('savedBasketsList');
-        if (baskets.length === 0) {
-            listEl.innerHTML = `<div class="card" style="text-align:center; padding:30px; color:var(--text-muted);"><p style="margin:0 0 10px 0;">No saved baskets yet. Create your first 7-stock basket to join contests!</p><button class="btn-outline" onclick="openCreateBasketForm()">Create Basket Now</button></div>`;
-            return;
-        }
-        listEl.innerHTML = baskets.map(b => `
-            <div class="card" style="border-left: 4px solid var(--purple-main);">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-                    <b style="font-size:15px; color:var(--text-dark);">🛒 ${b.name}</b>
-                    <button onclick="deleteBasket(${b.id})" style="background:transparent; border:none; color:var(--stock-red); cursor:pointer; font-size:12px;">Delete ✕</button>
-                </div>
-                <div style="margin-bottom:12px;">
-                    <span class="stock-pill bull-pill">🐂 Bull: ${b.bull}</span>
-                    <span class="stock-pill calf-pill">🐃 Calf: ${b.calf}</span>
-                </div>
-                <div style="display:flex; gap:8px;">
-                    <button class="btn-primary" style="padding:10px; font-size:13px;" onclick="initiatePurpleWorkflow('mega_daily', 100, 'Nifty Mega League')">🚀 Enter Mega League (₹100)</button>
-                </div>
-            </div>
-        `).join('');
-    }
-
-    function deleteBasket(id) {
-        let baskets = JSON.parse(localStorage.getItem('nifty7_saved_baskets') || '[]');
-        baskets = baskets.filter(b => b.id !== id);
-        localStorage.setItem('nifty7_saved_baskets', JSON.stringify(baskets));
-        renderSavedBaskets();
-    }
-
-    // --- INTERACTIVE LEADERBOARDS & SQUAD AUDITS ---
-    async function loadContestLeaderboards() {
-        const container = document.getElementById('homeUserLeaderboards');
-        try {
-            const res = await fetch('/api/contests');
-            const data = await res.json();
-            if (data.success) {
-                container.innerHTML = data.contests.map(c => `
-                    <div class="card" style="border:1px solid var(--purple-main); cursor:pointer;" onclick="openDetailedStandingsDrawer('${c.id}', '${c.name}')">
-                        <div style="display:flex; justify-content:space-between; align-items:center;">
-                            <strong>🏆 ${c.name} Standings</strong>
-                            <span style="background:var(--green-bg); color:var(--stock-green); font-size:11px; padding:4px 8px; border-radius:8px; font-weight:bold;">TAP TO OPEN ➔</span>
-                        </div>
-                        <div style="display:flex; justify-content:space-between; font-size:13px; margin-top:8px; color:var(--text-muted);">
-                            <span>Enrolled: <b>${c.joined}</b></span>
-                            <span>Status: <b style="color:var(--purple-main);">${c.status.toUpperCase()}</b></span>
-                        </div>
-                    </div>
-                `).join('');
-            }
-        } catch(e) { container.innerHTML = `<p style="color:var(--text-muted);">Leaderboards synchronizing...</p>`; }
-    }
-
-    async function openDetailedStandingsDrawer(contestId, contestName) {
-        document.getElementById('drawerContestTitle').innerText = contestName;
-        const drawer = document.getElementById('contestLeaderboardDrawer');
-        const listContainer = document.getElementById('drawerLeaderboardList');
-        drawer.style.display = 'flex';
-        listContainer.innerHTML = '<p style="text-align:center;">Loading audit ledger...</p>';
-
-        try {
-            const res = await fetch(`/api/contests/${contestId}/leaderboard`);
-            const data = await res.json();
-            if (data.success && data.leaderboard.length > 0) {
-                listContainer.innerHTML = data.leaderboard.map((p, idx) => `
-                    <div style="background:#f8fafc; border:1px solid var(--border-color); padding:12px; border-radius:12px;">
-                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-                            <span><b>#${idx+1}</b> ${p.handle}</span>
-                            <strong style="color:var(--purple-main);">${p.current_points} PTS</strong>
-                        </div>
-                        <div style="margin-top:4px;">
-                            <span style="font-size:11px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Basket: ${p.basketName}</span>
-                            <span class="stock-pill bull-pill" style="font-size:10px;">🐂 Bull: ${p.bull}</span>
-                            <span class="stock-pill calf-pill" style="font-size:10px;">🐃 Calf: ${p.calf}</span>
-                            <button class="btn-outline" style="padding:2px 6px; font-size:10px; float:right;" onclick="auditCompetitorSquad('${p.handle}', '${p.basketName.replace(/'/g, "\\'")}', '${p.bull}', '${p.calf}', '${p.normal.join(',')}')">Inspect Squad</button>
-                        </div>
-                    </div>
-                `).join('');
-            } else {
-                listContainer.innerHTML = `<p style="color:var(--text-muted); text-align:center; padding:20px;">No users enrolled yet.</p>`;
-            }
-        } catch(e) { listContainer.innerHTML = 'Error compiling ledger items.'; }
-    }
-
-    function auditCompetitorSquad(handle, basketName, bull, calf, normalStr) {
-        document.getElementById('auditUserBasketModal').style.display = 'flex';
-        const normalList = normalStr.split(',');
-        document.getElementById('auditUserBasketContent').innerHTML = `
-            <p style="margin:0 0 4px 0; font-size:14px;">User: <b>${handle}</b></p>
-            <p style="margin:0 0 12px 0; font-size:13px; color:var(--text-muted);">Basket Name: <b>${basketName}</b></p>
-            <div style="background:#f8fafc; padding:10px; border-radius:8px; border:1px solid var(--border-color); margin-bottom:12px;">
-                <div style="margin-bottom:6px;"><span class="stock-pill bull-pill" style="font-size:12px;">🐂 Bull (2.0X): <b>${bull}</b></span></div>
-                <div><span class="stock-pill calf-pill" style="font-size:12px;">🐃 Calf (1.5X): <b>${calf}</b></span></div>
-            </div>
-            <p style="font-size:12px; font-weight:700; margin:0 0 6px 0; color:var(--text-muted);">Normal Picks (1.0X):</p>
-            <div style="display:flex; flex-wrap:wrap; gap:4px; margin-bottom:15px;">
-                ${normalList.map(s => `<span class="stock-pill" style="background:#f1f5f9; color:var(--text-dark); border:1px solid var(--border-color);">${s}</span>`).join('')}
-            </div>
-            <div style="background:var(--green-bg); color:var(--stock-green); padding:8px; border-radius:8px; text-align:center; font-size:11px; font-weight:800;">
-                ✔ Squad Verified: Locked before contest start (Zero Admin Manipulation)
-            </div>
-        `;
-    }
-
-    // --- REAL WALLET PAYMENTS (CASHFREE) ---
-    function openDepositModal() { document.getElementById('depositModal').style.display = 'flex'; }
-    function openWithdrawModal() { document.getElementById('withdrawModal').style.display = 'flex'; }
-
-    async function processDeposit() {
-        const user = JSON.parse(localStorage.getItem('nifty7_user'));
-        const amount = document.getElementById('depositAmountInput').value;
-        try {
-            const res = await fetch('/api/cashfree/create-order', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ userId: user.id, amount, phone: user.phone, name: user.handle })
-            });
-            const data = await res.json();
-            if (data.success) {
-                closeModal('depositModal');
-                alert("⚡ Cashfree Order Activated! Simulated instant sandbox credit applied to your wallet.");
-                fetchUserProfileData();
-            } else { alert(data.message || "Payment Gateway error."); }
-        } catch(e) { alert("Network connection error."); }
-    }
-
-    async function submitWithdrawal() {
-        const user = JSON.parse(localStorage.getItem('nifty7_user'));
-        const amount = document.getElementById('withdrawAmtInput').value;
-        const upiId = document.getElementById('withdrawUpiInput').value.trim();
-        if(!upiId || !upiId.includes('@')) { alert("Please enter a valid UPI ID (e.g., username@okaxis)"); return; }
-        
-        try {
-            const res = await fetch('/api/cashfree/request-payout', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ userId: user.id, amount, upiId })
-            });
-            const data = await res.json();
-            if (data.success) {
-                closeModal('withdrawModal');
-                alert(`💸 Payout of ₹${amount} successfully dispatched to ${upiId} via Cashfree IMPS!`);
-                fetchUserProfileData();
-            } else { alert(data.message || "Withdrawal failed."); }
-        } catch(e) { alert("Network connection error."); }
-    }
-
-    // --- PROFILE & SUPPORT MODALS ---
-    function openEditProfileModal() { document.getElementById('editProfileModal').style.display = 'flex'; }
-    function openSupportModal() { document.getElementById('supportModal').style.display = 'flex'; }
-
-    async function submitHandleChange() {
-        const user = JSON.parse(localStorage.getItem('nifty7_user'));
-        const handle = document.getElementById('newHandleInput').value.trim();
-        if(!handle || !handle.startsWith('@')) { alert("Handle must start with @"); return; }
-        
-        try {
-            const res = await fetch('/api/user/update-handle', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ userId: user.id, handle })
-            });
-            const data = await res.json();
-            if (data.success) {
-                user.handle = data.handle;
-                localStorage.setItem('nifty7_user', JSON.stringify(user));
-                closeModal('editProfileModal');
-                checkSession();
-                alert("✅ Username handle permanently updated in database!");
-            } else { alert(data.message || "Failed to update handle."); }
-        } catch(e) { alert("Network error."); }
-    }
-
-    function submitSupportTicket() {
-        const msg = document.getElementById('supportMsgInput').value.trim();
-        if(!msg) { alert("Please enter your issue description."); return; }
-        document.getElementById('supportMsgInput').value = '';
-        closeModal('supportModal');
-        alert("🛠️ Support ticket lodged successfully! Our technical desk will email you within 2 hours.");
-    }
-
-    // --- AUTHENTICATION (FAST2SMS) ---
-    async function requestOtp() {
-        const phone = document.getElementById('phoneInput').value.trim();
-        const subtext = document.getElementById('modalSubtext');
-        if (!phone || phone.length !== 10) { alert("Enter 10-digit mobile number."); return; }
-
-        try {
-            subtext.innerText = "Connecting to Fast2SMS servers...";
-            const res = await fetch('/api/auth/request-otp', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ phone })
-            });
-            const data = await res.json();
-            if (data.success) {
-                document.getElementById('stepPhone').style.display = 'none';
-                document.getElementById('stepOtp').style.display = 'block';
-                subtext.innerText = `Verification OTP dispatched to ${phone}`;
-            } else { alert(data.message || "Fast2SMS transmission error."); }
-        } catch(e) { alert("SMS platform timeout."); }
-    }
-
-    async function verifyOtp() {
-        const phone = document.getElementById('phoneInput').value.trim();
-        const otp = document.getElementById('otpInput').value.trim();
-        const refCode = document.getElementById('loginReferralInput').value.trim();
-
-        try {
-            const res = await fetch('/api/auth/verify-otp', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ phone, otp, referralCode: refCode })
-            });
-            const data = await res.json();
-            if (data.success) {
-                localStorage.setItem('nifty7_user', JSON.stringify(data.user));
-                closeModal('loginModal');
-                checkSession();
-                alert("Welcome inside Nifty-7 Arena!");
-            } else { alert(data.message || "Invalid OTP code."); }
-        } catch(e) { alert("Validation error."); }
-    }
-
-    async function fetchUserProfileData() {
-        const user = JSON.parse(localStorage.getItem('nifty7_user'));
-        if (!user) return;
-        try {
-            const res = await fetch(`/api/user/${user.id}/profile`);
-            const data = await res.json();
-            if (data.success) {
-                user.balance = parseFloat(data.user.balance).toFixed(2);
-                localStorage.setItem('nifty7_user', JSON.stringify(user));
-                
-                document.getElementById('headerBalance').innerText = `₹${user.balance}`;
-                document.getElementById('walletMainBal').innerText = `₹${user.balance}`;
-                document.getElementById('displayReferralCode').innerText = data.user.referral_code || "---";
-                document.getElementById('refCountLabel').innerText = data.user.refCount || "0";
-                document.getElementById('refEarningsLabel').innerText = `₹${parseFloat(data.user.refEarnings || 0).toFixed(2)}`;
-                
-                const historyBox = document.getElementById('walletHistoryList');
-                if (data.transactions && data.transactions.length > 0) {
-                    historyBox.innerHTML = data.transactions.map(t => `
-                        <div style="padding:10px 0; border-bottom:1px solid var(--border-color); display:flex; justify-content:space-between;">
-                            <div><b>${t.desc}</b><br><small style="color:var(--text-muted);">${new Date(t.timestamp).toLocaleTimeString()}</small></div>
-                            <span style="color:${t.type==='CREDIT'||t.type==='DEPOSIT'||t.type==='REFERRAL_CREDIT'?'var(--stock-green)':'var(--stock-red)'}; font-weight:800;">
-                                ${t.type==='CREDIT'||t.type==='DEPOSIT'||t.type==='REFERRAL_CREDIT'?'+':'-'} ₹${parseFloat(t.amount).toFixed(2)}
-                            </span>
-                        </div>
-                    `).join('');
-                } else {
-                    historyBox.innerHTML = `<p style="color:var(--text-muted); text-align:center;">No recent transactions.</p>`;
-                }
-            }
-        } catch(e) { console.warn("Profile sync delay."); }
-    }
-
-    function checkSession() {
-        const user = JSON.parse(localStorage.getItem('nifty7_user'));
-        if (user) {
-            document.getElementById('authBtn').innerText = 'Profile';
-            document.getElementById('profilePhoneDisplay').innerText = `Mobile: ${user.phone}`;
-            document.getElementById('profileHandleDisplay').innerText = user.handle;
-            fetchUserProfileData();
-        } else {
-            document.getElementById('authBtn').innerText = 'Login';
-        }
-        renderSavedBaskets();
-    }
-
-    function handleAuthClick() {
-        if (localStorage.getItem('nifty7_user')) switchNav('profile');
-        else document.getElementById('loginModal').style.display = 'flex';
-    }
-
-    function logoutSession() {
-        if(confirm("Log out of current arena session?")) {
-            localStorage.clear();
-            location.reload();
-        }
-    }
-</script>
+<nav class="nav" aria-label="Main">
+  <button type="button" class="on" id="nav-home" onclick="switchNav('home')"><span class="ico">🏠</span>Home</button>
+  <button type="button" id="nav-contests" onclick="switchNav('contests')"><span class="ico">🏆</span>Contests</button>
+  <button type="button" id="nav-baskets" onclick="switchNav('baskets')"><span class="ico">📋</span>Teams</button>
+  <button type="button" id="nav-wallet" onclick="switchNav('wallet')"><span class="ico">💰</span>Wallet</button>
+  <button type="button" id="nav-profile" onclick="switchNav('profile')"><span class="ico">👤</span>Account</button>
+</nav>
+<div id="marketStatusBadge" style="position:fixed;bottom:18px;right:18px;z-index:30;padding:8px 12px;font-size:12px;font-weight:700;border-radius:999px;background:rgba(15,118,110,.95);color:#fff;backdrop-filter:blur(8px);">Market source: unknown</div>
+<div id="marketDebugInfo" style="position:fixed;bottom:62px;right:18px;z-index:30;padding:10px 12px;font-size:12px;line-height:1.4;border-radius:18px;background:rgba(255,255,255,.95);color:#111;border:1px solid rgba(0,0,0,.08);max-width:260px;box-shadow:0 18px 50px rgba(0,0,0,.12);">Live debug: waiting for feed</div>
+<script src="/app.js?v=20260716"></script>
 </body>
 </html>
